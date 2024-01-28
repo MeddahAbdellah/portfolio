@@ -1,0 +1,40 @@
+---
+import "@/styles/globals.css";
+import { Header } from "@/components/header";
+import { Intro } from "@/components/intro";
+import { Experience } from "@/components/experience";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Meddah Abdallah</title>
+    <style>
+      main {
+        height: calc(100dvh - var(--header-height));
+        scroll-snap-type: y mandatory;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <Intro client:visible />
+      <Experience client:visible />
+    </main>
+  </body>
+</html>

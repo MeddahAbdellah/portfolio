@@ -1,0 +1,32 @@
+.container::before {
+  position: absolute;
+  content: "";
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+  mask-image: radial-gradient(rgba(0, 0, 0, 0.9), transparent 70%);
+}
+
+.highlight {
+  background: linear-gradient(45deg, #ffba2d, #ffba2d, #eb2407, #fe1650);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.codeShuffle {
+  z-index: -1;
+  /* background: linear-gradient(83.21deg, #3245ff 0%, white 100%);
+  mask-image: radial-gradient(rgba(0, 0, 0, 0.9), transparent 90%); */
+
+  background: linear-gradient(83.21deg, white 0%, #bc52ee 100%);
+  mask-image: radial-gradient(
+    transparent 30%,
+    rgba(0, 0, 0, 0.2),
+    transparent 95%
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+  cursor: default;
+  user-select: none;
+}
