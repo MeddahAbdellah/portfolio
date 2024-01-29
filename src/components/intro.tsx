@@ -57,7 +57,7 @@ export function Intro(): React.JSX.Element {
       onMouseLeave={handleMouseLeave}
       className={`${styles.container} h-full w-dvw relative flex flex-col justify-center items-center p-0 m-0 snap-start`}
     >
-      <div className={`${styles.codeShuffle} break-all leading-none`}>
+      <div className={`${styles.codeShuffle} break-all leading-tight`}>
         {text}
       </div>
       <div

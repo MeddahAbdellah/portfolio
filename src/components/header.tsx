@@ -13,7 +13,7 @@ export function Header(): React.JSX.Element {
       style={{
         height: "var(--header-height)",
       }}
-      className="sticky bg-background top-0 w-full px-24 border-b border-solid border-zinc-600 flex justify-between items-center z-10"
+      className="sticky bg-background top-0 w-full pl-24 pr-8 border-b border-solid border-zinc-600 flex justify-between items-center z-10"
     >
       <NavigationMenu>
         <NavigationMenuList>
@@ -78,6 +78,16 @@ export function Header(): React.JSX.Element {
                 target="_blank"
               >
                 <i className="fab fa-stack-overflow text-lg"></i>
+              </a>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <a className="ml-8" href="#hire">
+                Hire Me
               </a>
             </NavigationMenuLink>
           </NavigationMenuItem>
