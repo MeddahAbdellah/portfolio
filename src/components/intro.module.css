@@ -1,6 +1,6 @@
 .container {
-  --__x: 200px;
-  --__y: 200px;
+  --__x: 50%;
+  --__y: 50%;
   --__opacity: 0;
   isolation: isolate;
   background-color: black;

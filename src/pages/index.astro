@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { Header } from "@/components/header";
 import { Intro } from "@/components/intro";
 import { Experience } from "@/components/experience";
+import SkillTasteIntro from "@/components/skill-taste-intro.astro";
 ---
 
 <html lang="en">
@@ -23,18 +24,23 @@ import { Experience } from "@/components/experience";
     <meta name="generator" content={Astro.generator} />
     <title>Meddah Abdallah</title>
     <style>
-      main {
+      /* main {
         height: calc(100dvh - var(--header-height));
         scroll-snap-type: y mandatory;
+        scroll-snap-stop: always;
         overflow-y: auto;
-      }
+      } */
     </style>
   </head>
   <body>
     <Header />
-    <main>
+    <main
+      style="height: calc(100dvh - var(--header-height))"
+      class="snap-y snap-mandatory overflow-y-auto"
+    >
       <Intro client:visible />
       <Experience client:visible />
+      <SkillTasteIntro />
     </main>
   </body>
 </html>

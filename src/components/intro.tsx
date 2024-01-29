@@ -55,7 +55,7 @@ export function Intro(): React.JSX.Element {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`${styles.container} h-full w-dvw relative flex flex-col justify-center items-center p-0 m-0 snap-start`}
+      className={`${styles.container} h-full w-dvw relative flex flex-col justify-center items-center p-0 m-0 snap-start snap-always`}
     >
       <div className={`${styles.codeShuffle} break-all leading-tight`}>
         {text}
@@ -63,10 +63,10 @@ export function Intro(): React.JSX.Element {
       <div
         className={`${styles.textContainer} w-3/5 flex flex-col justify-center items-center text-center gap-16`}
       >
-        <h1 className="scroll-m-20 text-8xl font-extrabold tracking-tight lg:text-8xl">
+        <h1 className="text-8xl font-extrabold tracking-tight lg:text-8xl">
           Meddah Abdallah
         </h1>
-        <h4 className="scroll-m-20 text-xl font-regular tracking-tight">
+        <h4 className="text-xl font-regular tracking-tight">
           Full-stack developer specializing in crafting high-quality user
           experiences and robust code, with a flexible approach to
           infrastructure. Expertise spans{" "}
