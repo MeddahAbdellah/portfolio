@@ -25,6 +25,19 @@ async function codeShuffleGeneratorFn(
 
 const textGenerationFn = await codeShuffleGeneratorFn(codeSource);
 
+const handleMouseMove = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const target = e.target as HTMLElement;
+  target.style.setProperty("--__x", e.clientX - target.offsetLeft + "px");
+  target.style.setProperty("--__y", e.clientY - target.offsetTop + "px");
+};
+const handleMouseEnter = (e: React.MouseEvent) => {
+  (e.target as HTMLElement).style.setProperty("--__opacity", "1");
+};
+
+const handleMouseLeave = (e: React.MouseEvent) => {
+  (e.target as HTMLElement).style.setProperty("--__opacity", "0");
+};
+
 export function Intro(): React.JSX.Element {
   const [text, setText] = React.useState<string>(textGenerationFn());
 
@@ -39,14 +52,17 @@ export function Intro(): React.JSX.Element {
 
   return (
     <section
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={`${styles.container} h-full w-dvw relative flex flex-col justify-center items-center p-0 m-0 snap-start`}
     >
-      <div
-        className={`${styles.codeShuffle} max-h-full overflow-hidden absolute top-0 left-0 w-full h-full break-all leading-none`}
-      >
+      <div className={`${styles.codeShuffle} break-all leading-none`}>
         {text}
       </div>
-      <div className="w-3/5 flex flex-col justify-center items-center text-center gap-16">
+      <div
+        className={`${styles.textContainer} w-3/5 flex flex-col justify-center items-center text-center gap-16`}
+      >
         <h1 className="scroll-m-20 text-8xl font-extrabold tracking-tight lg:text-8xl">
           Meddah Abdallah
         </h1>

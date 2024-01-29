@@ -112,7 +112,7 @@ function Tab(props: {
 }
 
 export function Experience(): React.JSX.Element {
-  // Make This Navigation Based
+  // TODO: Make This Navigation Based
   const [selectedCompany, setSelectedCompany] = useState<string>(
     companies[0].name,
   );

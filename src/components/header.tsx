@@ -30,14 +30,6 @@ export function Header(): React.JSX.Element {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <a href="#education">Education</a>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              asChild
-              className={navigationMenuTriggerStyle()}
-            >
               <a href="#tastes">Skill Tastes</a>
             </NavigationMenuLink>
           </NavigationMenuItem>
