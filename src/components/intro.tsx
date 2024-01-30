@@ -25,11 +25,21 @@ async function codeShuffleGeneratorFn(
 
 const textGenerationFn = await codeShuffleGeneratorFn(codeSource);
 
-const handleMouseMove = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+const moveMask = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
   const target = e.target as HTMLElement;
   target.style.setProperty("--__x", e.clientX - target.offsetLeft + "px");
   target.style.setProperty("--__y", e.clientY - target.offsetTop + "px");
 };
+
+const handleMouseMoveGeneratorFn = (
+  setText: React.Dispatch<React.SetStateAction<string>>,
+) => {
+  return (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    moveMask(e);
+    setText(textGenerationFn());
+  };
+};
+
 const handleMouseEnter = (e: React.MouseEvent) => {
   (e.target as HTMLElement).style.setProperty("--__opacity", "1");
 };
@@ -40,15 +50,7 @@ const handleMouseLeave = (e: React.MouseEvent) => {
 
 export function Intro(): React.JSX.Element {
   const [text, setText] = React.useState<string>(textGenerationFn());
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setText(textGenerationFn());
-    }, intervalMs);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  const handleMouseMove = handleMouseMoveGeneratorFn(setText);
 
   return (
     <section
