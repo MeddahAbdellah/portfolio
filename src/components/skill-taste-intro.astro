@@ -1,14 +1,47 @@
----
-
----
-
 <section
   class="w-full h-full flex flex-col justify-center items-center p-0 m-0 snap-start snap-always gap-16"
 >
   <h1 class="font-extrabold text-8xl">Skill tastes</h1>
-  <h4 class="text-center text-xl font-regular w-9/12">
-    Why settle for a long, dull list of capabilities when I can demonstrate them
-    in real time? Let's jump right in and showcase what I can do, it's more
-    engaging and fun!
+  <h4
+    id="skillTasteIntroDescription"
+    class="text-center text-lg font-regular w-7/12"
+  >
   </h4>
 </section>
+<script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+<script type="module">
+  const h4 = document.getElementById("skillTasteIntroDescription");
+
+  var typewriter = new Typewriter(h4, {
+    loop: false,
+    delay: 1,
+  })
+    .typeString(
+      "By the time I'm writing this, I haven't already contacted my references yet.",
+    )
+    .pauseFor(3000)
+    .deleteAll(1)
+    .pauseFor(300)
+    .typeString(
+      "And since I'm all for optimization (I'm lazy), I'm going to build an app showcasing my skills.",
+    )
+    .pauseFor(3000)
+    .deleteAll(1)
+    .typeString(
+      "The app will be a form where users can send me a review and I will validate weather or not to put it on the website, ofcourse I will my judgement will be objective (only the good ones will be published)",
+    );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          typewriter.start();
+          observer.unobserve(h4);
+        }
+      });
+    },
+    { threshold: 0.1 },
+  );
+
+  observer.observe(h4);
+</script>

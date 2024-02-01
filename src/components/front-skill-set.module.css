@@ -1,0 +1,53 @@
+.wrapper {
+  background: radial-gradient(rgba(0, 121, 145, 1), rgba(120, 255, 214, 1));
+}
+
+.container {
+  --__rows: 10;
+  --__columns: 10;
+  display: grid;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  grid-template-columns: repeat(var(--__columns), 1fr);
+  grid-template-rows: repeat(var(--__rows), 1fr);
+  pointer-events: none;
+}
+
+.highlight {
+  background: linear-gradient(
+    45deg,
+    rgba(0, 121, 145, 1),
+    rgba(120, 255, 214, 1)
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.title {
+  background: radial-gradient(
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.2) 70%,
+    transparent 100%
+  );
+}
+
+.tile {
+  isolation: isolate;
+  position: relative;
+  cursor: pointer;
+  color: white;
+  aspect-ratio: 1;
+}
+
+.tile::before {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  background-color: hsl(var(--background));
+  inset: 0.5px;
+}
+
+.tile:hover::before {
+  background-color: hsl(var(--accent));
+}

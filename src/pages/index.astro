@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Intro } from "@/components/intro";
 import { Experience } from "@/components/experience";
 import SkillTasteIntro from "@/components/skill-taste-intro.astro";
+import { FrontSkillSet } from "@/components/front-skill-set";
 ---
 
 <html lang="en">
@@ -23,14 +24,6 @@ import SkillTasteIntro from "@/components/skill-taste-intro.astro";
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Meddah Abdallah</title>
-    <style>
-      /* main {
-        height: calc(100dvh - var(--header-height));
-        scroll-snap-type: y mandatory;
-        scroll-snap-stop: always;
-        overflow-y: auto;
-      } */
-    </style>
   </head>
   <body>
     <Header />
@@ -41,6 +34,7 @@ import SkillTasteIntro from "@/components/skill-taste-intro.astro";
       <Intro client:visible />
       <Experience client:visible />
       <SkillTasteIntro />
+      <FrontSkillSet client:load />
     </main>
   </body>
 </html>

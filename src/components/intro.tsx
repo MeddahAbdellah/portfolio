@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./intro.module.css";
 
-const intervalMs = 60;
 const codeSource = `https://raw.githubusercontent.com/hyperledger/fabric-sdk-node/61cf4b2441c7c30eaf36aa744e9768a0e7edf722/test/unit/channel-event-hub.js`;
 
 async function codeShuffleGeneratorFn(
