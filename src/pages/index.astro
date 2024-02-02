@@ -4,7 +4,7 @@ import { Header } from "@/components/header";
 import { Intro } from "@/components/intro";
 import { Experience } from "@/components/experience";
 import SkillTasteIntro from "@/components/skill-taste-intro.astro";
-import { FrontSkillSet } from "@/components/front-skill-set";
+import { SkillSet } from "@/components/skill-set";
 ---
 
 <html lang="en">
@@ -34,7 +34,8 @@ import { FrontSkillSet } from "@/components/front-skill-set";
       <Intro client:visible />
       <Experience client:visible />
       <SkillTasteIntro />
-      <FrontSkillSet client:load />
+      <SkillSet type="front" client:load />
+      <SkillSet type="back" client:load />
     </main>
   </body>
 </html>

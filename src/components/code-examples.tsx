@@ -6,40 +6,15 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
-import styles from "./front-code-examples.module.css";
+import styles from "./code-examples.module.css";
+import { frontSkills } from "./front-example-urls";
+import { backSkills } from "./back-example-urls";
 
-const skills = [
-  {
-    icon: "./angular.svg",
-    url: "https://stackblitz.com/edit/stackblitz-starters-vsqw3r",
-  },
-  {
-    icon: "./react.svg",
-    url: "https://stackblitz.com/edit/stackblitz-starters-4wkctw",
-  },
-  {
-    icon: "./svelte.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafza?file=index.ts",
-  },
-  {
-    icon: "./solidjs.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafqa?file=index.ts",
-  },
-  {
-    icon: "./qwik.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafga?file=index.ts",
-  },
-  {
-    icon: "./astro.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafgaza?file=index.ts",
-  },
-  {
-    icon: "./next.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafgaa?file=index.ts",
-  },
-] as const;
-
-export function FrontCodeExamples(): React.JSX.Element {
+export function CodeExamples(props: {
+  type: "front" | "back";
+}): React.JSX.Element {
+  const { type } = props;
+  const skills = type === "front" ? frontSkills : backSkills;
   const [url, setUrl] = React.useState<string>(
     "https://stackblitz.com/edit/stackblitz-starters-vsqw3r",
   );

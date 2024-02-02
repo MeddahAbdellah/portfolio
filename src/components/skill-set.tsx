@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./front-skill-set.module.css";
 import { stagger, useAnimate } from "framer-motion";
-import { FrontCodeExamples } from "./front-code-examples";
+import { CodeExamples } from "./code-examples";
 
 const tileSizePx = 100;
 
@@ -40,7 +40,8 @@ function throttledGeneratorFn(effectFn: () => void): [() => void, () => void] {
   ];
 }
 
-export function FrontSkillSet(): React.JSX.Element {
+export function SkillSet(props: { type: "front" | "back" }): React.JSX.Element {
+  const { type } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const opened = useRef<boolean>(false);
   const [numberOfTiles, setNumberOfTiles] = React.useState<number>(0);
@@ -71,12 +72,13 @@ export function FrontSkillSet(): React.JSX.Element {
       ref={scope}
       className={`${styles.wrapper} relative h-full w-full overflow-hidden snap-start snap-always`}
     >
-      <FrontCodeExamples />
+      <CodeExamples type={type} />
       <div className="absolute h-full w-full top-0 pointer-events-none">
         <div ref={containerRef} className={styles.container}>
           <header className={`absolute z-10 pt-32 px-32`}>
             <h1 className="font-extrabold text-8xl">
-              <span>Frontend skills</span> <br /> <br />
+              <span>{type === "front" ? "Frontend" : "Backend"} skills</span>{" "}
+              <br /> <br />
               <span className={`${styles.highlight} pl-56`}>
                 Click somewhere
               </span>
