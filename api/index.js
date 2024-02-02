@@ -10,7 +10,7 @@ linkedin: ${linkedin}
 ---
 ${review}`;
 
-  const githubToken = process.env.YOUR_GITHUB_TOKEN;
+  const githubToken = process.env.GITHUB_TOKEN;
   const owner = process.env.GITHUB_REPO_OWNER;
   const repo = process.env.REPO_NAME;
   const path = filePath;
