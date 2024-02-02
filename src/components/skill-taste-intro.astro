@@ -1,5 +1,5 @@
 <style>
-  #skill-taste-intro-appDiagram {
+  #skill-taste-intro-app-diagram {
     width: 100%;
     height: 100%;
     position: relative;
@@ -12,7 +12,7 @@
     );
   }
 
-  #skill-taste-intro-appDiagram img {
+  #skill-taste-intro-app-diagram img {
     width: 100%;
     mix-blend-mode: hard-light;
     border-radius: 20px;
@@ -24,34 +24,26 @@
     transition: 1s;
   }
 
-  #parallax {
+  #skill-taste-intro-parallax {
+    overflow: hidden;
     position: absolute;
     top: 0;
     right: 0;
-    width: 50%;
+    width: 100%;
     height: 100%;
   }
 
-  #parallax img {
+  #skill-taste-intro-parallax img {
     position: absolute;
     width: 75px;
     opacity: 0.3;
     mix-blend-mode: multiply;
   }
 
-  #scene {
+  #skill-taste-intro-scene {
     position: relative;
     width: 100%;
     height: 100%;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
   }
 </style>
 <section
@@ -60,13 +52,13 @@
   <div class="w-full">
     <h1 class="font-bold text-5xl my-8">Skill tastes</h1>
     <ul
-      id="skillTasteIntroDescription"
+      id="skill-taste-intro-app-description"
       class="list-none text-lg text-zinc-100 font-regular"
     >
     </ul>
   </div>
 
-  <div id="skill-taste-intro-appDiagram">
+  <div id="skill-taste-intro-app-diagram">
     <img src="papp1.png" />
     <img src="papp2.png" />
     <img src="papp3.png" />
@@ -77,8 +69,8 @@
     <img src="papp8.png" />
   </div>
 
-  <div id="parallax">
-    <div id="scene" class="relative">
+  <div id="skill-taste-intro-parallax">
+    <div id="skill-taste-intro-scene" class="relative">
       <img
         data-origin-x=".5"
         data-origin-y=".5"
@@ -108,10 +100,10 @@
   src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"
 ></script>
 <script type="module">
-  const h4 = document.getElementById("skillTasteIntroDescription");
-  const appDiagram = document.getElementById("skill-taste-intro-appDiagram");
+  const ul = document.getElementById("skill-taste-intro-app-description");
+  const appDiagram = document.getElementById("skill-taste-intro-app-diagram");
 
-  var typewriter = new Typewriter(h4, {
+  var typewriter = new Typewriter(ul, {
     loop: false,
     delay: 1,
   })
@@ -164,13 +156,13 @@
     { threshold: 0.1 },
   );
 
-  observer.observe(h4);
+  observer.observe(ul);
 
-  const scene = document.getElementById("scene");
+  const scene = document.getElementById("skill-taste-intro-scene");
   const parallaxInstance = new Parallax(scene);
 
   function randomPositionImages() {
-    const images = document.querySelectorAll("#scene img");
+    const images = document.querySelectorAll("#skill-taste-intro-scene img");
     console.log("images", images);
     images.forEach((img) => {
       const maxX = window.innerWidth - img.width;
