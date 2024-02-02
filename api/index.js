@@ -1,4 +1,4 @@
-export default async function handler(_request, response) {
+export default async function handler(request, response) {
   const { name, review, linkedin } = request.body;
   if (!name || !review || !linkedin) {
     return response.status(400).json({ error: "Please fill all the fields" });
