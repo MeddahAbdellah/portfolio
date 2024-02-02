@@ -24,8 +24,27 @@ async function codeShuffleGeneratorFn(
 
 const textGenerationFn = await codeShuffleGeneratorFn(codeSource);
 
+function generateDocumentScrollEffectFn(
+  ref: React.RefObject<HTMLDivElement>,
+): () => void {
+  return () => {
+    ref.current?.style.setProperty("--__opacity", "0");
+  };
+}
+
+const registerDocumentScrollEffect = (
+  containerRef: React.RefObject<HTMLDivElement>,
+) => {
+  return () => {
+    const documentScrollEffect = generateDocumentScrollEffectFn(containerRef);
+    document.addEventListener("scroll", documentScrollEffect, true);
+    return () => document.removeEventListener("scroll", documentScrollEffect);
+  };
+};
+
 const moveMask = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
   const target = e.target as HTMLElement;
+  target.style.setProperty("--__opacity", "1");
   target.style.setProperty("--__x", e.clientX - target.offsetLeft + "px");
   target.style.setProperty("--__y", e.clientY - target.offsetTop + "px");
 };
@@ -50,9 +69,13 @@ const handleMouseLeave = (e: React.MouseEvent) => {
 export function Intro(): React.JSX.Element {
   const [text, setText] = React.useState<string>(textGenerationFn());
   const handleMouseMove = handleMouseMoveGeneratorFn(setText);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(registerDocumentScrollEffect(containerRef), []);
 
   return (
     <section
+      ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
