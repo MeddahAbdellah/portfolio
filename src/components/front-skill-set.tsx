@@ -72,13 +72,13 @@ export function FrontSkillSet(): React.JSX.Element {
       className={`${styles.wrapper} relative h-full w-full overflow-hidden snap-start snap-always`}
     >
       <FrontCodeExamples />
-      <div className="absolute h-full w-full top-0">
+      <div className="absolute h-full w-full top-0 pointer-events-none">
         <div ref={containerRef} className={styles.container}>
           <header className={`absolute z-10 pt-32 px-32`}>
             <h1 className="font-extrabold text-8xl">
               <span>Frontend skills</span> <br /> <br />
               <span className={`${styles.highlight} pl-56`}>
-                click somewhere
+                Click somewhere
               </span>
             </h1>
           </header>

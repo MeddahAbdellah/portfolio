@@ -1,35 +1,105 @@
+<style>
+  #appDiagram {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: black;
+    mask-image: radial-gradient(
+      ellipse at center,
+      black 50%,
+      rgba(0, 0, 0, 0.25) 70%,
+      transparent
+    );
+  }
+
+  #appDiagram img {
+    height: 90%;
+    mix-blend-mode: hard-light;
+    border-radius: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: 1s;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
 <section
-  class="w-full h-full flex flex-col justify-center items-center p-0 m-0 snap-start snap-always gap-16"
+  class="w-full h-full flex flex-col justify-center items-center p-0 m-0 snap-start snap-always"
 >
-  <h1 class="font-extrabold text-8xl">Skill tastes</h1>
+  <h1 class="font-extrabold text-6xl m-8">Skill tastes</h1>
   <h4
     id="skillTasteIntroDescription"
-    class="text-center text-lg font-regular w-7/12"
+    class="text-center text-lg font-regular w-7/12 h-24"
   >
   </h4>
+
+  <div id="appDiagram">
+    <img src="papp1.png" />
+    <img src="papp2.png" />
+    <img src="papp3.png" />
+    <img src="papp4.png" />
+    <img src="papp5.png" />
+    <img src="papp6.png" />
+    <img src="papp7.png" />
+    <img src="papp8.png" />
+  </div>
 </section>
 <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 <script type="module">
   const h4 = document.getElementById("skillTasteIntroDescription");
+  const appDiagram = document.getElementById("appDiagram");
 
   var typewriter = new Typewriter(h4, {
     loop: false,
     delay: 1,
   })
     .typeString(
-      "By the time I'm writing this, I haven't already contacted my references yet.",
+      "By the time I'm writing this, I haven't contacted my references yet. Let's build an app to get them and showcase my skills.",
     )
     .pauseFor(3000)
     .deleteAll(1)
+    .callFunction(() => (appDiagram.children[0].style.opacity = 1))
+    .typeString("We will make a frontend app to collect the reference")
+    .pauseFor(2000)
+    .deleteAll(1)
+    .callFunction(() => (appDiagram.children[1].style.opacity = 1))
+    .typeString("The frontend will send data to the backend for processing")
     .pauseFor(300)
-    .typeString(
-      "And since I'm all for optimization (I'm lazy), I'm going to build an app showcasing my skills.",
-    )
-    .pauseFor(3000)
+    .callFunction(() => (appDiagram.children[2].style.opacity = 1))
+    .pauseFor(2000)
     .deleteAll(1)
+    .callFunction(() => (appDiagram.children[3].style.opacity = 1))
     .typeString(
-      "The app will be a form where users can send me a review and I will validate weather or not to put it on the website, ofcourse I will my judgement will be objective (only the good ones will be published)",
-    );
+      "Backend needs to store the data, and since I don't want to pay for a database, I will use a the repo and create a PR for each request",
+    )
+    .pauseFor(300)
+    .callFunction(() => (appDiagram.children[4].style.opacity = 1))
+    .pauseFor(3500)
+    .deleteAll(1)
+    .callFunction(() => (appDiagram.children[5].style.opacity = 1))
+    .typeString(
+      "I will validate the PR and merge the objectivelly good ones (the ones I like)",
+    )
+    .pauseFor(300)
+    .callFunction(() => (appDiagram.children[6].style.opacity = 1))
+    .pauseFor(2000)
+    .deleteAll(1)
+    .callFunction(() => (appDiagram.children[7].style.opacity = 1))
+    .typeString(
+      "CI/CD will deploy the app and you will be able to see the reference on the website!",
+    )
+    .pauseFor(300)
+    .callFunction(() => (appDiagram.children[8].style.opacity = 1));
 
   const observer = new IntersectionObserver(
     (entries) => {

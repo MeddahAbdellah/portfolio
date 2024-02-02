@@ -1,7 +1,8 @@
 .container {
   --__x: 50%;
   --__y: 50%;
-  --__opacity: 0;
+  --__opacity: 1;
+  --__mask-size: 700px;
   isolation: isolate;
   background-color: black;
   overflow: hidden;
@@ -52,13 +53,14 @@
   transition: 0.5s;
 
   -webkit-mask-image: radial-gradient(
-    300px circle at var(--__x) var(--__y),
+    var(--__mask-size) circle at var(--__x) var(--__y),
     black 20%,
     rgba(0, 0, 0, 0.25),
     transparent
   );
+
   mask-image: radial-gradient(
-    300px circle at var(--__x) var(--__y),
+    var(--__mask-size) circle at var(--__x) var(--__y),
     black 40%,
     rgba(0, 0, 0, 0.25),
     transparent

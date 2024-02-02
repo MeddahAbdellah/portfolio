@@ -11,11 +11,11 @@ import styles from "./front-code-examples.module.css";
 const skills = [
   {
     icon: "./angular.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafa?file=index.ts",
+    url: "https://stackblitz.com/edit/stackblitz-starters-vsqw3r",
   },
   {
     icon: "./react.svg",
-    url: "https://stackblitz.com/edit/typescript-fnpafda?file=index.ts",
+    url: "https://stackblitz.com/edit/stackblitz-starters-4wkctw",
   },
   {
     icon: "./svelte.svg",
@@ -41,7 +41,7 @@ const skills = [
 
 export function FrontCodeExamples(): React.JSX.Element {
   const [url, setUrl] = React.useState<string>(
-    "https://stackblitz.com/edit/typescript-fnpafa?file=index.ts",
+    "https://stackblitz.com/edit/stackblitz-starters-vsqw3r",
   );
 
   const [loading, setLoading] = React.useState<boolean>(true);
