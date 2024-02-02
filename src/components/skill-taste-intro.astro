@@ -1,5 +1,5 @@
 <style>
-  #appDiagram {
+  #skill-taste-intro-appDiagram {
     width: 100%;
     height: 100%;
     position: relative;
@@ -12,8 +12,8 @@
     );
   }
 
-  #appDiagram img {
-    height: 90%;
+  #skill-taste-intro-appDiagram img {
+    width: 100%;
     mix-blend-mode: hard-light;
     border-radius: 20px;
     position: absolute;
@@ -22,6 +22,27 @@
     opacity: 0;
     transform: translate(-50%, -50%);
     transition: 1s;
+  }
+
+  #parallax {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+  }
+
+  #parallax img {
+    position: absolute;
+    width: 75px;
+    opacity: 0.3;
+    mix-blend-mode: multiply;
+  }
+
+  #scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 
   @keyframes fadeIn {
@@ -34,16 +55,18 @@
   }
 </style>
 <section
-  class="w-full h-full flex flex-col justify-center items-center p-0 m-0 snap-start snap-always"
+  class="relative w-full h-full flex p-0 m-0 snap-start snap-always p-16"
 >
-  <h1 class="font-extrabold text-6xl m-8">Skill tastes</h1>
-  <h4
-    id="skillTasteIntroDescription"
-    class="text-center text-lg font-regular w-7/12 h-24"
-  >
-  </h4>
+  <div class="w-full">
+    <h1 class="font-bold text-5xl my-8">Skill tastes</h1>
+    <ul
+      id="skillTasteIntroDescription"
+      class="list-none text-lg text-zinc-100 font-regular"
+    >
+    </ul>
+  </div>
 
-  <div id="appDiagram">
+  <div id="skill-taste-intro-appDiagram">
     <img src="papp1.png" />
     <img src="papp2.png" />
     <img src="papp3.png" />
@@ -53,50 +76,78 @@
     <img src="papp7.png" />
     <img src="papp8.png" />
   </div>
+
+  <div id="parallax">
+    <div id="scene" class="relative">
+      <img
+        data-origin-x=".5"
+        data-origin-y=".5"
+        data-depth="1.6"
+        src="angular.svg"
+      />
+      <img data-depth="1.2" src="react.svg" />
+      <img data-depth="2.3" src="astro.svg" />
+      <img data-depth="1.8" src="next.svg" />
+      <img data-depth="4.2" src="svelte.svg" />
+      <img data-depth="3.3" src="solidjs.svg" />
+      <img data-depth="1.7" src="qwik.svg" />
+      <img data-depth="2.9" src="node.svg" />
+      <img data-depth="3.7" src="nest.svg" />
+      <img data-depth="3.7" src="terraform.svg" />
+      <img data-depth="3.7" src="kube.svg" />
+      <img data-depth="3.7" src="argo.svg" />
+      <img data-depth="3.7" src="jenkins.svg" />
+      <img data-depth="3.7" src="git.svg" />
+      <img data-depth="3.7" src="helm.svg" />
+      <img data-depth="3.7" src="gh.svg" />
+    </div>
+  </div>
 </section>
 <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"
+></script>
 <script type="module">
   const h4 = document.getElementById("skillTasteIntroDescription");
-  const appDiagram = document.getElementById("appDiagram");
+  const appDiagram = document.getElementById("skill-taste-intro-appDiagram");
 
   var typewriter = new Typewriter(h4, {
     loop: false,
     delay: 1,
   })
     .typeString(
-      "By the time I'm writing this, I haven't contacted my references yet. Let's build an app to get them and showcase my skills.",
+      "By the time I'm writing this, I haven't contacted my references yet. Let's build an app to get them and showcase my skills. <br/> <br/>",
     )
     .pauseFor(3000)
-    .deleteAll(1)
     .callFunction(() => (appDiagram.children[0].style.opacity = 1))
-    .typeString("We will make a frontend app to collect the reference")
+    .typeString(
+      "<li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>🎨 We will make a frontend app to collect the reference.",
+    )
     .pauseFor(2000)
-    .deleteAll(1)
     .callFunction(() => (appDiagram.children[1].style.opacity = 1))
-    .typeString("The frontend will send data to the backend for processing")
+    .typeString(
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>✉️ The frontend will send data to the backend for processing.",
+    )
     .pauseFor(300)
     .callFunction(() => (appDiagram.children[2].style.opacity = 1))
     .pauseFor(2000)
-    .deleteAll(1)
     .callFunction(() => (appDiagram.children[3].style.opacity = 1))
     .typeString(
-      "Backend needs to store the data, and since I don't want to pay for a database, I will use a the repo and create a PR for each request",
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>⚙️ Backend will store the data on the repo (cutting costs for a database).",
     )
     .pauseFor(300)
     .callFunction(() => (appDiagram.children[4].style.opacity = 1))
     .pauseFor(3500)
-    .deleteAll(1)
     .callFunction(() => (appDiagram.children[5].style.opacity = 1))
     .typeString(
-      "I will validate the PR and merge the objectivelly good ones (the ones I like)",
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>✅ I will validate the PR and merge the objectivelly good ones (the ones I like).",
     )
     .pauseFor(300)
     .callFunction(() => (appDiagram.children[6].style.opacity = 1))
     .pauseFor(2000)
-    .deleteAll(1)
     .callFunction(() => (appDiagram.children[7].style.opacity = 1))
     .typeString(
-      "CI/CD will deploy the app and you will be able to see the reference on the website!",
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>🚀 CI/CD will deploy the app and you will be able to see the reference on the website!</li>",
     )
     .pauseFor(300)
     .callFunction(() => (appDiagram.children[8].style.opacity = 1));
@@ -114,4 +165,22 @@
   );
 
   observer.observe(h4);
+
+  const scene = document.getElementById("scene");
+  const parallaxInstance = new Parallax(scene);
+
+  function randomPositionImages() {
+    const images = document.querySelectorAll("#scene img");
+    console.log("images", images);
+    images.forEach((img) => {
+      const maxX = window.innerWidth - img.width;
+      const maxY = window.innerHeight - img.height;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      img.style.left = `${randomX}px`;
+      img.style.top = `${randomY}px`;
+    });
+  }
+
+  randomPositionImages();
 </script>
