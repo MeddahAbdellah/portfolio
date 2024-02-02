@@ -30,21 +30,28 @@ ${review}`;
     .then((response) => response.json())
     .then((data) => data.object.sha);
 
+  console.log({ getLatestCommitSha });
+
   // Create a new branch
-  await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
-    method: "POST",
-    headers: {
-      Authorization: `token ${githubToken}`,
-      "Content-Type": "application/json",
+  const createNewBranch = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/git/refs`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `token ${githubToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ref: `refs/heads/${branch}`,
+        sha: getLatestCommitSha,
+      }),
     },
-    body: JSON.stringify({
-      ref: `refs/heads/${branch}`,
-      sha: getLatestCommitSha,
-    }),
-  });
+  ).then((response) => response.json());
+
+  console.log({ createNewBranch });
 
   // Create a new file on the new branch
-  await fetch(
+  const createNewFile = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}?branch=${branch}`,
     {
       method: "PUT",
@@ -58,7 +65,9 @@ ${review}`;
         branch,
       }),
     },
-  );
+  ).then((response) => response.json());
+
+  console.log({ createNewFile });
 
   // Create a pull request
   const prResponse = await fetch(
