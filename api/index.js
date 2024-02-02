@@ -80,5 +80,5 @@ ${review}`;
 
   const prData = await prResponse.json();
 
-  res.json({ success: true, prUrl: prData.html_url });
+  response.json({ success: true, prUrl: prData.html_url });
 }
