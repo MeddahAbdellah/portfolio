@@ -3,6 +3,15 @@ const githubToken = process.env.GITHUB_TOKEN;
 const owner = process.env.GITHUB_REPO_OWNER;
 const repo = process.env.REPO_NAME;
 
+const history = {};
+
+const simpleRateLimit = (ip, timeout = 60 * 1000) => {
+  if (history[ip] > Date.now() - timeout) {
+    throw new Error("Rate Limit Exceeded");
+  }
+  history[ip] = Date.now();
+};
+
 function randomString() {
   return Math.random().toString(36).substring(7);
 }
@@ -34,8 +43,8 @@ function toValidationError(payload) {
     return { error: "Review is required" };
   }
 
-  if (!payload.linkedin) {
-    return { error: "Linkedin is required" };
+  if (!payload.jobTitle) {
+    return { error: "jobTitle is required" };
   }
 
   return undefined;
@@ -68,7 +77,7 @@ async function createNewBranch(branch, latestCommitSha) {
   }).then((response) => response.json());
 }
 
-async function getReferences() {
+async function getReferencesAndSha() {
   return fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}?ref=main`,
     {
@@ -81,13 +90,17 @@ async function getReferences() {
     .then((data) => {
       if (data.content) {
         const decodedContent = Buffer.from(data.content, "base64").toString();
-        return JSON.parse(decodedContent);
+        return {
+          currentReferences: JSON.parse(decodedContent),
+          currentReferencesSha: data.sha,
+        };
       }
       return [];
     });
 }
 
-function toUpdatedRefrences(currentReferences) {
+function toUpdatedRefrences(currentReferences, payload) {
+  const { name, review, jobTitle } = payload;
   let userReference = currentReferences.find(
     (reference) => reference.name === name,
   );
@@ -96,13 +109,13 @@ function toUpdatedRefrences(currentReferences) {
     userReference = {
       ...userReference,
       review,
-      linkedin,
+      jobTitle,
     };
   } else {
     userReference = {
       name,
       review,
-      linkedin,
+      jobTitle,
     };
   }
 
@@ -112,9 +125,14 @@ function toUpdatedRefrences(currentReferences) {
   ];
 }
 
-async function syncUpdate(branch, commitMessage, updatedContent) {
+async function syncUpdate(
+  branch,
+  commitMessage,
+  currentReferencesSha,
+  updatedContent,
+) {
   return fetch(
-    `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}?branch=${branch}`,
+    `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}`,
     {
       method: "PUT",
       headers: {
@@ -124,6 +142,7 @@ async function syncUpdate(branch, commitMessage, updatedContent) {
       body: JSON.stringify({
         message: commitMessage,
         content: updatedContent,
+        sha: currentReferencesSha,
         branch,
       }),
     },
@@ -148,8 +167,14 @@ async function createPullRequest(branch, commitMessage) {
 export default async function handler(request, response) {
   enableCors(request, response, "stackblitz.io");
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
+  try {
+    simpleRateLimit(request.headers["x-real-ip"], 10 * 60 * 1000);
+  } catch (error) {
+    return response.status(429).end();
+  }
+
+  if (request.method === "OPTIONS") {
+    response.status(200).end();
     return;
   }
 
@@ -163,11 +188,10 @@ export default async function handler(request, response) {
   const latestCommitSha = await getLatestCommitSha();
 
   const branch = `${name.toLowerCase().replace(/[^a-z]/g, "")}-reference-${randomString()}`;
-  const newBranch = await createNewBranch(branch, latestCommitSha);
+  await createNewBranch(branch, latestCommitSha);
 
-  console.log({ newBranch });
-
-  const currentReferences = await getReferences();
+  const { currentReferences, currentReferencesSha } =
+    await getReferencesAndSha();
 
   const updatedReferences = toUpdatedRefrences(currentReferences, request.body);
 
@@ -176,13 +200,7 @@ export default async function handler(request, response) {
   ).toString("base64");
 
   const commitMessage = `Adding new reference for ${name}`;
-  const syncUpdateResponse = await syncUpdate(
-    branch,
-    commitMessage,
-    updatedContent,
-  );
-
-  console.log({ syncUpdateResponse });
+  await syncUpdate(branch, commitMessage, currentReferencesSha, updatedContent);
 
   const pr = await createPullRequest(branch, commitMessage);
 
