@@ -1,47 +1,48 @@
-export default async function handler(request, response) {
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  const allowedDomain = "stackblitz.io";
-  const origin = req.headers.origin;
+const referencesPath = "public/references.json";
+const githubToken = process.env.GITHUB_TOKEN;
+const owner = process.env.GITHUB_REPO_OWNER;
+const repo = process.env.REPO_NAME;
+
+function randomString() {
+  return Math.random().toString(36).substring(7);
+}
+
+function enableCors(request, response, allowedDomain) {
+  response.setHeader("Access-Control-Allow-Credentials", true);
+  const origin = request.headers.origin;
 
   if (origin && origin.endsWith(allowedDomain)) {
-    res.header("Access-Control-Allow-Origin", origin);
+    response.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  res.setHeader(
+  response.setHeader(
     "Access-Control-Allow-Methods",
     "GET,OPTIONS,PATCH,DELETE,POST,PUT",
   );
-  res.setHeader(
+  response.setHeader(
     "Access-Control-Allow-Headers",
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
   );
+}
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
+function toValidationError(payload) {
+  if (!payload.name) {
+    return { error: "Name is required" };
   }
 
-  const { name, review, linkedin } = request.body;
-  if (!name || !review || !linkedin) {
-    return response.status(400).json({ error: "Please fill all the fields" });
+  if (!payload.review) {
+    return { error: "Review is required" };
   }
-  const filePath = `reviews/${name.replace(/\s+/g, "-").toLowerCase()}.md`;
-  const fileContent = `---
-name: ${name}
-linkedin: ${linkedin}
----
-${review}`;
 
-  const githubToken = process.env.GITHUB_TOKEN;
-  const owner = process.env.GITHUB_REPO_OWNER;
-  const repo = process.env.REPO_NAME;
-  const path = filePath;
+  if (!payload.linkedin) {
+    return { error: "Linkedin is required" };
+  }
 
-  const branch = `${name.toLowerCase().replace(/[^a-z]/g, "")}-review-branch`; // Unique branch name for each PR
-  const commitMessage = `Adding new review for ${name}`;
+  return undefined;
+}
 
-  // Fetch the SHA of the latest commit on the main branch
-  const getLatestCommitSha = await fetch(
+async function getLatestCommitSha() {
+  return fetch(
     `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`,
     {
       headers: {
@@ -51,30 +52,69 @@ ${review}`;
   )
     .then((response) => response.json())
     .then((data) => data.object.sha);
+}
 
-  console.log({ getLatestCommitSha });
+async function createNewBranch(branch, latestCommitSha) {
+  return fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
+    method: "POST",
+    headers: {
+      Authorization: `token ${githubToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ref: `refs/heads/${branch}`,
+      sha: latestCommitSha,
+    }),
+  }).then((response) => response.json());
+}
 
-  // Create a new branch
-  const createNewBranch = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/git/refs`,
+async function getReferences() {
+  return fetch(
+    `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}?ref=main`,
     {
-      method: "POST",
       headers: {
         Authorization: `token ${githubToken}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ref: `refs/heads/${branch}`,
-        sha: getLatestCommitSha,
-      }),
     },
-  ).then((response) => response.json());
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.content) {
+        const decodedContent = Buffer.from(data.content, "base64").toString();
+        return JSON.parse(decodedContent);
+      }
+      return [];
+    });
+}
 
-  console.log({ createNewBranch });
+function toUpdatedRefrences(currentReferences) {
+  let userReference = currentReferences.find(
+    (reference) => reference.name === name,
+  );
 
-  // Create a new file on the new branch
-  const createNewFile = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/contents/${path}?branch=${branch}`,
+  if (userReference) {
+    userReference = {
+      ...userReference,
+      review,
+      linkedin,
+    };
+  } else {
+    userReference = {
+      name,
+      review,
+      linkedin,
+    };
+  }
+
+  return [
+    ...currentReferences.filter((reference) => reference.name !== name),
+    userReference,
+  ];
+}
+
+async function syncUpdate(branch, commitMessage, updatedContent) {
+  return fetch(
+    `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}?branch=${branch}`,
     {
       method: "PUT",
       headers: {
@@ -83,33 +123,68 @@ ${review}`;
       },
       body: JSON.stringify({
         message: commitMessage,
-        content: Buffer.from(fileContent).toString("base64"),
+        content: updatedContent,
         branch,
       }),
     },
   ).then((response) => response.json());
+}
 
-  console.log({ createNewFile });
-
-  // Create a pull request
-  const prResponse = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/pulls`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `token ${githubToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: commitMessage,
-        head: branch,
-        base: "main",
-        body: `Review submission by ${name}`,
-      }),
+async function createPullRequest(branch, commitMessage) {
+  return fetch(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
+    method: "POST",
+    headers: {
+      Authorization: `token ${githubToken}`,
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      title: commitMessage,
+      head: branch,
+      base: "main",
+    }),
+  }).then((response) => response.json());
+}
+
+export default async function handler(request, response) {
+  enableCors(request, response, "stackblitz.io");
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
+  const error = toValidationError(request.body);
+  if (error) {
+    return response.status(400).json(error);
+  }
+
+  const { name } = request.body;
+
+  const latestCommitSha = await getLatestCommitSha();
+
+  const branch = `${name.toLowerCase().replace(/[^a-z]/g, "")}-reference-${randomString()}`;
+  const newBranch = await createNewBranch(branch, latestCommitSha);
+
+  console.log({ newBranch });
+
+  const currentReferences = await getReferences();
+
+  const updatedReferences = toUpdatedRefrences(currentReferences, request.body);
+
+  const updatedContent = Buffer.from(
+    JSON.stringify(updatedReferences),
+  ).toString("base64");
+
+  const commitMessage = `Adding new reference for ${name}`;
+  const syncUpdateResponse = await syncUpdate(
+    branch,
+    commitMessage,
+    updatedContent,
   );
 
-  const prData = await prResponse.json();
+  console.log({ syncUpdateResponse });
 
-  response.json({ success: true, prUrl: prData.html_url });
+  const pr = await createPullRequest(branch, commitMessage);
+
+  response.json({ success: !!pr.html_url, prUrl: pr.html_url });
 }
