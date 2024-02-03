@@ -20,6 +20,8 @@ function enableCors(request, response, allowedDomain) {
   response.setHeader("Access-Control-Allow-Credentials", true);
   const origin = request.headers.origin;
 
+  console.log({ origin, allowedDomain });
+
   if (origin && origin.endsWith(allowedDomain)) {
     response.setHeader("Access-Control-Allow-Origin", origin);
   }
