@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from "./ui/navigation-menu";
+} from "../ui/navigation-menu";
 import styles from "./code-examples.module.css";
 import { frontSkills } from "./front-example-urls";
 import { backSkills } from "./back-example-urls";
