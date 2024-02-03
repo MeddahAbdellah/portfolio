@@ -1,4 +1,27 @@
 export default async function handler(request, response) {
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  const allowedDomain = "stackblitz.io";
+  const origin = req.headers.origin;
+
+  if (origin && origin.endsWith(allowedDomain)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+  );
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
   const { name, review, linkedin } = request.body;
   if (!name || !review || !linkedin) {
     return response.status(400).json({ error: "Please fill all the fields" });

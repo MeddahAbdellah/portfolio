@@ -141,8 +141,7 @@
     .typeString(
       "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>🚀 CI/CD will deploy the app and you will be able to see the reference on the website!</li>",
     )
-    .pauseFor(300)
-    .callFunction(() => (appDiagram.children[8].style.opacity = 1));
+    .pauseFor(300);
 
   const observer = new IntersectionObserver(
     (entries) => {
