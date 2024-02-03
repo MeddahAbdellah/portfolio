@@ -20,8 +20,6 @@ function enableCors(request, response, allowedDomain) {
   response.setHeader("Access-Control-Allow-Credentials", true);
   const origin = request.headers.origin;
 
-  console.log({ origin, allowedDomain });
-
   if (origin && origin.endsWith(allowedDomain)) {
     response.setHeader("Access-Control-Allow-Origin", origin);
   }
@@ -169,15 +167,15 @@ async function createPullRequest(branch, commitMessage) {
 export default async function handler(request, response) {
   enableCors(request, response, "stackblitz.io");
 
-  try {
-    simpleRateLimit(request.headers["x-real-ip"], 10 * 60 * 1000);
-  } catch (error) {
-    return response.status(429).end();
-  }
-
   if (request.method === "OPTIONS") {
     response.status(200).end();
     return;
+  }
+
+  try {
+    simpleRateLimit(request.headers["x-real-ip"], 500);
+  } catch (error) {
+    return response.status(429).end();
   }
 
   const error = toValidationError(request.body);
