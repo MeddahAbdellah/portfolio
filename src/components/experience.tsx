@@ -117,7 +117,10 @@ export function Experience(): React.JSX.Element {
     companies[0].name,
   );
   return (
-    <section className="h-full w-dvw flex p-8 snap-start snap-always gap-4">
+    <section
+      id="xp"
+      className="h-full w-dvw flex p-8 snap-start snap-always gap-4"
+    >
       <div className="w-1/3 flex flex-col gap-4 p-4 border border-solid border-zinc-600 rounded-lg">
         <h2 className="text-3xl font-bold ml-4">Experience</h2>
         {companies.map((company) => {

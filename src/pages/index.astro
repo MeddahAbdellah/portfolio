@@ -33,9 +33,9 @@ import { SkillSet } from "@/components/skill-set";
     <Header />
     <main
       style="height: calc(100dvh - var(--header-height))"
-      class="snap-y snap-mandatory overflow-y-auto"
+      class="snap-y snap-mandatory overflow-y-auto scroll-smooth"
     >
-      <Intro client:visible />
+      <Intro client:load />
       <Experience client:visible />
       <SkillTasteIntro />
       <SkillSet type="front" client:load />
