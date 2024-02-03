@@ -173,7 +173,7 @@ export default async function handler(request, response) {
   }
 
   try {
-    simpleRateLimit(request.headers["x-real-ip"], 500);
+    simpleRateLimit(request.headers["x-real-ip"], 10 * 60 * 1000);
   } catch (error) {
     return response.status(429).end();
   }
