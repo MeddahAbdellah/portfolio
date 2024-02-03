@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import styles from "./front-skill-set.module.css";
+import styles from "./skill-set.module.css";
 import { stagger, useAnimate } from "framer-motion";
 import { CodeExamples } from "./code-examples";
 
