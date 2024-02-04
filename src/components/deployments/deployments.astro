@@ -12,7 +12,7 @@ function toPortfolioDeployments(): ({
 }) => Deployment[] {
   return ({ deployments }: { deployments: VercelDeployment[] }) =>
     deployments
-      .map((deployment) => ({
+      ?.map((deployment) => ({
         uid: deployment.uid,
         preview: deployment.url,
         branch: deployment.meta.githubCommitRef,
@@ -20,7 +20,7 @@ function toPortfolioDeployments(): ({
         commit: deployment.meta.githubCommitMessage,
         state: deployment.state,
       }))
-      .filter((deployment) => deployment.branch !== "main");
+      .filter((deployment) => deployment.branch !== "main") ?? [];
 }
 
 async function getVercelDeployments(): Promise<Deployment[]> {
