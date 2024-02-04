@@ -4,14 +4,13 @@ import Parallax from "parallax-js";
 import styles from "./deployments.module.css";
 import { useState, useRef, useEffect } from "react";
 import type { Deployment } from "./deployments.model";
-const baseUrl = import.meta.env.BASE_URL;
 
-export function Deployments(): React.JSX.Element {
+export function Deployments({ url }: { url: string }): React.JSX.Element {
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const sceneRef = useRef<HTMLDivElement>(null);
-  console.log({ baseUrl });
+
   useEffect(() => {
-    fetch(`${baseUrl}/api/deployments`, {
+    fetch(`${url}api/deployments`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

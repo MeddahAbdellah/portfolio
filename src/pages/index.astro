@@ -40,7 +40,7 @@ import { Deployments } from "@/components/deployments";
       <Experience client:visible />
       <SkillTasteIntro />
       <SkillSet client:load />
-      <Deployments client:visible />
+      <Deployments url={Astro.url.origin} client:visible />
     </main>
   </body>
 </html>
