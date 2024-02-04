@@ -56,16 +56,5 @@ export default async function handler(request, response) {
 
   const deployments = await getVercelDeployments();
 
-  for (const deployment of deployments) {
-    console.log(`Deleting deployment: ${deployment.uid}`);
-    await fetch(`https://api.vercel.com//v13/deployments/${deployment.uid}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${vercelToken}`,
-      },
-    });
-    console.log(`Deleted deployment: ${deployment.uid}`);
-  }
-
   response.json({ deployments });
 }
