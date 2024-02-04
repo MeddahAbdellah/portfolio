@@ -1,21 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-
-export interface Deployment {
-  uid: string;
-  url: string;
-  branch: string;
-  sha: string;
-  message: string;
-  state: string;
-}
-
-const deploymentState = {
-  ready: "READY",
-  error: "ERROR",
-  building: "BUILDING",
-  queued: "QUEUED",
-  cancelled: "CANCELLED",
-};
+import { deploymentState, type Deployment } from "./deployments";
 
 const stateToChip = (state: string) => {
   switch (state) {
@@ -27,7 +11,7 @@ const stateToChip = (state: string) => {
       return <i className="bg-yellow-500 rounded-full w-2 h-2"></i>;
     case deploymentState.queued:
       return <i className="bg-blue-500 rounded-full w-2 h-2"></i>;
-    case deploymentState.cancelled:
+    case deploymentState.canceled:
       return <i className="bg-gray-500 rounded-full w-2 h-2"></i>;
     default:
       return <i className="bg-blue-500 rounded-full w-2 h-2"></i>;
@@ -44,14 +28,14 @@ export const columns: ColumnDef<Deployment>[] = [
     },
   },
   {
-    accessorKey: "message",
+    accessorKey: "commit",
     header: "Commit",
     cell: ({ row }) => {
-      const message = row.getValue<string>("message");
+      const commit = row.getValue<string>("commit");
       return (
         <p className="flex items-center">
           <img className="h-[16px] mr-1 aspect-1/1" src="commit-git.svg"></img>
-          {message}
+          {commit}
         </p>
       );
     },
@@ -73,17 +57,18 @@ export const columns: ColumnDef<Deployment>[] = [
     },
   },
   {
-    accessorKey: "url",
+    accessorKey: "preview",
     header: "Preview",
     cell: ({ row }) => {
-      const url = row.getValue<string>("url");
+      const preview = row.getValue<string>("preview");
       return (
         <a
           className="hover:underline flex items-center"
-          href={`https://${url}`}
+          href={`https://${preview}`}
           target="_blank"
         >
-          {url} <img className="h-[12px] ml-1 aspect-1/1" src="arrow.svg"></img>
+          {preview}{" "}
+          <img className="h-[12px] ml-1 aspect-1/1" src="arrow.svg"></img>
         </a>
       );
     },

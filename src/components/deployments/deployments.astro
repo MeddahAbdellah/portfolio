@@ -1,19 +1,89 @@
 ---
-import { type Deployment, columns } from "./columns";
+import { type Deployment, type VercelDeployment } from "./deployments";
 import { DataTable } from "./data-table";
+import { Separator } from "../ui/separator";
+const vercelToken = process.env.VERCEL_TOKEN;
+const projectId = process.env.PORTFOLIO_PROJECT_ID;
 
-async function getDeployments(): Promise<Deployment[]> {
-  return fetch("http://localhost:3000/api/deployments")
-    .then((res) => res.json())
-    .then(({ deployments }) => deployments)
-    .catch((err) => {
-      console.error(err);
-      return [];
-    });
+function toPortfolioDeployments(): ({
+  deployments,
+}: {
+  deployments: VercelDeployment[];
+}) => Deployment[] {
+  return ({ deployments }: { deployments: VercelDeployment[] }) =>
+    deployments
+      .map((deployment) => ({
+        uid: deployment.uid,
+        preview: deployment.url,
+        branch: deployment.meta.githubCommitRef,
+        sha: deployment.meta.githubCommitSha,
+        commit: deployment.meta.githubCommitMessage,
+        state: deployment.state,
+      }))
+      .filter((deployment) => deployment.branch !== "main");
 }
-const deployments = await getDeployments();
+
+async function getVercelDeployments(): Promise<Deployment[]> {
+  return fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${vercelToken}`,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then(toPortfolioDeployments());
+}
+
+const deployments = await getVercelDeployments();
 ---
 
-<div class="container h-full mx-auto py-10 snap-start">
-  <DataTable columns={columns} data={deployments} />
-</div>
+<style>
+  #deployments-aurora {
+    isolation: isolate;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  #deployments-aurora::after {
+    content: "";
+    z-index: -1;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    aspect-ratio: 1/1;
+    top: -50%;
+    right: -50%;
+    background: radial-gradient(
+      rgba(0, 121, 145, 0.4),
+      rgba(120, 255, 214, 0.3),
+      transparent 100%
+    );
+    mask-image: radial-gradient(rgba(255, 255, 255, 0.7), transparent 70%);
+    mix-blend-mode: darken;
+  }
+</style>
+
+<section class="h-full w-full mx-auto snap-start relative overflow-hidden">
+  <div id="deployments-container-scene" class="absolute h-full w-full">
+    <div id="deployments-aurora" data-depth-y="3.2" data-depth-x=".6"></div>
+  </div>
+  <main class="w-full h-full py-8 px-16">
+    <h1 class="text-3xl font-bold mb-4">Deployments</h1>
+    <h6 class="text-sm text-zinc-400 ml-2">
+      🚀 Continuously generated from the previous form
+    </h6>
+    <Separator className="mt-8 mb-2" />
+    <DataTable client:visible data={deployments} />
+  </main>
+</section>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"
+></script>
+
+<script type="module">
+  const scene = document.getElementById("deployments-container-scene");
+  const parallaxInstance = new Parallax(scene);
+</script>
