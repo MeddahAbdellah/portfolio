@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { deploymentState, type Deployment } from "./deployments";
+import { deploymentState, type Deployment } from "./deployments.model";
 
 const stateToChip = (state: string) => {
   switch (state) {
