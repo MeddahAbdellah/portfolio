@@ -1,0 +1,71 @@
+const vercelToken = process.env.VERCEL_TOKEN;
+const projectId = process.env.PORTFOLIO_PROJECT_ID;
+
+function enableCors(request, response, allowedDomain) {
+  response.setHeader("Access-Control-Allow-Credentials", true);
+  const origin = request.headers.origin;
+
+  if (origin && origin.endsWith(allowedDomain)) {
+    response.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  response.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  );
+  response.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+  );
+}
+
+function toPortfolioDeployments() {
+  return ({ deployments }) => {
+    return deployments
+      .map((deployment) => ({
+        uid: deployment.uid,
+        url: deployment.url,
+        branch: deployment.meta.githubCommitRef,
+        sha: deployment.meta.githubCommitSha,
+        message: deployment.meta.githubCommitMessage,
+        state: deployment.state,
+      }))
+      .filter((deployment) => deployment.branch !== "main");
+  };
+}
+
+async function getVercelDeployments() {
+  return fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${vercelToken}`,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then(toPortfolioDeployments());
+}
+
+export default async function handler(request, response) {
+  enableCors(request, response, "stackblitz.io");
+
+  if (request.method === "OPTIONS") {
+    response.status(200).end();
+    return;
+  }
+
+  const deployments = await getVercelDeployments();
+
+  for (const deployment of deployments) {
+    console.log(`Deleting deployment: ${deployment.uid}`);
+    await fetch(`https://api.vercel.com//v13/deployments/${deployment.uid}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${vercelToken}`,
+      },
+    });
+    console.log(`Deleted deployment: ${deployment.uid}`);
+  }
+
+  response.json({ deployments });
+}
