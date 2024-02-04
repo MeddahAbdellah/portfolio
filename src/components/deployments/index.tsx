@@ -8,9 +8,9 @@ import type { Deployment } from "./deployments.model";
 export function Deployments({ url }: { url: string }): React.JSX.Element {
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const sceneRef = useRef<HTMLDivElement>(null);
-
+  console.log({ url });
   useEffect(() => {
-    fetch(`${url}/api/deployments`, {
+    fetch(`api/deployments`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
