@@ -10,7 +10,7 @@ export function Deployments({ url }: { url: string }): React.JSX.Element {
   const sceneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch(`${url}api/deployments`, {
+    fetch(`${url}/api/deployments`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
