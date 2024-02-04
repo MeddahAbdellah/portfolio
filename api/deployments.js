@@ -24,10 +24,10 @@ function toPortfolioDeployments() {
     return deployments
       .map((deployment) => ({
         uid: deployment.uid,
-        url: deployment.url,
+        preview: deployment.url,
         branch: deployment.meta.githubCommitRef,
         sha: deployment.meta.githubCommitSha,
-        message: deployment.meta.githubCommitMessage,
+        commit: deployment.meta.githubCommitMessage,
         state: deployment.state,
       }))
       .filter((deployment) => deployment.branch !== "main");

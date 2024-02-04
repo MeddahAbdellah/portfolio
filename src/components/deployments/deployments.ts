@@ -7,17 +7,6 @@ export interface Deployment {
   state: string;
 }
 
-export interface VercelDeployment {
-  uid: string,
-  url: string,
-  meta: {
-    githubCommitRef: string,
-    githubCommitSha: string,
-    githubCommitMessage: string,
-  },
-  state: DeploymentState,
-}
-
 export type DeploymentState = "READY" | "BUILDING" | "ERROR" | "QUEUED" | "CANCELED";
 
 export const deploymentState: { [key: string]: DeploymentState} = {
