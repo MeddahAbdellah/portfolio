@@ -5,10 +5,9 @@ import styles from "./deployments.module.css";
 import { useState, useRef, useEffect } from "react";
 import type { Deployment } from "./deployments.model";
 
-export function Deployments({ url }: { url: string }): React.JSX.Element {
+export function Deployments(): React.JSX.Element {
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const sceneRef = useRef<HTMLDivElement>(null);
-  console.log({ url });
   useEffect(() => {
     fetch(`api/deployments`, {
       method: "GET",
@@ -17,7 +16,7 @@ export function Deployments({ url }: { url: string }): React.JSX.Element {
       },
     })
       .then((response) => response.json())
-      .then((data) => setDeployments(data));
+      .then(({ deployments }) => setDeployments(deployments));
   }, []);
 
   useEffect(() => {
