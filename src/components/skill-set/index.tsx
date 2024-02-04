@@ -40,8 +40,7 @@ function throttledGeneratorFn(effectFn: () => void): [() => void, () => void] {
   ];
 }
 
-export function SkillSet(props: { type: "front" | "back" }): React.JSX.Element {
-  const { type } = props;
+export function SkillSet(): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const opened = useRef<boolean>(false);
   const [numberOfTiles, setNumberOfTiles] = React.useState<number>(0);
@@ -72,13 +71,12 @@ export function SkillSet(props: { type: "front" | "back" }): React.JSX.Element {
       ref={scope}
       className={`${styles.wrapper} relative h-full w-full overflow-hidden snap-start snap-always`}
     >
-      <CodeExamples type={type} />
+      <CodeExamples />
       <div className="absolute h-full w-full top-0 pointer-events-none">
         <div ref={containerRef} className={styles.container}>
           <header className={`absolute z-10 pt-32 px-32`}>
             <h1 className="font-extrabold text-8xl">
-              <span>{type === "front" ? "Frontend" : "Backend"} skills</span>{" "}
-              <br /> <br />
+              <span>Coding skills</span> <br /> <br />
               <span className={`${styles.highlight} pl-56`}>
                 Click somewhere
               </span>
