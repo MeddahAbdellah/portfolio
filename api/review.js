@@ -199,7 +199,7 @@ export default async function handler(request, response) {
     JSON.stringify(updatedReferences),
   ).toString("base64");
 
-  const commitMessage = `Adding new reference for ${name}`;
+  const commitMessage = `👌 Adding new reference from ${name}`;
   await syncUpdate(branch, commitMessage, currentReferencesSha, updatedContent);
 
   const pr = await createPullRequest(branch, commitMessage);

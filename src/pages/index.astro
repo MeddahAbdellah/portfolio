@@ -5,6 +5,7 @@ import { Intro } from "@/components/intro";
 import { Experience } from "@/components/experience";
 import SkillTasteIntro from "@/components/tastes/skill-tastes-intro.astro";
 import { SkillSet } from "@/components/skill-set";
+import Deployments from "@/components/deployments/deployments.astro";
 ---
 
 <html lang="en">
@@ -40,6 +41,7 @@ import { SkillSet } from "@/components/skill-set";
       <SkillTasteIntro />
       <SkillSet type="front" client:load />
       <SkillSet type="back" client:load />
+      <Deployments />
     </main>
   </body>
 </html>
