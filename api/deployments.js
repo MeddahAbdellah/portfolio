@@ -1,5 +1,5 @@
-const vercelToken = "jeCps8a9G7XuvKkPesjAIAAP";
-const projectId = "prj_p06H9MCgjZGJUx0tAEipovMeRgS6";
+const vercelToken = process.env.VERCEL_TOKEN;
+const projectId = process.env.PORTFOLIO_PROJECT_ID;
 
 function enableCors(request, response, allowedDomain) {
   response.setHeader("Access-Control-Allow-Credentials", true);
