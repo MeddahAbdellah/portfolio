@@ -93,7 +93,7 @@ export const experienceList = [
   {
     name: "Freelancer.com",
     location: "Worldwide",
-    jobTitle: "Embedded Systems Engineer/Fullstack Developer",
+    jobTitle: "Fullstack Developer/Embedded Systems Engineer",
     workedTime: "2018 - 2020",
     role: "Versatile Dev tasks",
     website: "https://www.freelancer.com/u/MeddahAbdellah",

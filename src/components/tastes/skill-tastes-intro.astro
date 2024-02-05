@@ -35,9 +35,16 @@
 
   #skill-taste-intro-parallax img {
     position: absolute;
-    width: 75px;
+    width: 25px;
     opacity: 0.3;
     mix-blend-mode: multiply;
+    transition: 0.5s ease-out;
+    pointer-events: all;
+  }
+
+  #skill-taste-intro-parallax img:hover {
+    opacity: 1;
+    width: 30px;
   }
 
   #skill-taste-intro-scene {
@@ -48,53 +55,57 @@
 </style>
 <section
   id="tastes"
-  class="relative w-full h-full flex p-0 m-0 snap-start snap-always p-16"
+  class="relative w-full h-full flex flex-col py-8 px-16 snap-start snap-always"
 >
-  <div class="w-full">
-    <h1 class="font-bold text-5xl my-8">Skill tastes</h1>
+  <header>
+    <h1 class="text-3xl font-bold mb-4">Skill tastes</h1>
+    <h6 class="text-sm text-zinc-400 ml-2 mb-8">
+      🎨 Let me try showcase what I can do
+    </h6>
+  </header>
+  <main class="w-full h-full flex">
     <ul
       id="skill-taste-intro-app-description"
-      class="list-none text-lg text-zinc-100 font-regular"
+      class="list-none text-md text-zinc-100 font-regular"
     >
     </ul>
-  </div>
-
-  <div id="skill-taste-intro-app-diagram">
-    <img src="papp1.png" />
-    <img src="papp2.png" />
-    <img src="papp3.png" />
-    <img src="papp4.png" />
-    <img src="papp5.png" />
-    <img src="papp6.png" />
-    <img src="papp7.png" />
-    <img src="papp8.png" />
-  </div>
-
-  <div id="skill-taste-intro-parallax">
-    <div id="skill-taste-intro-scene" class="relative">
-      <img
-        data-origin-x=".5"
-        data-origin-y=".5"
-        data-depth="1.6"
-        src="angular.svg"
-      />
-      <img data-depth="1.2" src="react.svg" />
-      <img data-depth="2.3" src="astro.svg" />
-      <img data-depth="1.8" src="next.svg" />
-      <img data-depth="4.2" src="svelte.svg" />
-      <img data-depth="3.3" src="solidjs.svg" />
-      <img data-depth="1.7" src="qwik.svg" />
-      <img data-depth="2.9" src="node.svg" />
-      <img data-depth="3.7" src="nest.svg" />
-      <img data-depth="3.7" src="terraform.svg" />
-      <img data-depth="3.7" src="kube.svg" />
-      <img data-depth="3.7" src="argo.svg" />
-      <img data-depth="3.7" src="jenkins.svg" />
-      <img data-depth="3.7" src="git.svg" />
-      <img data-depth="3.7" src="helm.svg" />
-      <img data-depth="3.7" src="gh.svg" />
+    <div id="skill-taste-intro-app-diagram">
+      <img src="papp1.png" />
+      <img src="papp2.png" />
+      <img src="papp3.png" />
+      <img src="papp4.png" />
+      <img src="papp5.png" />
+      <img src="papp6.png" />
+      <img src="papp7.png" />
+      <img src="papp8.png" />
     </div>
-  </div>
+
+    <div id="skill-taste-intro-parallax">
+      <div id="skill-taste-intro-scene" class="relative">
+        <img
+          data-origin-x=".5"
+          data-origin-y=".5"
+          data-depth="1.6"
+          src="angular.svg"
+        />
+        <img data-depth="1.2" src="react.svg" />
+        <img data-depth="2.3" src="astro.svg" />
+        <img data-depth="1.8" src="next.svg" />
+        <img data-depth="4.2" src="svelte.svg" />
+        <img data-depth="3.3" src="solidjs.svg" />
+        <img data-depth="1.7" src="qwik.svg" />
+        <img data-depth="2.9" src="node.svg" />
+        <img data-depth="3.7" src="nest.svg" />
+        <img data-depth="3.7" src="terraform.svg" />
+        <img data-depth="3.7" src="kube.svg" />
+        <img data-depth="3.7" src="argo.svg" />
+        <img data-depth="3.7" src="jenkins.svg" />
+        <img data-depth="3.7" src="git.svg" />
+        <img data-depth="3.7" src="helm.svg" />
+        <img data-depth="3.7" src="gh.svg" />
+      </div>
+    </div>
+  </main>
 </section>
 <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 <script
