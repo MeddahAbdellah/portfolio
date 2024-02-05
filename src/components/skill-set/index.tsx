@@ -32,7 +32,7 @@ function throttledGeneratorFn(effectFn: () => void): [() => void, () => void] {
       timeoutId = setTimeout(() => {
         effectFn();
         timeoutId = null;
-      }, 200);
+      }, 1000);
     },
     () => {
       if (timeoutId) clearTimeout(timeoutId);
