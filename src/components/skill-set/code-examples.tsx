@@ -163,25 +163,10 @@ export function CodeExamples(): React.JSX.Element {
       <iframe
         ref={iframeRef}
         src={url}
-        onError={() => {
-          alert("onError");
-
-          setLoading(false);
-        }}
         onLoadCapture={() => {
-          alert("onLoadCapture");
-          setLoading(false);
-        }}
-        onLoadStart={() => {
-          alert("onLoadStart");
-          setLoading(false);
-        }}
-        onLoadedData={() => {
-          alert("onLoadedData");
           setLoading(false);
         }}
         onLoad={() => {
-          alert("onLoad");
           setLoading(false);
         }}
         className={`h-full rounded-lg ${loading ? " opacity-0" : ""}`}
