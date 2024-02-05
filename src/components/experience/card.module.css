@@ -4,7 +4,7 @@
 
 .citron:after {
   grid-area: "citron";
-  background-image: url("@asset/citron-screen.png");
+  background-image: url("../../../citron-screen.png");
 }
 
 .padoa {
@@ -21,7 +21,7 @@
 }
 
 .ursum:after {
-  background-image: url("@asset/ursum-screen.png");
+  background-image: url("../../../ursum-screen.png");
 }
 
 .freelancerCom {
@@ -29,7 +29,7 @@
 }
 
 .freelancerCom:after {
-  background-image: url("@asset/freelancer-screen.png");
+  background-image: url("../../../freelancer-screen.png");
 }
 
 .background {
