@@ -1,0 +1,91 @@
+.citron {
+  grid-area: "citron";
+}
+
+.citron:after {
+  grid-area: "citron";
+  background-image: url("citron-screen.png");
+}
+
+.padoa {
+  grid-area: "padoa";
+}
+
+.padoa:after {
+  grid-area: "padoa";
+  background-image: url("padoa-screen.png");
+}
+
+.ursum {
+  grid-area: "ursum";
+}
+
+.ursum:after {
+  background-image: url("ursum-screen.png");
+}
+
+.freelancerCom {
+  grid-area: "freelancer-com";
+}
+
+.freelancerCom:after {
+  background-image: url("freelancer-screen.png");
+}
+
+.background {
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  transition: 0.5;
+}
+
+.background h3,
+.background p {
+  transition: 0.5s;
+}
+
+.background:hover h3,
+.background:hover p {
+  color: black;
+}
+
+.background:hover > * {
+  transition: 0.5s;
+}
+
+.background::after {
+  filter: blur(10px);
+  content: "";
+  z-index: -2;
+  position: absolute;
+  background-size: cover;
+  left: 100%;
+  top: 100%;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition:
+    all 0.5s,
+    left 0.1s ease-in-out,
+    top 0.1s ease-in-out;
+}
+
+.background:hover::after {
+  left: 0;
+  top: 0;
+  opacity: 1;
+}
+
+.hoverCard {
+  position: relative;
+}
+
+.hoverCard p:hover {
+  color: red;
+}
+
+.hoverCard ul {
+  position: absolute;
+  left: 50%;
+  top: -100%;
+}

@@ -2,10 +2,10 @@
 import "@/styles/globals.css";
 import { Header } from "@/components/header";
 import { Intro } from "@/components/intro";
-import { Experience } from "@/components/experience";
 import SkillTasteIntro from "@/components/tastes/skill-tastes-intro.astro";
 import { SkillSet } from "@/components/skill-set";
 import { Deployments } from "@/components/deployments";
+import Experience from "@/components/experience/experience.astro";
 ---
 
 <html lang="en">
@@ -37,7 +37,7 @@ import { Deployments } from "@/components/deployments";
       class="snap-y snap-mandatory overflow-y-auto scroll-smooth"
     >
       <Intro client:load />
-      <Experience client:visible />
+      <Experience />
       <SkillTasteIntro />
       <SkillSet client:load />
       <Deployments client:visible />
