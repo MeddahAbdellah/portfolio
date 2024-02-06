@@ -1,28 +1,25 @@
 import React from "react";
 import styles from "./intro.module.css";
+import { text } from "../../../public/code-sample.json";
 
-const codeSource = `https://raw.githubusercontent.com/hyperledger/fabric-sdk-node/61cf4b2441c7c30eaf36aa744e9768a0e7edf722/test/unit/channel-event-hub.js`;
-
-async function codeShuffleGeneratorFn(
-  source: string,
+function codeShuffleGeneratorFn(
   offset: number = 200,
   lengthOfShownText: number = 30000,
-): Promise<() => string> {
-  let codeSample = await fetch(source)
-    .then((res) => res.blob())
-    .then((blob) => blob.text())
-    .then((text) => text.replace(/\r?\n|\r/g, "").split(""));
-  codeSample = [...codeSample, ...codeSample, ...codeSample];
+): () => string {
+  const codeSample = text.repeat(10);
   let index: number = 0;
   return (): string => {
     index =
       Math.floor(Math.random() * (codeSample.length - lengthOfShownText)) +
       offset;
-    return codeSample.slice(index, index + lengthOfShownText).join("");
+    return codeSample
+      .split("")
+      .slice(index, index + lengthOfShownText)
+      .join("");
   };
 }
 
-const textGenerationFn = await codeShuffleGeneratorFn(codeSource);
+const textGenerationFn = codeShuffleGeneratorFn();
 
 function generateDocumentScrollEffectFn(
   ref: React.RefObject<HTMLDivElement>,
@@ -66,8 +63,10 @@ const handleMouseLeave = (e: React.MouseEvent) => {
   (e.target as HTMLElement).style.setProperty("--__opacity", "0");
 };
 
+const initialTest = text.repeat(10);
+
 export function Intro(): React.JSX.Element {
-  const [text, setText] = React.useState<string>(textGenerationFn());
+  const [text, setText] = React.useState<string>(initialTest);
   const handleMouseMove = handleMouseMoveGeneratorFn(setText);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
