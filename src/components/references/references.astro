@@ -10,13 +10,9 @@ const referenceColumns = [
 ---
 
 <style scoped>
-  .row-container {
-    display: grid;
-    grid-auto-flow: column;
-    gap: 5rem;
-    overflow-y: hidden;
-    padding-inline: 4rem;
-    box-sizing: border-box;
+  #references-scroll-container {
+    display: flex;
+    flex-wrap: wrap;
   }
 </style>
 
@@ -31,10 +27,7 @@ const referenceColumns = [
     </h6>
   </header>
 
-  <main
-    id="references-scroll-container"
-    class="h-full overflow-y-auto grid grid-cols-4 gap-4"
-  >
+  <main id="references-scroll-container" class="h-full overflow-y-auto gap-4">
     {
       referenceColumns.map((column) => {
         return <ReferenceColumn referenceColumn={column} />;

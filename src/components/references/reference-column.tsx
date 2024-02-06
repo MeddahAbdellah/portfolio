@@ -14,7 +14,7 @@ export function ReferenceColumn({
   referenceColumn: typeof references;
 }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 min-w-[300px] flex-1">
       {referenceColumn.map((reference) => {
         return (
           <Card className="referenceCard duration-300 w-full h-fit flex flex-col cursor-pointer rounded">
