@@ -100,7 +100,7 @@ async function getReferencesAndSha() {
 }
 
 function toUpdatedRefrences(currentReferences, payload) {
-  const { name, review, jobTitle } = payload;
+  const { name, review, jobTitle, profilePic } = payload;
   let userReference = currentReferences.find(
     (reference) => reference.name === name,
   );
@@ -110,12 +110,14 @@ function toUpdatedRefrences(currentReferences, payload) {
       ...userReference,
       review,
       jobTitle,
+      profilePic,
     };
   } else {
     userReference = {
       name,
       review,
       jobTitle,
+      profilePic,
     };
   }
 
