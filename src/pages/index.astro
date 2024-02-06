@@ -6,6 +6,7 @@ import SkillTasteIntro from "@/components/tastes/skill-tastes-intro.astro";
 import { SkillSet } from "@/components/skill-set";
 import { Deployments } from "@/components/deployments";
 import Experience from "@/components/experience/experience.astro";
+import References from "@/components/references/references.astro";
 ---
 
 <html lang="en">
@@ -41,6 +42,7 @@ import Experience from "@/components/experience/experience.astro";
       <SkillTasteIntro />
       <SkillSet client:load />
       <Deployments client:visible />
+      <References />
     </main>
   </body>
 </html>

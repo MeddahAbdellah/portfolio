@@ -1,0 +1,66 @@
+---
+import references from "../../../public/references.json";
+import { ReferenceColumn } from "./reference-column";
+
+const referenceColumns = [
+  references.filter((_, index) => index % 3 === 0),
+  references.filter((_, index) => index % 3 === 1),
+  references.filter((_, index) => index % 3 === 2),
+];
+---
+
+<style scoped>
+  .row-container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 5rem;
+    overflow-y: hidden;
+    padding-inline: 4rem;
+    box-sizing: border-box;
+  }
+</style>
+
+<section
+  id="refs"
+  class="flex flex-col snap-start snap-always py-8 px-16 h-full"
+>
+  <header>
+    <h1 class="text-3xl font-bold mb-4">References</h1>
+    <h6 class="text-sm text-zinc-400 ml-2 mb-8">
+      🙏 Thank you all for the feedbacks
+    </h6>
+  </header>
+
+  <main
+    id="references-scroll-container"
+    class="h-full overflow-y-auto grid grid-cols-4 gap-4"
+  >
+    {
+      referenceColumns.map((column) => {
+        return <ReferenceColumn referenceColumn={column} />;
+      })
+    }
+  </main>
+</section>
+<script type="module">
+  const container = document.getElementById("references-scroll-container");
+  const referenceCards = document.querySelectorAll(".referenceCard");
+  const limit = 150;
+  const checkDistanceAndAdjustOpacity = () => {
+    referenceCards.forEach((card) => {
+      const cardBottom = card.getBoundingClientRect().bottom;
+      const containerTop = container.getBoundingClientRect().top;
+      const distance = cardBottom - containerTop;
+
+      if (distance < limit) {
+        card.style.opacity = "0";
+      }
+
+      if (distance > limit) {
+        card.style.opacity = "1";
+      }
+    });
+  };
+
+  container.addEventListener("scroll", checkDistanceAndAdjustOpacity);
+</script>

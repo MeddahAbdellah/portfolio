@@ -34,7 +34,10 @@ export const columns: ColumnDef<Deployment>[] = [
       const commit = row.getValue<string>("commit");
       return (
         <p className="flex items-center">
-          <img className="h-[16px] mr-1 aspect-1/1" src="commit-git.svg"></img>
+          <img
+            className="h-[16px] mr-1 aspect-square"
+            src="commit-git.svg"
+          ></img>
           {commit}
         </p>
       );
@@ -48,7 +51,7 @@ export const columns: ColumnDef<Deployment>[] = [
       return (
         <p className="flex items-center">
           <img
-            className="h-[16px] mr-1 aspect-1/1"
+            className="h-[16px] mr-1 aspect-square"
             src="pull-request.svg"
           ></img>
           {branch}
@@ -68,7 +71,7 @@ export const columns: ColumnDef<Deployment>[] = [
           target="_blank"
         >
           {preview}{" "}
-          <img className="h-[12px] ml-1 aspect-1/1" src="arrow.svg"></img>
+          <img className="h-[12px] ml-1 aspect-square" src="arrow.svg"></img>
         </a>
       );
     },
