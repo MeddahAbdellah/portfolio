@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./intro.module.css";
 import { text } from "../../../public/code-sample.json";
+import { animateIntroMask } from "./animate-intro-mask";
 
 function codeShuffleGeneratorFn(
   offset: number = 200,
@@ -42,8 +43,7 @@ const registerDocumentScrollEffect = (
 const moveMask = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
   const target = e.target as HTMLElement;
   target.style.setProperty("--__opacity", "1");
-  target.style.setProperty("--__x", e.clientX - target.offsetLeft + "px");
-  target.style.setProperty("--__y", e.clientY - target.offsetTop + "px");
+  animateIntroMask(target, e.clientX, e.clientY);
 };
 
 const handleMouseMoveGeneratorFn = (
