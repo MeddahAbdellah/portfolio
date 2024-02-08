@@ -47,6 +47,10 @@ function toValidationError(payload) {
     return { error: "jobTitle is required" };
   }
 
+  if (!payload.profilePic) {
+    return { error: "profilePic is required" };
+  }
+
   return undefined;
 }
 
