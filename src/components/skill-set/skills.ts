@@ -13,6 +13,12 @@ export const skills = [
     url: "https://stackblitz.com/edit/stackblitz-starters-4wkctw",
   },
   {
+    icon: "./react.svg",
+    name: "React (My way)",
+    type: "front" as SkillType,
+    url: "https://stackblitz.com/edit/stackblitz-starters-kyrzpw",
+  },
+  {
     icon: "./svelte.svg",
     name: "Svelte",
     type: "front" as SkillType,

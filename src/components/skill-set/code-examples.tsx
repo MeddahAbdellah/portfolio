@@ -25,7 +25,7 @@ function SkillGroup({ type }: { type: SkillType }): React.JSX.Element {
             <SelectItem key={skill.url} value={skill.url}>
               <p className="flex">
                 <img
-                  className="mx-2 cursor-pointer h-[24px] object-cover"
+                  className="mx-2 cursor-pointer size-[24px] object-contain"
                   src={skill.icon}
                 />
                 {skill.name}
