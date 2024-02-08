@@ -4,7 +4,7 @@
   --__opacity: 1;
   --__mask-size: 700px;
   isolation: isolate;
-  background-color: black;
+  background-color: hsl(var(--background));
   overflow: hidden;
   place-items: center;
   aspect-ratio: 1;
