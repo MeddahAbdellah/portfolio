@@ -1,5 +1,5 @@
 .wrapper {
-  background: radial-gradient(rgba(0, 121, 145, 1), rgba(120, 255, 214, 1));
+  background: radial-gradient(var(--g1), var(--g2));
 }
 
 .container {
@@ -15,11 +15,7 @@
 }
 
 .highlight {
-  background: linear-gradient(
-    45deg,
-    rgba(0, 121, 145, 1),
-    rgba(120, 255, 214, 1)
-  );
+  background: linear-gradient(45deg, var(--g1), var(--g2));
   -webkit-background-clip: text;
   color: transparent;
 }

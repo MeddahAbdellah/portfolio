@@ -19,10 +19,11 @@
   height: 100%;
   background: radial-gradient(
     rgb(23, 24, 37) 40%,
-    rgba(0, 121, 145, 1) 50%,
-    rgba(120, 255, 214, 1) 80%,
-    rgba(0, 121, 145, 1)
+    var(--g1) 50%,
+    var(--g2) 80%,
+    var(--g1)
   );
+  transition: 0.5s;
   mix-blend-mode: darken;
 }
 
@@ -32,11 +33,7 @@
 }
 
 .highlight {
-  background: linear-gradient(
-    45deg,
-    rgba(0, 121, 145, 1),
-    rgba(120, 255, 214, 1)
-  );
+  background: linear-gradient(45deg, var(--g1), var(--g2));
   -webkit-background-clip: text;
   color: transparent;
 }
