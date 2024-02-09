@@ -49,10 +49,13 @@ function reloadIframeToast(id?: number): void {
   });
 }
 
-function registerToasterEffect(loading: boolean): () => () => void {
+function registerToasterEffect(
+  loading: boolean,
+  visible: boolean,
+): () => () => void {
   return () => {
     let timer: NodeJS.Timeout;
-    if (loading) {
+    if (loading && visible) {
       timer = setTimeout(() => {
         reloadIframeToast();
       }, 5000);
@@ -103,12 +106,14 @@ export function CodeExamples(): React.JSX.Element {
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   const [loading, setLoading] = React.useState<boolean>(true);
-
-  React.useEffect(registerToasterEffect(loading), [loading]);
+  const [visible, setVisible] = React.useState<boolean>(false);
+  React.useEffect(registerToasterEffect(loading, visible), [loading, visible]);
 
   return (
     <main
+      id="code-examples"
       onMouseEnter={() => {
+        setVisible(true);
         if (!notifiedUserAboutRefresh) {
           reloadIframeToast(1);
           setNotifiedUserAboutRefresh(true);
@@ -117,7 +122,6 @@ export function CodeExamples(): React.JSX.Element {
       }}
       className="flex flex-col h-full w-full px-16 opacity-0 bg-background"
     >
-      <Toaster className="cursor-grab" />
       <div ref={scope} className="flex relative justify-between my-2">
         <Select
           onValueChange={(url) => {
@@ -151,6 +155,7 @@ export function CodeExamples(): React.JSX.Element {
           Refresh
         </Button>
       </div>
+      <Toaster className="cursor-grab" />
 
       {loading ? (
         <center className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

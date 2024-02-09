@@ -1,0 +1,279 @@
+---
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+const appSteps = [
+  {
+    icon: "angular.svg",
+    content: "Frontend form",
+    id: "frontend",
+  },
+  {
+    icon: "jenkins.svg",
+    content: "CICD deployment",
+    id: "cicd",
+  },
+  {
+    icon: "node.svg",
+    content: "Backend processing",
+    id: "backend",
+  },
+  {
+    icon: "github.svg",
+    content: "Storing in a DB (The repo)",
+    id: "repo",
+  },
+  {
+    icon: "react.svg",
+    content: "Frontend list of reviews",
+    id: "frontend-output",
+  },
+];
+---
+
+<style scoped>
+  .line {
+    height: 100%;
+    fill: hsl(var(--border));
+  }
+  .avatar {
+    transition: 0.5s;
+  }
+  .avatar:hover {
+    border-color: white;
+    border-width: 1px;
+  }
+
+  .avatar:active {
+    animation: click 0.1s ease-in-out;
+  }
+
+  #game-payload {
+    font-size: 0.4rem;
+  }
+
+  @keyframes click {
+    0% {
+      scale: 1;
+    }
+    50% {
+      scale: 1.05;
+    }
+    100% {
+      scale: 1;
+    }
+  }
+</style>
+<div id="skill-tastes-card-holder" class="flex h-full isolate gap-16 p-8">
+  <div class="flex flex-col w-full items-center mb-auto mt-auto gap-8 relative">
+    <div class="absolute flex flex-col items-center h-full w-full -z-10">
+      <div
+        id="game-payload"
+        class="element flex flex-col items-center justify-center border p-2 h-[24px] rounded-full"
+      >
+        {"✉️"}
+      </div>
+      <svg
+        id="game-line"
+        width="1"
+        height="434"
+        viewBox="0 0 1 434"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          x1="0.5"
+          y1="0.5"
+          x2="0.500019"
+          y2="433.5"
+          stroke="#27272A"
+          stroke-linecap="round"
+          stroke-dasharray="2 4"></line>
+      </svg>
+    </div>
+
+    <img
+      id="game-avatar"
+      class="avatar cursor-pointer hover:border rounded-full w-[44px] aspect-square border object-container"
+      src="user-avatar.webp"
+    />
+    {
+      appSteps.map((step) => {
+        return (
+          <Card className="swappable h-fit flex gap-2 w-[200px] rounded-full p-2 text-xs border bg-card text-card-foreground shadow-sm">
+            <p class="w-full text-center opacity-0">{step.content}</p>
+          </Card>
+        );
+      })
+    }
+  </div>
+  <div class="flex flex-col w-full items-center gap-4 mt-auto text-center">
+    <p class="text-sm">
+      Put the cards in the right order to send the reference
+    </p>
+    {
+      appSteps.map((step) => {
+        return (
+          <Card
+            id={step.id}
+            className="swappable h-fit flex gap-2 w-[200px] rounded-full p-2 text-xs border bg-card text-card-foreground shadow-sm"
+          >
+            <img
+              src={step.icon}
+              class="aspect-square object-container w-[16px]"
+            />
+            <p class="w-full text-center">{step.content}</p>
+          </Card>
+        );
+      })
+    }
+    <div class="flex justify-end gap-4 cursor-pointer">
+      <Button id="game-solve" className="mt-auto self-end" variant="outline">
+        Solve
+      </Button>
+      <Button
+        id="game-next"
+        className="mt-auto self-end"
+        variant="outline"
+        disabled={true}
+      >
+        Next
+      </Button>
+    </div>
+  </div>
+</div>
+<!-- Algorithm for swapping cards -->
+<script type="module">
+  import Swappable from "https://cdn.jsdelivr.net/npm/@shopify/draggable/build/esm/Swappable/Swappable.mjs";
+  const cardHolder = document.getElementById("skill-tastes-card-holder");
+
+  const swappable = new Swappable(cardHolder, {
+    draggable: ".swappable",
+    distance: 20,
+  });
+</script>
+<!-- Algorithm for solving the puzzle -->
+<script type="module">
+  const gameSolve = document.getElementById("game-solve");
+  const gameNext = document.getElementById("game-next");
+
+  gameNext.addEventListener("click", () => {
+    window.location.href = "#code-examples";
+  });
+
+  gameSolve.addEventListener("click", () => {
+    const swappables = Array.from(document.querySelectorAll(".swappable"));
+    const ids = ["frontend", "backend", "repo", "cicd", "frontend-output"];
+    const htmls = ids.map((id) => document.getElementById(id).innerHTML);
+    swappables.forEach((_, index) => {
+      if (index < ids.length) {
+        swappables[index].innerHTML = htmls[index];
+        swappables[index].id = ids[index];
+      } else {
+        swappables[index].id = "";
+        swappables[index].innerHTML =
+          '<p class="w-full text-center opacity-0">Empty</p>';
+      }
+    });
+  });
+</script>
+<!-- Algorithm for the message animation -->
+<script type="module">
+  import anime from "https://cdn.jsdelivr.net/npm/animejs@3.2.2/+esm";
+  function elementsIntersect(el1, el2) {
+    const rect1 = el1.getBoundingClientRect();
+    const rect2 = el2.getBoundingClientRect();
+
+    return !(
+      rect1.right < rect2.left ||
+      rect1.left > rect2.right ||
+      rect1.bottom < rect2.top ||
+      rect1.top > rect2.bottom
+    );
+  }
+
+  const gamePayload = document.getElementById("game-payload");
+  const line = anime.path("#game-line line");
+  const emptyBlocks = document.querySelectorAll(".swappable");
+  const ids = ["frontend", "backend", "repo", "cicd", "frontend-output"];
+  let intersectedWith = [];
+  anime({
+    targets: "#game-payload",
+    translateY: line("y"),
+    duration: 3000,
+    easing: "linear",
+    loop: true,
+    update: (animation) => {
+      const frontend = document.getElementById("frontend");
+      const cicd = document.getElementById("cicd");
+      const backend = document.getElementById("backend");
+      const repo = document.getElementById("repo");
+      const frontendOutput = document.getElementById("frontend-output");
+
+      if (elementsIntersect(frontend, gamePayload)) {
+        intersectedWith.push("frontend");
+        return;
+      }
+
+      if (
+        elementsIntersect(backend, gamePayload) &&
+        intersectedWith.includes("frontend")
+      ) {
+        intersectedWith.push("backend");
+        return;
+      }
+
+      if (
+        elementsIntersect(repo, gamePayload) &&
+        intersectedWith.includes("backend")
+      ) {
+        intersectedWith.push("repo");
+        return;
+      }
+
+      if (
+        elementsIntersect(cicd, gamePayload) &&
+        intersectedWith.includes("repo")
+      ) {
+        intersectedWith.push("cicd");
+        return;
+      }
+
+      if (
+        elementsIntersect(frontendOutput, gamePayload) &&
+        intersectedWith.includes("repo")
+      ) {
+        gamePayload.style.borderColor = "hsl(var(--success))";
+        frontendOutput.style.borderColor = "hsl(var(--success))";
+        document.getElementById("game-next").disabled = false;
+        requestAnimationFrame(() => {
+          gamePayload.style.transition = "1s cubic-bezier(1,0,1,0)";
+          gamePayload.style.opacity = "0";
+        });
+        animation.pause();
+        return;
+      }
+
+      if (
+        Array.from(emptyBlocks).some((block) =>
+          elementsIntersect(block, gamePayload),
+        )
+      ) {
+        intersectedWith = [];
+        animation.pause();
+        gamePayload.style.borderColor = "hsl(var(--destructive))";
+        requestAnimationFrame(() => {
+          gamePayload.style.transition = "1s cubic-bezier(1,0,1,0)";
+          gamePayload.style.opacity = "0";
+          setTimeout(() => {
+            gamePayload.style.transition = "none";
+            gamePayload.style.borderColor = "hsl(var(--border))";
+            gamePayload.style.opacity = "1";
+            animation.restart();
+          }, 1000);
+        });
+
+        return;
+      }
+    },
+  });
+</script>

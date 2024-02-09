@@ -1,0 +1,149 @@
+---
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "../ui/table";
+const fakeTable = {
+  headers: ["Status", "Commit", "Branch", "Preview"],
+  rows: [
+    {
+      commit: "a1b2c3",
+      branch: "Jhon",
+      preview: "https://a1b2c3-preview.com",
+    },
+    {
+      commit: "d4e5f6",
+      branch: "Doe",
+      preview: "https://d4e5f6-preview.com",
+    },
+    {
+      commit: "g7h8i9",
+      branch: "Harry",
+      preview: "https://g7h8i9-preview.com",
+    },
+    {
+      commit: "j0k1l2",
+      branch: "Potter",
+      preview: "https://j0k1l2-preview.com",
+    },
+  ],
+} as const;
+---
+
+<style scoped>
+  .white-shadow {
+    box-shadow: 0px 0px 20px 2px rgba(255, 255, 255, 0.25);
+  }
+</style>
+<section class="min-w-80">
+  <div
+    id="skill-taste-presentation-scene"
+    class="h-1/2 overflow-hidden relative"
+  >
+    <Card className="scale-50 absolute top-30 left-30 z-10 white-shadow">
+      <CardHeader className="bg-accent p-2" />
+      <CardContent className="whitespace-pre-wrap h-[300px] overflow-hidden">
+        <code>
+          {
+            `
+function toPortfolioDeployments() {
+    return ({ deployments }) => {
+        return deployments
+        .map((deployment) => ({
+            uid: deployment.uid,
+            preview: deployment.url,
+            branch: deployment.meta.githubCommitRef,
+            sha: deployment.meta.githubCommitSha,
+            commit: deployment.meta.githubCommitMessage,
+            state: deployment.state,
+        }))
+        .filter((deployment) => deployment.branch !== "main");
+    };
+    }
+
+async function getVercelDeployments() {
+    return fetch("https://api.vercel.com/v6/deployments?projectId=\${projectId}", {
+        method: "GET",
+        headers: {
+        Authorization: "Bearer \${vercelToken}",
+        "Content-Type": "application/json",
+        },
+    })
+        .then((response) => response.json())
+        .then(toPortfolioDeployments());
+    }
+                `
+          }
+        </code>
+      </CardContent>
+    </Card>
+    <div
+      class="rounded-md border scale-50 absolute -top-10 -left-5 z-20 bg-background white-shadow"
+    >
+      <Table className="overflow-visible">
+        <TableHeader>
+          <TableRow>
+            {
+              fakeTable.headers.map((header) => {
+                return <TableHead key={header}>{header}</TableHead>;
+              })
+            }
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {
+            fakeTable.rows.map((row) => (
+              <TableRow key={row.commit}>
+                <TableCell>
+                  <div class="flex justify-center">
+                    <i class="bg-green-500 rounded-full w-2 h-2" />
+                  </div>
+                </TableCell>
+                <TableCell>{row.commit}</TableCell>
+                <TableCell>{row.branch}</TableCell>
+                <TableCell>{row.preview}</TableCell>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    </div>
+
+    <Card
+      className="w-full h-fit scale-50 absolute top-50 -left-20 z-30 drop-shadow-xl white-shadow transition-all	"
+    >
+      <CardHeader>
+        <h1>Leave a review</h1>
+        <p>The review will be published on the website</p>
+      </CardHeader>
+      <CardContent>
+        <label>Name</label>
+        <Input placeholder="Your name" />
+        <label>Email</label>
+        <Input placeholder="Your email" />
+        <label>Review</label>
+        <Input placeholder="Your review" />
+      </CardContent>
+      <CardFooter className="text-end">
+        <Button variant="outline">Send</Button>
+      </CardFooter>
+    </Card>
+  </div>
+  <Separator />
+  <h6 class="px-4 pt-4 text-lg font-bold">Help Sam leaving a reference!</h6>
+  <p class="p-4 text-sm">
+    By the time I'm writing this, I haven't contacted my references yet. Let's
+    build an app to get them and showcase my skills. <br /><br />
+
+    Put the cards in a logical order, so the review that the Sam is sending gets
+    displayed on the website.
+  </p>
+</section>
