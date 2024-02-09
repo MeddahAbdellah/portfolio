@@ -76,7 +76,7 @@ export function SkillSet(): React.JSX.Element {
         <div ref={containerRef} className={styles.container}>
           <header className={`absolute z-10 pt-32 px-32`}>
             <h1 className="font-extrabold text-8xl">
-              <span>Coding skills</span> <br /> <br />
+              <span>Code Examples</span> <br /> <br />
               <span className={`${styles.highlight} pl-56`}>
                 Click somewhere
               </span>
