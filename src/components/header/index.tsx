@@ -52,7 +52,7 @@ export function Header(): React.JSX.Element {
               className={navigationMenuTriggerStyle()}
             >
               <a href="/cv_meddah_abdallah.pdf" target="_blank">
-                <img src="cv-icon.svg" className="h-[12px]" />
+                <img src="cv-icon.svg" className="h-[12px]" alt="" />
               </a>
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -62,7 +62,9 @@ export function Header(): React.JSX.Element {
               className={navigationMenuTriggerStyle()}
             >
               <a href="https://github.com/MeddahAbdellah" target="_blank">
-                <i className="fab fa-github text-lg"></i>
+                <i className="fab fa-github text-lg">
+                  <span className="hidden">github</span>
+                </i>
               </a>
             </NavigationMenuLink>
           </NavigationMenuItem>

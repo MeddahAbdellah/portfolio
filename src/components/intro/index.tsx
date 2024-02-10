@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./intro.module.css";
-import { text } from "../../../public/code-sample.json";
+import { text } from "./code-sample.json";
 import { animateIntroMask } from "./animate-intro-mask";
 
 function codeShuffleGeneratorFn(

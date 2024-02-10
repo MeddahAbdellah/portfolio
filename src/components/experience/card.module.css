@@ -13,7 +13,7 @@
 
 .padoa:after {
   grid-area: "padoa";
-  background-image: url("../../../public/padoa-screen.png");
+  background-image: url("../../../padoa-screen.png");
 }
 
 .ursum {
