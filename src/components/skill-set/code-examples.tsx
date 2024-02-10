@@ -42,8 +42,12 @@ function reloadIframe(iframe: HTMLIFrameElement | null): void {
   iframe.src += "";
 }
 
-function reloadIframeToast(id?: number): void {
-  toast.info("If the code doesn't load, please click on refresh", {
+function reloadIframeToast(reloadFn: () => void, id?: number): void {
+  toast.info("If the code takes too long to load, please click on refresh", {
+    action: {
+      label: "Refresh",
+      onClick: reloadFn,
+    },
     duration: 10000,
     ...(id ? { id } : {}),
   });
@@ -52,12 +56,13 @@ function reloadIframeToast(id?: number): void {
 function registerToasterEffect(
   loading: boolean,
   visible: boolean,
+  refresh: () => void,
 ): () => () => void {
   return () => {
     let timer: NodeJS.Timeout;
     if (loading && visible) {
       timer = setTimeout(() => {
-        reloadIframeToast();
+        reloadIframeToast(refresh);
       }, 5000);
     }
     return () => clearTimeout(timer);
@@ -107,7 +112,11 @@ export function CodeExamples(): React.JSX.Element {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [visible, setVisible] = React.useState<boolean>(false);
-  React.useEffect(registerToasterEffect(loading, visible), [loading, visible]);
+  const refreshFn = reloadIframe?.bind(null, iframeRef.current);
+  React.useEffect(registerToasterEffect(loading, visible, refreshFn), [
+    loading,
+    visible,
+  ]);
 
   return (
     <main
@@ -115,7 +124,7 @@ export function CodeExamples(): React.JSX.Element {
       onMouseEnter={() => {
         setVisible(true);
         if (!notifiedUserAboutRefresh) {
-          reloadIframeToast(1);
+          reloadIframeToast(refreshFn, 1);
           setNotifiedUserAboutRefresh(true);
           triggerSkillsAnimationEffect(animate);
         }
@@ -148,11 +157,14 @@ export function CodeExamples(): React.JSX.Element {
           </SelectContent>
         </Select>
         <Skills />
-        <Button
-          variant="outline"
-          onClick={() => reloadIframe(iframeRef.current)}
-        >
+
+        <Button variant="outline" onClick={refreshFn}>
           Refresh
+        </Button>
+        <Button className="ml-2" variant="outline">
+          <a href={url} target="_blank">
+            Open in new tab
+          </a>
         </Button>
       </div>
       <Toaster className="cursor-grab" />

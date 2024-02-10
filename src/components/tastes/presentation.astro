@@ -1,149 +1,162 @@
 ---
 import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "../ui/table";
-const fakeTable = {
-  headers: ["Status", "Commit", "Branch", "Preview"],
-  rows: [
-    {
-      commit: "a1b2c3",
-      branch: "Jhon",
-      preview: "https://a1b2c3-preview.com",
-    },
-    {
-      commit: "d4e5f6",
-      branch: "Doe",
-      preview: "https://d4e5f6-preview.com",
-    },
-    {
-      commit: "g7h8i9",
-      branch: "Harry",
-      preview: "https://g7h8i9-preview.com",
-    },
-    {
-      commit: "j0k1l2",
-      branch: "Potter",
-      preview: "https://j0k1l2-preview.com",
-    },
-  ],
-} as const;
 ---
 
 <style scoped>
   .white-shadow {
     box-shadow: 0px 0px 20px 2px rgba(255, 255, 255, 0.25);
   }
+
+  .bullets {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bullet {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: hsl(var(--muted));
+    margin: 0 4px;
+    transition: 0.2s;
+  }
+
+  .bullet:nth-child(1) {
+    background-color: hsl(var(--primary));
+  }
 </style>
-<section class="min-w-80">
-  <div
-    id="skill-taste-presentation-scene"
-    class="h-1/2 overflow-hidden relative"
-  >
-    <Card className="scale-50 absolute top-30 left-30 z-10 white-shadow">
-      <CardHeader className="bg-accent p-2" />
-      <CardContent className="whitespace-pre-wrap h-[300px] overflow-hidden">
-        <code>
-          {
-            `
-function toPortfolioDeployments() {
-    return ({ deployments }) => {
-        return deployments
-        .map((deployment) => ({
-            uid: deployment.uid,
-            preview: deployment.url,
-            branch: deployment.meta.githubCommitRef,
-            sha: deployment.meta.githubCommitSha,
-            commit: deployment.meta.githubCommitMessage,
-            state: deployment.state,
-        }))
-        .filter((deployment) => deployment.branch !== "main");
-    };
-    }
-
-async function getVercelDeployments() {
-    return fetch("https://api.vercel.com/v6/deployments?projectId=\${projectId}", {
-        method: "GET",
-        headers: {
-        Authorization: "Bearer \${vercelToken}",
-        "Content-Type": "application/json",
-        },
-    })
-        .then((response) => response.json())
-        .then(toPortfolioDeployments());
-    }
-                `
-          }
-        </code>
-      </CardContent>
-    </Card>
-    <div
-      class="rounded-md border scale-50 absolute -top-10 -left-5 z-20 bg-background white-shadow"
-    >
-      <Table className="overflow-visible">
-        <TableHeader>
-          <TableRow>
-            {
-              fakeTable.headers.map((header) => {
-                return <TableHead key={header}>{header}</TableHead>;
-              })
-            }
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {
-            fakeTable.rows.map((row) => (
-              <TableRow key={row.commit}>
-                <TableCell>
-                  <div class="flex justify-center">
-                    <i class="bg-green-500 rounded-full w-2 h-2" />
-                  </div>
-                </TableCell>
-                <TableCell>{row.commit}</TableCell>
-                <TableCell>{row.branch}</TableCell>
-                <TableCell>{row.preview}</TableCell>
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
-    </div>
-
-    <Card
-      className="w-full h-fit scale-50 absolute top-50 -left-20 z-30 drop-shadow-xl white-shadow transition-all	"
-    >
-      <CardHeader>
-        <h1>Leave a review</h1>
-        <p>The review will be published on the website</p>
-      </CardHeader>
-      <CardContent>
-        <label>Name</label>
-        <Input placeholder="Your name" />
-        <label>Email</label>
-        <Input placeholder="Your email" />
-        <label>Review</label>
-        <Input placeholder="Your review" />
-      </CardContent>
-      <CardFooter className="text-end">
-        <Button variant="outline">Send</Button>
-      </CardFooter>
-    </Card>
-  </div>
+<section class="min-w-80 flex flex-col">
+  <img
+    id="skill-tastes-presentation-img"
+    src="present-code-examples.gif"
+    alt=""
+  />
   <Separator />
-  <h6 class="px-4 pt-4 text-lg font-bold">Help Sam leaving a reference!</h6>
-  <p class="p-4 text-sm">
-    By the time I'm writing this, I haven't contacted my references yet. Let's
-    build an app to get them and showcase my skills. <br /><br />
-
-    Put the cards in a logical order, so the review that the Sam is sending gets
-    displayed on the website.
+  <h6 id="skill-tastes-presentation-title" class="px-4 pt-4 text-lg font-bold">
+  </h6>
+  <p
+    id="skill-tastes-presentation-text"
+    class="px-4 py-2 text-sm overflow-auto"
+  >
   </p>
+  <div class="flex w-full justify-between px-2 py-2 mt-auto">
+    <Button
+      id="skill-tastes-presentation-prev"
+      disabled={true}
+      variant="outline"
+    >
+      Prev
+    </Button>
+    <div class="bullets">
+      <span class="bullet"></span>
+      <span class="bullet"></span>
+      <span class="bullet"></span>
+      <span class="bullet"></span>
+      <span class="bullet"></span>
+    </div>
+    <Button id="skill-tastes-presentation-next" variant="outline">Next</Button>
+  </div>
 </section>
+
+<script type="module">
+  const slides = [
+    {
+      gif: "",
+      title: "Let people leave a review of me!",
+      content: `
+        In order to showcase my skills and at the same time collect feedback from
+        previous collegues. <br /><br />
+        I decided to walk you through the creation of a simple app that will do just
+        so.<br /><br />
+        What you see on the right is a little game that will guide you to
+        understanding what are the necessary steps to create such an app.
+
+      `,
+    },
+    {
+      gif: "present-code-examples.gif",
+      title: "Code examples!",
+      content: `
+        In the next section/page, you will see code examples of 
+        the same app written using different technologies Stackblitz/Replit, 
+        Which are online code editors.<br /><br />
+        And if we've worked together before you will be able to use the form displayed there, to send your own review.
+      `,
+    },
+    {
+      gif: "present-github-db.gif",
+      title: "Where is the review stored ?",
+      content: `
+        To avoid database costs, I will store the review as a PR that will be created on my GitHub repository. <br /><br />
+        Once the PR is created, I will be able to deploy it to a preview url and review it. 
+      `,
+    },
+    {
+      gif: "present-deployments.gif",
+      title: "The review will be deployed",
+      content: `
+        Each review left will be deployed to it's own url for preview while I validate it and deploy it to the website. <br /><br />
+        This will allow me to showcase my knowledge of infrastructure/DevOps/GitOps.
+      `,
+    },
+    {
+      gif: "",
+      title: "Play the game with Sam!",
+      content: `
+        Now that you know what we are going to do, let's play the game and see how it's done.
+        Put the app bricks in the right order so that Sam's review is added to the website.
+      `,
+    },
+  ];
+  let index = 0;
+
+  function revealSlide(index) {
+    document.getElementById("skill-tastes-presentation-img").src =
+      slides[index].gif;
+    document.getElementById("skill-tastes-presentation-title").innerHTML =
+      slides[index].title;
+    document.getElementById("skill-tastes-presentation-text").innerHTML =
+      slides[index].content;
+  }
+
+  revealSlide(0);
+
+  const prevButton = document.getElementById("skill-tastes-presentation-prev");
+  const nextButton = document.getElementById("skill-tastes-presentation-next");
+  const bullets = Array.from(document.querySelectorAll(".bullet"));
+
+  function prevFn() {
+    if (index === 0) return;
+    bullets[index].style.backgroundColor = "hsl(var(--muted))";
+    index--;
+    nextButton.disabled = false;
+    bullets[index].style.backgroundColor = "hsl(var(--primary))";
+    if (index === 0) {
+      prevButton.disabled = true;
+    }
+    revealSlide(index);
+  }
+
+  function nextFn() {
+    if (index === slides.length - 1) return;
+    bullets[index].style.backgroundColor = "hsl(var(--muted))";
+    index++;
+    prevButton.disabled = false;
+    bullets[index].style.backgroundColor = "hsl(var(--primary))";
+    if (index === slides.length - 1) {
+      nextButton.disabled = true;
+    }
+    revealSlide(index);
+  }
+
+  const intervalId = setInterval(nextFn, 5000);
+
+  prevButton.addEventListener("click", prevFn);
+  nextButton.addEventListener("click", () => {
+    clearInterval(intervalId);
+    nextFn();
+  });
+</script>

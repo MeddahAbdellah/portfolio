@@ -63,7 +63,10 @@ const appSteps = [
     }
   }
 </style>
-<div id="skill-tastes-card-holder" class="flex h-full isolate gap-16 p-8">
+<div
+  id="skill-tastes-card-holder"
+  class="flex h-full isolate gap-16 pt-8 pb-2 px-8"
+>
   <div class="flex flex-col w-full items-center mb-auto mt-auto gap-8 relative">
     <div class="absolute flex flex-col items-center h-full w-full -z-10">
       <div
@@ -106,10 +109,8 @@ const appSteps = [
       })
     }
   </div>
-  <div class="flex flex-col w-full items-center gap-4 mt-auto text-center">
-    <p class="text-sm">
-      Put the cards in the right order to send the reference
-    </p>
+  <div class="flex flex-col w-full items-center gap-4 h-full text-center">
+    <p class="text-sm">Put the cards in the right order to send the review</p>
     {
       appSteps.map((step) => {
         return (
@@ -126,7 +127,7 @@ const appSteps = [
         );
       })
     }
-    <div class="flex justify-end gap-4 cursor-pointer">
+    <div class="flex justify-end gap-4 cursor-pointer mt-auto">
       <Button id="game-solve" className="mt-auto self-end" variant="outline">
         Solve
       </Button>
@@ -136,7 +137,7 @@ const appSteps = [
         variant="outline"
         disabled={true}
       >
-        Next
+        Code examples
       </Button>
     </div>
   </div>
