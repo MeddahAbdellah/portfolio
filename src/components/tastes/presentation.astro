@@ -55,6 +55,12 @@ import { Button } from "../ui/button";
   const playButton = document.getElementById(
     "skill-tastes-intro-presentation-play",
   );
+
+  video.addEventListener("ended", () => {
+    playButton.innerHTML = `<i class="fa-solid fa-play"></i>`;
+    video.currentTime = 0;
+  });
+
   playButton.addEventListener("click", () => {
     if (video.paused) {
       video.play();
