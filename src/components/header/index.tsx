@@ -87,7 +87,11 @@ export function Header(): React.JSX.Element {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <a className="ml-8" href="#hire">
+              <a
+                className="ml-8"
+                href="https://calendly.com/meddah-abdallah/hire-me"
+                target="_blank"
+              >
                 Hire Me
               </a>
             </NavigationMenuLink>
