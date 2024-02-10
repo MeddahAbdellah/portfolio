@@ -129,27 +129,31 @@ import { Separator } from "../ui/separator";
   const bullets = Array.from(document.querySelectorAll(".bullet"));
 
   function prevFn() {
-    if (index === 0) return;
-    bullets[index].style.backgroundColor = "hsl(var(--muted))";
-    index--;
-    nextButton.disabled = false;
-    bullets[index].style.backgroundColor = "hsl(var(--primary))";
-    if (index === 0) {
-      prevButton.disabled = true;
-    }
-    revealSlide(index);
+    requestAnimationFrame(() => {
+      if (index === 0) return;
+      bullets[index].style.backgroundColor = "hsl(var(--muted))";
+      index--;
+      nextButton.disabled = false;
+      bullets[index].style.backgroundColor = "hsl(var(--primary))";
+      if (index === 0) {
+        prevButton.disabled = true;
+      }
+      revealSlide(index);
+    });
   }
 
   function nextFn() {
-    if (index === slides.length - 1) return;
-    bullets[index].style.backgroundColor = "hsl(var(--muted))";
-    index++;
-    prevButton.disabled = false;
-    bullets[index].style.backgroundColor = "hsl(var(--primary))";
-    if (index === slides.length - 1) {
-      nextButton.disabled = true;
-    }
-    revealSlide(index);
+    requestAnimationFrame(() => {
+      if (index === slides.length - 1) return;
+      bullets[index].style.backgroundColor = "hsl(var(--muted))";
+      index++;
+      prevButton.disabled = false;
+      bullets[index].style.backgroundColor = "hsl(var(--primary))";
+      if (index === slides.length - 1) {
+        nextButton.disabled = true;
+      }
+      revealSlide(index);
+    });
   }
 
   const intervalId = setInterval(nextFn, 5000);
