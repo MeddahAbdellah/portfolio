@@ -1,6 +1,5 @@
 ---
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 ---
 
 <style scoped>
@@ -28,139 +27,62 @@ import { Separator } from "../ui/separator";
     background-color: hsl(var(--primary));
   }
 </style>
-<section class="min-w-80 flex flex-col">
-  <img
-    id="skill-tastes-presentation-img"
-    src="present-code-examples.gif"
-    alt=""
-  />
-  <Separator />
-  <h6 id="skill-tastes-presentation-title" class="px-4 pt-4 text-lg font-bold">
-  </h6>
-  <p
-    id="skill-tastes-presentation-text"
-    class="px-4 py-2 text-sm overflow-auto"
-  >
-  </p>
-  <div class="flex w-full justify-between px-2 py-2 mt-auto">
+<section class="relative flex flex-col">
+  <video
+    id="skill-tastes-intro-presentation"
+    src="presentation.mp4"
+    class="h-full m-w-[600px] object-cover"></video>
+  <div class="absolute flex p-2 bottom-[20px] right-[20px]">
     <Button
-      id="skill-tastes-presentation-prev"
-      disabled={true}
+      id="skill-tastes-intro-presentation-restart"
       variant="outline"
+      className="rounded-full h-[32px] w-[32px] mr-2"
     >
-      Prev
+      <i class="fa-solid fa-arrows-rotate"></i>
     </Button>
-    <div class="bullets">
-      <span class="bullet"></span>
-      <span class="bullet"></span>
-      <span class="bullet"></span>
-      <span class="bullet"></span>
-      <span class="bullet"></span>
-    </div>
-    <Button id="skill-tastes-presentation-next" variant="outline">Next</Button>
+    <Button
+      id="skill-tastes-intro-presentation-play"
+      variant="outline"
+      className="rounded-full h-[32px] w-[32px]"
+    >
+      <i class="fa-solid fa-play"></i>
+    </Button>
   </div>
 </section>
 
 <script type="module">
-  const slides = [
-    {
-      gif: "",
-      title: "Let people leave a review of me!",
-      content: `
-        In order to showcase my skills and at the same time collect feedback from
-        previous collegues. <br /><br />
-        I decided to walk you through the creation of a simple app that will do just
-        so.<br /><br />
-        What you see on the right is a little game that will guide you to
-        understanding what are the necessary steps to create such an app.
-
-      `,
-    },
-    {
-      gif: "present-code-examples.gif",
-      title: "Code examples!",
-      content: `
-        In the next section/page, you will see code examples of 
-        the same app written using different technologies Stackblitz/Replit, 
-        Which are online code editors.<br /><br />
-        And if we've worked together before you will be able to use the form displayed there, to send your own review.
-      `,
-    },
-    {
-      gif: "present-github-db.gif",
-      title: "Where is the review stored ?",
-      content: `
-        To avoid database costs, I will store the review as a PR that will be created on my GitHub repository. <br /><br />
-        Once the PR is created, I will be able to deploy it to a preview url and review it. 
-      `,
-    },
-    {
-      gif: "present-deployments.gif",
-      title: "The review will be deployed",
-      content: `
-        Each review left will be deployed to it's own url for preview while I validate it and deploy it to the website. <br /><br />
-        This will allow me to showcase my knowledge of infrastructure/DevOps/GitOps.
-      `,
-    },
-    {
-      gif: "",
-      title: "Play the game with Sam!",
-      content: `
-        Now that you know what we are going to do, let's play the game and see how it's done.
-        Put the app bricks in the right order so that Sam's review is added to the website.
-      `,
-    },
-  ];
-  let index = 0;
-
-  function revealSlide(index) {
-    document.getElementById("skill-tastes-presentation-img").src =
-      slides[index].gif;
-    document.getElementById("skill-tastes-presentation-title").innerHTML =
-      slides[index].title;
-    document.getElementById("skill-tastes-presentation-text").innerHTML =
-      slides[index].content;
-  }
-
-  revealSlide(0);
-
-  const prevButton = document.getElementById("skill-tastes-presentation-prev");
-  const nextButton = document.getElementById("skill-tastes-presentation-next");
-  const bullets = Array.from(document.querySelectorAll(".bullet"));
-
-  function prevFn() {
-    requestAnimationFrame(() => {
-      if (index === 0) return;
-      bullets[index].style.backgroundColor = "hsl(var(--muted))";
-      index--;
-      nextButton.disabled = false;
-      bullets[index].style.backgroundColor = "hsl(var(--primary))";
-      if (index === 0) {
-        prevButton.disabled = true;
-      }
-      revealSlide(index);
-    });
-  }
-
-  function nextFn() {
-    requestAnimationFrame(() => {
-      if (index === slides.length - 1) return;
-      bullets[index].style.backgroundColor = "hsl(var(--muted))";
-      index++;
-      prevButton.disabled = false;
-      bullets[index].style.backgroundColor = "hsl(var(--primary))";
-      if (index === slides.length - 1) {
-        nextButton.disabled = true;
-      }
-      revealSlide(index);
-    });
-  }
-
-  const intervalId = setInterval(nextFn, 5000);
-
-  prevButton.addEventListener("click", prevFn);
-  nextButton.addEventListener("click", () => {
-    clearInterval(intervalId);
-    nextFn();
+  const video = document.getElementById("skill-tastes-intro-presentation");
+  const playButton = document.getElementById(
+    "skill-tastes-intro-presentation-play",
+  );
+  playButton.addEventListener("click", () => {
+    if (video.paused) {
+      video.play();
+      playButton.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+    } else {
+      video.pause();
+      playButton.innerHTML = `<i class="fa-solid fa-play"></i>`;
+    }
   });
+
+  const restartButton = document.getElementById(
+    "skill-tastes-intro-presentation-restart",
+  );
+  restartButton.addEventListener("click", () => {
+    video.currentTime = 0;
+  });
+
+  // when the video leaves the viewport, pause it
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          video.pause();
+          playButton.innerHTML = `<i class="fa-solid fa-play"></i>`;
+        }
+      });
+    },
+    { threshold: 0.5 },
+  );
+  observer.observe(video);
 </script>
