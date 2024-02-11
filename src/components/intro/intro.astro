@@ -1,0 +1,134 @@
+<style>
+  #intro {
+    --__x: 50%;
+    --__y: 50%;
+    --__opacity: 0;
+    --__mask-size: 700px;
+    isolation: isolate;
+    background-color: hsl(var(--background));
+    overflow: hidden;
+    place-items: center;
+    aspect-ratio: 1;
+  }
+
+  #intro::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      rgb(23, 24, 37) 40%,
+      var(--g1) 50%,
+      var(--g2) 80%,
+      var(--g1)
+    );
+    transition: 0.5s;
+    mix-blend-mode: darken;
+  }
+
+  .title-container {
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .highlight {
+    background: linear-gradient(45deg, var(--g1), var(--g2));
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  #intro-code-shuffle {
+    font-display: optional;
+    color: white;
+    cursor: default;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: var(--__opacity);
+    transition: 1s;
+
+    -webkit-mask-image: radial-gradient(
+      var(--__mask-size) circle at var(--__x) var(--__y),
+      black 20%,
+      rgba(0, 0, 0, 0.25),
+      transparent
+    );
+
+    mask-image: radial-gradient(
+      var(--__mask-size) circle at var(--__x) var(--__y),
+      black 40%,
+      rgba(69, 35, 35, 0.25),
+      transparent
+    );
+
+    user-select: none;
+  }
+</style>
+<section
+  id="intro"
+  class="h-full w-dvw relative flex flex-col justify-center items-center p-0 m-0 snap-start snap-always"
+>
+  <div
+    id="intro-code-shuffle"
+    aria-hidden="true"
+    role="none"
+    class="break-all leading-tight"
+  >
+  </div>
+  <div
+    class="title-container w-3/5 flex flex-col justify-center items-center text-center gap-16"
+  >
+    <h1 class="text-8xl font-extrabold tracking-tight lg:text-8xl text-nowrap">
+      Meddah Abdallah
+    </h1>
+    <h2 class="text-xl font-regular tracking-tight">
+      Full-stack developer specializing in crafting high-quality user
+      experiences and robust code, with a flexible approach to infrastructure.
+      Expertise spans the entire stack, from
+      <span class="highlight"> front to back-end to infrastructure</span>
+      , ensuring seamless, efficient, and scalable solutions.
+    </h2>
+  </div>
+</section>
+<script>
+  import { animateIntroMask } from "./animate-intro-mask.js";
+  import { codeShuffleGeneratorFn } from "./code-shuffle-generator-fn.js";
+  const textGenerationFn = codeShuffleGeneratorFn();
+  const container = document.getElementById("intro");
+  const codeShuffle = document.getElementById("intro-code-shuffle");
+  requestAnimationFrame(() => {
+    codeShuffle.innerText = textGenerationFn();
+    requestAnimationFrame(() => {
+      codeShuffle.style.setProperty("--__opacity", "1");
+    });
+
+    container.addEventListener("mouseenter", (e) => {
+      codeShuffle.style.setProperty("--__opacity", "1");
+    });
+    container.addEventListener("mouseleave", (e) => {
+      codeShuffle.style.setProperty("--__opacity", "0");
+    });
+    container.addEventListener("mousemove", (e) => {
+      animateIntroMask(e.target, e.clientX, e.clientY);
+      codeShuffle.innerText = textGenerationFn();
+    });
+
+    document.addEventListener(
+      "scroll",
+      () => {
+        const containerRect = container.getBoundingClientRect();
+        const isVisible = !(
+          containerRect.bottom < window.innerHeight * 0.5 ||
+          containerRect.top > window.innerHeight * 0.5
+        );
+
+        codeShuffle.style.setProperty("--__opacity", isVisible ? "1" : "0");
+      },
+      true,
+    );
+  });
+</script>

@@ -1,15 +1,11 @@
 // To avoid importing a library to do this, I created a simple function to animate custom properties in CSS.
-export function animateIntroMask(
-  element: HTMLElement,
-  targetX: number,
-  targetY: number,
-): void {
+export function animateIntroMask(element, targetX, targetY) {
   /*
    * Mutating the DOM directly is not recommended, but in this case
    * it's the easiest way, and it's a one off use for an optional effect.
    */
   if ("animationFrameId" in element && element.animationFrameId) {
-    cancelAnimationFrame(element.animationFrameId as number);
+    cancelAnimationFrame(element.animationFrameId);
   }
 
   /*
@@ -21,9 +17,9 @@ export function animateIntroMask(
   const width = getComputedStyle(element).width;
   const height = getComputedStyle(element).height;
   const startX =
-    parseInt(x.includes('%') ? (parseInt(width)/2).toString() : x, 10) || 0;
-    const startY =
-    parseInt(y.includes('%') ? (parseInt(height)/2).toString() : y, 10) || 0;
+    parseInt(x.includes("%") ? (parseInt(width) / 2).toString() : x, 10) || 0;
+  const startY =
+    parseInt(y.includes("%") ? (parseInt(height) / 2).toString() : y, 10) || 0;
 
   const deltaX = targetX - startX;
   const deltaY = targetY - startY;
