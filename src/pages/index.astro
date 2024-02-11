@@ -7,6 +7,11 @@ import { SkillSet } from "@/components/skill-set";
 import { Deployments } from "@/components/deployments";
 import Experience from "@/components/experience/experience.astro";
 import References from "@/components/references/references.astro";
+import { SEO } from "astro-seo";
+const siteDescription = `Full-stack developer specializing in crafting high-quality user
+        experiences and robust code, with a flexible approach to
+        infrastructure. Expertise spans front to back-end to infrastructure
+        , ensuring seamless, efficient, and scalable solutions.`;
 ---
 
 <html lang="en">
@@ -22,6 +27,35 @@ import References from "@/components/references/references.astro";
     />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <SEO
+      title="Meddah Abdallah | Full Stack Developer | Software Engineer"
+      description={siteDescription}
+      openGraph={{
+        basic: {
+          title: "Meddah Abdallah | Full Stack Developer | Software Engineer",
+          type: "video.movie",
+          image: "https://www.meddahabdallah.pro/logo.png",
+          url: "https://www.meddahabdallah.pro/presentation.mp4",
+        },
+        optional: {
+          video: "https://www.meddahabdallah.pro/presentation.mp4",
+        },
+      }}
+      extend={{
+        link: [{ rel: "icon", href: "/favicon.png" }],
+        meta: [
+          {
+            name: "twitter:image",
+            content: "https://www.meddahabdallah.pro/logo.png",
+          },
+          { name: "twitter:title", content: "Meddah Abdallah" },
+          {
+            name: "twitter:description",
+            content: "Full Stack Developer | Software Engineer",
+          },
+        ],
+      }}
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"

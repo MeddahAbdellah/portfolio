@@ -25,6 +25,7 @@ export function ReferenceColumn({
               <img
                 className="w-full object-fit"
                 src={reference.profilePic}
+                alt=""
               ></img>
             </CardHeader>
             <CardContent className="p-0 px-6 h-full">

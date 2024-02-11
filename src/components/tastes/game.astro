@@ -98,6 +98,7 @@ const appSteps = [
       id="game-avatar"
       class="avatar cursor-pointer hover:border rounded-full w-[44px] aspect-square border object-container"
       src="user-avatar.webp"
+      alt=""
     />
     {
       appSteps.map((step) => {
@@ -121,6 +122,7 @@ const appSteps = [
             <img
               src={step.icon}
               class="aspect-square object-container w-[16px]"
+              alt=""
             />
             <p class="w-full text-center">{step.content}</p>
           </Card>
