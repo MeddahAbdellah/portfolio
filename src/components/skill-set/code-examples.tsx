@@ -202,7 +202,7 @@ export function CodeExamples(): React.JSX.Element {
         <></>
       )}
 
-      {/* <iframe
+      <iframe
         ref={iframeRef}
         src={url}
         onLoadCapture={() => {
@@ -212,7 +212,7 @@ export function CodeExamples(): React.JSX.Element {
           setLoading(false);
         }}
         className={`h-full rounded-lg ${loading ? " opacity-0" : ""}`}
-      ></iframe> */}
+      ></iframe>
     </main>
   );
 }
