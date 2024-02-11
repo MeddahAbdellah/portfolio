@@ -103,7 +103,7 @@ function Skills(): React.JSX.Element {
             key={skill.url}
             className="mx-2 cursor-pointer h-[24px] object-cover"
             src={skill.icon}
-            alt=""
+            alt={skill.name}
           />
         );
       })}

@@ -75,12 +75,12 @@ export function SkillSet(): React.JSX.Element {
       <div className="absolute h-full w-full top-0 pointer-events-none">
         <div ref={containerRef} className={styles.container}>
           <header className={`absolute z-10 pt-32 px-32`}>
-            <h1 className="font-extrabold text-8xl">
+            <h2 className="font-extrabold text-8xl">
               <span>Code Examples</span> <br /> <br />
               <span className={`${styles.highlight} pl-56`}>
                 Click somewhere
               </span>
-            </h1>
+            </h2>
           </header>
           {Array.from({ length: numberOfTiles }, (_, i) => i + 1).map(
             (index: number) => {
