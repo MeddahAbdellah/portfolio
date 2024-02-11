@@ -144,6 +144,7 @@ export function CodeExamples(): React.JSX.Element {
     >
       <div ref={scope} className="flex relative justify-between my-2">
         <Select
+          aria-label="Select a skill that you want to see"
           onOpenChange={() => {
             animationRef.current?.complete();
           }}
@@ -152,8 +153,14 @@ export function CodeExamples(): React.JSX.Element {
             setUrl(url);
           }}
         >
-          <SelectTrigger className="w-[320px]">
-            <SelectValue placeholder="✨ Select a skill" />
+          <SelectTrigger
+            aria-label="Select a skill that you want to see"
+            className="w-[320px]"
+          >
+            <SelectValue
+              aria-label="Select a skill that you want to see"
+              placeholder="✨ Select a skill"
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -172,10 +179,14 @@ export function CodeExamples(): React.JSX.Element {
         </Select>
         <Skills />
 
-        <Button variant="outline" onClick={refreshFn}>
+        <Button
+          variant="outline"
+          aria-label="Refresh iframe"
+          onClick={refreshFn}
+        >
           Refresh
         </Button>
-        <Button className="ml-2" variant="outline">
+        <Button aria-label="Open in new tab" className="ml-2" variant="outline">
           <a href={url} target="_blank">
             Open in new tab
           </a>

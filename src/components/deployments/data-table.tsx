@@ -107,6 +107,7 @@ export function DataTable(): JSX.Element {
         <Button
           variant="outline"
           className="ml-auto"
+          aria-label="Refresh deployments"
           onClick={() => dispatch("[GET] deployments")}
         >
           {pending ? (
@@ -117,7 +118,11 @@ export function DataTable(): JSX.Element {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-2">
+            <Button
+              aria-label="Hide columns"
+              variant="outline"
+              className="ml-2"
+            >
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

@@ -89,7 +89,7 @@ export function Intro(): React.JSX.Element {
         <h1 className="text-8xl font-extrabold tracking-tight lg:text-8xl">
           Meddah Abdallah
         </h1>
-        <h4 className="text-xl font-regular tracking-tight">
+        <h2 className="text-xl font-regular tracking-tight">
           Full-stack developer specializing in crafting high-quality user
           experiences and robust code, with a flexible approach to
           infrastructure. Expertise spans{" "}
@@ -97,7 +97,7 @@ export function Intro(): React.JSX.Element {
             front to back-end to infrastructure
           </span>
           , ensuring seamless, efficient, and scalable solutions.
-        </h4>
+        </h2>
       </div>
     </section>
   );
