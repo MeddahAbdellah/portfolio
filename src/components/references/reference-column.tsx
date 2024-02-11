@@ -27,7 +27,7 @@ export function ReferenceColumn({
                 src={reference.profilePic}
                 decoding="async"
                 loading="lazy"
-                alt=""
+                alt="fullstack"
               ></img>
             </CardHeader>
             <CardContent className="p-0 px-6 h-full">

@@ -56,7 +56,7 @@ export function Header(): React.JSX.Element {
                 target="_blank"
                 aria-label="My cv in pdf format"
               >
-                <img src="cv-icon.svg" className="h-[12px]" alt="" />
+                <img src="cv-icon.svg" className="h-[12px]" alt="fullstack" />
               </a>
             </NavigationMenuLink>
           </NavigationMenuItem>
