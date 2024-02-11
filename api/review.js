@@ -82,6 +82,7 @@ async function createNewBranch(branch, latestCommitSha) {
 }
 
 async function getReferencesAndSha() {
+  console.log("getReferencesAndSha");
   return fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}?ref=main`,
     {
@@ -90,6 +91,10 @@ async function getReferencesAndSha() {
       },
     },
   )
+    .then((response) => {
+      console.log({ response });
+      return response;
+    })
     .then((response) => response.json())
     .then((data) => {
       if (data.content) {
@@ -98,6 +103,19 @@ async function getReferencesAndSha() {
           currentReferences: JSON.parse(decodedContent),
           currentReferencesSha: data.sha,
         };
+      }
+      if (data.download_url) {
+        return fetch(data.download_url)
+          .then((response) => response.json())
+          .then((references) => {
+            if (references) {
+              return {
+                currentReferences: references,
+                currentReferencesSha: data.sha,
+              };
+            }
+            return [];
+          });
       }
       return [];
     });
