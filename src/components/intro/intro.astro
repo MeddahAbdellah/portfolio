@@ -98,8 +98,10 @@
   import { animateIntroMask } from "./animate-intro-mask.js";
   import { codeShuffleGeneratorFn } from "./code-shuffle-generator-fn.js";
   const textGenerationFn = codeShuffleGeneratorFn();
-  const container = document.getElementById("intro");
-  const codeShuffle = document.getElementById("intro-code-shuffle");
+  const container = document.getElementById("intro") as HTMLElement;
+  const codeShuffle = document.getElementById(
+    "intro-code-shuffle",
+  ) as HTMLElement;
   requestAnimationFrame(() => {
     codeShuffle.innerText = textGenerationFn();
     requestAnimationFrame(() => {
