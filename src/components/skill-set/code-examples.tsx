@@ -13,7 +13,11 @@ import {
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { Toaster } from "../ui/sonner";
-import { stagger, useAnimate } from "framer-motion";
+import {
+  stagger,
+  useAnimate,
+  type AnimationPlaybackControls,
+} from "framer-motion";
 
 function SkillGroup({ type }: { type: SkillType }): React.JSX.Element {
   return (
@@ -71,8 +75,8 @@ function registerToasterEffect(
 
 function triggerSkillsAnimationEffect(
   animate: ReturnType<typeof useAnimate>[1],
-): void {
-  animate(
+): AnimationPlaybackControls {
+  return animate(
     [
       ["img", { scale: [1, 1.5, 0.5] }, { duration: 1, delay: stagger(0.3) }],
       [
@@ -81,7 +85,12 @@ function triggerSkillsAnimationEffect(
         { duration: 2, delay: stagger(0.3), at: 1 },
       ],
     ],
-    { delay: 2 },
+    {
+      delay: 2,
+      repeat: Infinity,
+      repeatType: "reverse",
+      repeatDelay: 2,
+    },
   );
 }
 
@@ -109,6 +118,7 @@ export function CodeExamples(): React.JSX.Element {
   const [notifiedUserAboutRefresh, setNotifiedUserAboutRefresh] =
     React.useState<boolean>(false);
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
+  const animationRef = React.useRef<AnimationPlaybackControls>();
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [visible, setVisible] = React.useState<boolean>(false);
@@ -126,13 +136,16 @@ export function CodeExamples(): React.JSX.Element {
         if (!notifiedUserAboutRefresh) {
           reloadIframeToast(refreshFn, 1);
           setNotifiedUserAboutRefresh(true);
-          triggerSkillsAnimationEffect(animate);
+          animationRef.current = triggerSkillsAnimationEffect(animate);
         }
       }}
       className="flex flex-col h-full w-full px-16 opacity-0 bg-background"
     >
       <div ref={scope} className="flex relative justify-between my-2">
         <Select
+          onOpenChange={() => {
+            animationRef.current?.complete();
+          }}
           onValueChange={(url) => {
             setLoading(true);
             setUrl(url);
