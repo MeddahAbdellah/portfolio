@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./code-examples.module.css";
 import { skills, type SkillType } from "./skills";
 import {
   Select,
@@ -18,6 +17,7 @@ import {
   useAnimate,
   type AnimationPlaybackControls,
 } from "framer-motion";
+import { Spinner } from "../ui/spinner";
 
 function SkillGroup({ type }: { type: SkillType }): React.JSX.Element {
   return (
@@ -184,7 +184,7 @@ export function CodeExamples(): React.JSX.Element {
 
       {loading ? (
         <center className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <i className={styles.spinner}></i> Building application...
+          <Spinner></Spinner> Building application...
         </center>
       ) : (
         <></>

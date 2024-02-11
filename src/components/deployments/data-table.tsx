@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -29,16 +28,56 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { ChevronDownIcon } from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import type { Deployment } from "./deployments.model";
 
-interface DataTableProps<TData> {
-  data: TData[];
+function useAsyncReducer<T, Error = unknown, Action = string>(
+  reducer: (state: T | undefined, action: Action) => Promise<T>,
+  initState: T,
+): [T, boolean, Error | undefined, (action: Action) => Promise<void>] {
+  const [state, setState] = useState<T>(initState);
+  const [pending, setPending] = useState<boolean>(false);
+  const [error, setError] = useState<Error>();
+
+  const dispatch = async (action: Action) => {
+    setPending(true);
+    try {
+      const newState = await reducer(state, action);
+      setState(newState);
+    } catch (error) {
+      setError(error as Error);
+    }
+    setPending(false);
+  };
+
+  return [state, pending, error, dispatch];
 }
 
-export function DataTable<TData>({ data }: DataTableProps<TData>) {
+async function toDeployments(): Promise<Deployment[]> {
+  try {
+    const response = await fetch(`api/deployments`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const { deployments } = await response.json();
+    return deployments;
+  } catch (error) {
+    throw "Unable to fetch deployments.";
+  }
+}
+
+export function DataTable(): JSX.Element {
+  const [deployments, pending, error, dispatch] = useAsyncReducer<
+    Deployment[],
+    string,
+    "[GET] deployments"
+  >(toDeployments, []);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const table = useReactTable({
-    data,
-    columns: columns as ColumnDef<TData>[],
+  const table = useReactTable<Deployment>({
+    data: deployments,
+    columns,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -49,6 +88,7 @@ export function DataTable<TData>({ data }: DataTableProps<TData>) {
   });
 
   useEffect(() => {
+    dispatch("[GET] deployments");
     table.setPageSize(5);
   }, []);
 
@@ -63,9 +103,21 @@ export function DataTable<TData>({ data }: DataTableProps<TData>) {
           }}
           className="max-w-sm"
         />
+
+        <Button
+          variant="outline"
+          className="ml-auto"
+          onClick={() => dispatch("[GET] deployments")}
+        >
+          {pending ? (
+            <Spinner />
+          ) : (
+            <i className="fa-solid fa-arrows-rotate"></i>
+          )}
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-2">
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -130,7 +182,7 @@ export function DataTable<TData>({ data }: DataTableProps<TData>) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {error ? error : "No results."}
                 </TableCell>
               </TableRow>
             )}
