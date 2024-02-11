@@ -69,7 +69,7 @@ export function SkillSet(): React.JSX.Element {
   return (
     <section
       ref={scope}
-      className={`${styles.wrapper} relative h-full w-full overflow-hidden snap-start snap-always`}
+      className={`${styles.wrapper} hidden md:block relative h-full w-full overflow-hidden snap-start snap-always`}
     >
       <CodeExamples />
       <div className="absolute h-full w-full top-0 pointer-events-none">

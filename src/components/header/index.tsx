@@ -14,7 +14,7 @@ export function Header(): React.JSX.Element {
         height: "var(--header-height)",
         borderColor: "hsl(var(--border))",
       }}
-      className="sticky bg-background top-0 w-full pl-24 pr-8 border-b border-solid flex justify-between items-center z-10"
+      className="hidden md:flex sticky bg-background top-0 w-full lg:pl-24 pr-8 border-b border-solid justify-between items-center z-10"
     >
       <NavigationMenu>
         <NavigationMenuList>

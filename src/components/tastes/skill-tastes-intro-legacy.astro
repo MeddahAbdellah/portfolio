@@ -1,0 +1,188 @@
+<style scoped>
+  #skill-taste-intro-app-diagram {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: black;
+    mask-image: radial-gradient(
+      ellipse at center,
+      black 50%,
+      rgba(0, 0, 0, 0.25) 70%,
+      transparent
+    );
+  }
+
+  #skill-taste-intro-app-diagram img {
+    width: 100%;
+    mix-blend-mode: hard-light;
+    border-radius: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: 1s;
+  }
+
+  #skill-taste-intro-parallax {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #skill-taste-intro-parallax img {
+    position: absolute;
+    width: 25px;
+    opacity: 0.3;
+    mix-blend-mode: multiply;
+    transition: 0.5s ease-out;
+    pointer-events: all;
+  }
+
+  #skill-taste-intro-parallax img:hover {
+    opacity: 1;
+    width: 30px;
+  }
+
+  #skill-taste-intro-scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<section
+  id="tastes"
+  class="relative w-full h-full flex flex-col py-8 px-16 snap-start snap-always"
+>
+  <header>
+    <h2 class="text-3xl font-bold mb-4">Skill tastes</h2>
+    <h3 class="text-sm text-zinc-400 ml-2 mb-8">
+      🎨 Let me try showcase what I can do
+    </h3>
+  </header>
+  <main class="w-full h-full flex">
+    <ul
+      id="skill-taste-intro-app-description"
+      class="list-none text-md text-zinc-100 font-regular"
+    >
+    </ul>
+    <div id="skill-taste-intro-app-diagram">
+      <img src="papp1.png" />
+      <img src="papp2.png" />
+      <img src="papp3.png" />
+      <img src="papp4.png" />
+      <img src="papp5.png" />
+      <img src="papp6.png" />
+      <img src="papp7.png" />
+      <img src="papp8.png" />
+    </div>
+
+    <div id="skill-taste-intro-parallax">
+      <div id="skill-taste-intro-scene" class="relative">
+        <img
+          data-origin-x=".5"
+          data-origin-y=".5"
+          data-depth="1.6"
+          src="angular.svg"
+        />
+        <img data-depth="1.2" src="react.svg" />
+        <img data-depth="2.3" src="astro.svg" />
+        <img data-depth="1.8" src="next.svg" />
+        <img data-depth="4.2" src="svelte.svg" />
+        <img data-depth="3.3" src="solidjs.svg" />
+        <img data-depth="1.7" src="qwik.svg" />
+        <img data-depth="2.9" src="node.svg" />
+        <img data-depth="3.7" src="nest.svg" />
+        <img data-depth="3.7" src="terraform.svg" />
+        <img data-depth="3.7" src="kube.svg" />
+        <img data-depth="3.7" src="argo.svg" />
+        <img data-depth="3.7" src="jenkins.svg" />
+        <img data-depth="3.7" src="git.svg" />
+        <img data-depth="3.7" src="helm.svg" />
+        <img data-depth="3.7" src="gh.svg" />
+      </div>
+    </div>
+  </main>
+</section>
+<script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"
+></script>
+<script type="module">
+  const ul = document.getElementById("skill-taste-intro-app-description");
+  const appDiagram = document.getElementById("skill-taste-intro-app-diagram");
+
+  var typewriter = new Typewriter(ul, {
+    loop: false,
+    delay: 1,
+  })
+    .typeString(
+      "By the time I'm writing this, I haven't contacted my references yet. Let's build an app to get them and showcase my skills. <br/> <br/>",
+    )
+    .pauseFor(3000)
+    .callFunction(() => (appDiagram.children[0].style.opacity = 1))
+    .typeString(
+      "<li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>🎨 We will make a frontend app to collect the reference.",
+    )
+    .pauseFor(2000)
+    .callFunction(() => (appDiagram.children[1].style.opacity = 1))
+    .typeString(
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>✉️ The frontend will send data to the backend for processing.",
+    )
+    .pauseFor(300)
+    .callFunction(() => (appDiagram.children[2].style.opacity = 1))
+    .pauseFor(2000)
+    .callFunction(() => (appDiagram.children[3].style.opacity = 1))
+    .typeString(
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>⚙️ Backend will store the data on the repo (cutting costs for a database).",
+    )
+    .pauseFor(300)
+    .callFunction(() => (appDiagram.children[4].style.opacity = 1))
+    .pauseFor(3500)
+    .callFunction(() => (appDiagram.children[5].style.opacity = 1))
+    .typeString(
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>✅ I will validate the PR and merge the objectivelly good ones (the ones I like).",
+    )
+    .pauseFor(300)
+    .callFunction(() => (appDiagram.children[6].style.opacity = 1))
+    .pauseFor(2000)
+    .callFunction(() => (appDiagram.children[7].style.opacity = 1))
+    .typeString(
+      "</li><li class='text-zinc-100 p-2 rounded-lg transition-all text-md'>🚀 CI/CD will deploy the app and you will be able to see the reference on the website!</li>",
+    )
+    .pauseFor(300);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          typewriter.start();
+          observer.unobserve(ul);
+        }
+      });
+    },
+    { threshold: 0.1 },
+  );
+
+  observer.observe(ul);
+
+  const scene = document.getElementById("skill-taste-intro-scene");
+  const parallaxInstance = new Parallax(scene);
+
+  function randomPositionImages() {
+    const images = document.querySelectorAll("#skill-taste-intro-scene img");
+    images.forEach((img) => {
+      const maxX = window.innerWidth - img.width;
+      const maxY = window.innerHeight - img.height;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      img.style.left = `${randomX}px`;
+      img.style.top = `${randomY}px`;
+    });
+  }
+
+  randomPositionImages();
+</script>

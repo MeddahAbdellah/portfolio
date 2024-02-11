@@ -1,7 +1,7 @@
 ---
 import "@/styles/globals.css";
 import { Header } from "@/components/header";
-import SkillTasteIntro2 from "@/components/tastes/skill-tastes-intro2.astro";
+import SkillTasteIntro from "@/components/tastes/skill-tastes-intro.astro";
 import { SkillSet } from "@/components/skill-set";
 import { Deployments } from "@/components/deployments";
 import Experience from "@/components/experience/experience.astro";
@@ -18,7 +18,7 @@ const siteDescription = `Full-stack developer specializing in crafting high-qual
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="height=device-height, width=device-width, initial-scale=1"
+      content="height=device-height, width=device-width, initial-scale=1, user-scalable=1"
     />
     <meta
       http-equiv="Cache-Control"
@@ -88,15 +88,25 @@ const siteDescription = `Full-stack developer specializing in crafting high-qual
     <meta name="generator" content={Astro.generator} />
     <title>Meddah Abdallah</title>
   </head>
+  <style scoped>
+    .main-container {
+      height: calc(100dvh - var(--header-height));
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        height: 100dvh;
+      }
+    }
+  </style>
   <body>
     <Header />
     <main
-      style="height: calc(100dvh - var(--header-height))"
-      class="snap-y snap-mandatory overflow-y-auto scroll-smooth"
+      class="main-container snap-y snap-mandatory overflow-y-auto scroll-smooth"
     >
       <Intro />
       <Experience />
-      <SkillTasteIntro2 />
+      <SkillTasteIntro />
       <SkillSet client:load />
       <Deployments client:visible />
       <References />

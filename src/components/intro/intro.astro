@@ -28,15 +28,25 @@
     mix-blend-mode: darken;
   }
 
+  @media (max-width: 768px) {
+    #intro::after {
+      width: auto;
+      aspect-ratio: 1;
+      left: revert-layer;
+    }
+  }
+
   .title-container {
     pointer-events: none;
     z-index: 2;
   }
 
-  .highlight {
-    background: linear-gradient(45deg, var(--g1), var(--g2));
-    -webkit-background-clip: text;
-    color: transparent;
+  @media (max-width: 768px) {
+    .highlight {
+      background: linear-gradient(45deg, var(--g1), var(--g2));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
   }
 
   #intro-code-shuffle {
@@ -80,12 +90,15 @@
   >
   </div>
   <div
-    class="title-container w-3/5 flex flex-col justify-center items-center text-center gap-16"
+    class="title-container w-3/5 flex flex-col justify-center items-center text-center gap-2 md:gap-16"
   >
-    <h1 class="text-8xl font-extrabold tracking-tight lg:text-8xl text-nowrap">
-      Meddah Abdallah
+    <h1
+      class="text-6xl md:text-8xl font-extrabold tracking-tight text-nowrap highlight"
+    >
+      <span class="hidden md:inline">Meddah</span> Abdallah
     </h1>
-    <h2 class="text-xl font-regular tracking-tight">
+    <h2 class="block md:hidden highlight text-xl">Fullstack developer</h2>
+    <h2 class="hidden md:block text-xl font-regular tracking-tight">
       Full-stack developer specializing in crafting high-quality user
       experiences and robust code, with a flexible approach to infrastructure.
       Expertise spans the entire stack, from
@@ -132,5 +145,12 @@
       },
       true,
     );
+  });
+  requestAnimationFrame(() => {
+    if (window.innerWidth < 768) {
+      setInterval(() => {
+        codeShuffle.innerText = textGenerationFn();
+      }, 50);
+    }
   });
 </script>
