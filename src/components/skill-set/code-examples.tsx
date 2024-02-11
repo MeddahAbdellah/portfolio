@@ -184,7 +184,7 @@ export function CodeExamples(): React.JSX.Element {
 
       {loading ? (
         <center className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <Spinner></Spinner> Building application...
+          <Spinner className="mb-4" /> Building application...
         </center>
       ) : (
         <></>

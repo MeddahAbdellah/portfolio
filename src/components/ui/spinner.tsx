@@ -1,5 +1,13 @@
 import styles from "./spinner.module.css";
 
-export function Spinner(): React.JSX.Element {
-  return <i className={styles.spinner}></i>;
+export function Spinner({
+  style,
+  className,
+}: {
+  style?: { "--portfolio-spinner-size": string };
+  className?: string;
+}): React.JSX.Element {
+  return (
+    <i style={style} className={`${styles.spinner} ${className ?? ""}`}></i>
+  );
 }

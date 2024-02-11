@@ -110,7 +110,7 @@ export function DataTable(): JSX.Element {
           onClick={() => dispatch("[GET] deployments")}
         >
           {pending ? (
-            <Spinner />
+            <Spinner style={{ "--portfolio-spinner-size": "16px" }} />
           ) : (
             <i className="fa-solid fa-arrows-rotate"></i>
           )}
