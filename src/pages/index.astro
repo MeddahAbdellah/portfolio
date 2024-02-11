@@ -1,11 +1,11 @@
 ---
 import "@/styles/globals.css";
 import { Header } from "@/components/header";
-import { Intro } from "@/components/intro";
 import SkillTasteIntro2 from "@/components/tastes/skill-tastes-intro2.astro";
 import { SkillSet } from "@/components/skill-set";
 import { Deployments } from "@/components/deployments";
 import Experience from "@/components/experience/experience.astro";
+import Intro from "@/components/intro/intro.astro";
 import References from "@/components/references/references.astro";
 import { SEO } from "astro-seo";
 const siteDescription = `Full-stack developer specializing in crafting high-quality user
@@ -71,7 +71,7 @@ const siteDescription = `Full-stack developer specializing in crafting high-qual
       style="height: calc(100dvh - var(--header-height))"
       class="snap-y snap-mandatory overflow-y-auto scroll-smooth"
     >
-      <Intro client:load />
+      <Intro />
       <Experience />
       <SkillTasteIntro2 />
       <SkillSet client:load />

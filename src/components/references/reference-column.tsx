@@ -25,6 +25,8 @@ export function ReferenceColumn({
               <img
                 className="w-full object-fit"
                 src={reference.profilePic}
+                decoding="async"
+                loading="lazy"
                 alt=""
               ></img>
             </CardHeader>
