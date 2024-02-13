@@ -81,8 +81,34 @@ async function createNewBranch(branch, latestCommitSha) {
   }).then((response) => response.json());
 }
 
+function toContentAndSha() {
+  return async (data) => {
+    if (data.content) {
+      const decodedContent = Buffer.from(data.content, "base64").toString();
+      return Promise.resolve({
+        currentReferences: JSON.parse(decodedContent),
+        currentReferencesSha: data.sha,
+      });
+    }
+
+    if (data.download_url) {
+      return fetch(data.download_url)
+        .then((response) => response.json())
+        .then((references) => {
+          if (references) {
+            return {
+              currentReferences: references,
+              currentReferencesSha: data.sha,
+            };
+          }
+          return [];
+        });
+    }
+    return Promise.resolve([]);
+  };
+}
+
 async function getReferencesAndSha() {
-  console.log("getReferencesAndSha");
   return fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${referencesPath}?ref=main`,
     {
@@ -91,34 +117,8 @@ async function getReferencesAndSha() {
       },
     },
   )
-    .then((response) => {
-      console.log({ response });
-      return response;
-    })
     .then((response) => response.json())
-    .then((data) => {
-      if (data.content) {
-        const decodedContent = Buffer.from(data.content, "base64").toString();
-        return {
-          currentReferences: JSON.parse(decodedContent),
-          currentReferencesSha: data.sha,
-        };
-      }
-      if (data.download_url) {
-        return fetch(data.download_url)
-          .then((response) => response.json())
-          .then((references) => {
-            if (references) {
-              return {
-                currentReferences: references,
-                currentReferencesSha: data.sha,
-              };
-            }
-            return [];
-          });
-      }
-      return [];
-    });
+    .then(toContentAndSha());
 }
 
 function toUpdatedRefrences(currentReferences, payload) {
