@@ -136,10 +136,7 @@
       "scroll",
       () => {
         const containerRect = container.getBoundingClientRect();
-        const isVisible = !(
-          containerRect.bottom < window.innerHeight * 0.5 ||
-          containerRect.top > window.innerHeight * 0.5
-        );
+        const isVisible = containerRect.bottom > window.innerHeight * 0.97;
 
         codeShuffle.style.setProperty("--__opacity", isVisible ? "1" : "0");
       },

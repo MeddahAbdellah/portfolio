@@ -18,6 +18,7 @@ import {
   type AnimationPlaybackControls,
 } from "framer-motion";
 import { Spinner } from "../ui/spinner";
+import { Explanation } from "../explanation/explanation";
 
 function SkillGroup({ type }: { type: SkillType }): React.JSX.Element {
   return (
@@ -123,6 +124,7 @@ export function CodeExamples(): React.JSX.Element {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [visible, setVisible] = React.useState<boolean>(false);
+  const [explainVisible, setExplainVisible] = React.useState<boolean>(false);
   const refreshFn = reloadIframe?.bind(null, iframeRef.current);
   React.useEffect(registerToasterEffect(loading, visible, refreshFn), [
     loading,
@@ -140,8 +142,14 @@ export function CodeExamples(): React.JSX.Element {
           animationRef.current = triggerSkillsAnimationEffect(animate);
         }
       }}
-      className="flex flex-col h-full w-full px-16 opacity-0 bg-background"
+      className="relative flex flex-col h-full w-full px-16 opacity-0 bg-background"
     >
+      <Explanation
+        src="code-examples-explained.mp4"
+        visible={explainVisible}
+        onEnded={() => setExplainVisible(false)}
+      />
+
       <div ref={scope} className="flex relative justify-between my-2">
         <Select
           aria-label="Select a skill that you want to see"
@@ -190,6 +198,13 @@ export function CodeExamples(): React.JSX.Element {
           <a href={url} target="_blank">
             Open in new tab
           </a>
+        </Button>
+        <Button
+          className="ml-2"
+          aria-label="Show explanation"
+          onClick={() => setExplainVisible(!explainVisible)}
+        >
+          What's this ? <i className="fa-solid fa-volume-high ml-2"></i>
         </Button>
       </div>
       <Toaster className="cursor-grab" />
