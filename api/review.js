@@ -16,11 +16,14 @@ function randomString() {
   return Math.random().toString(36).substring(7);
 }
 
-function enableCors(request, response, allowedDomain) {
+function enableCors(request, response, allowedDomains) {
   response.setHeader("Access-Control-Allow-Credentials", true);
   const origin = request.headers.origin;
 
-  if (origin && origin.endsWith(allowedDomain)) {
+  if (
+    origin &&
+    allowedDomains.some((allowedDomain) => origin.endsWith(allowedDomain))
+  ) {
     response.setHeader("Access-Control-Allow-Origin", origin);
   }
 
@@ -189,7 +192,7 @@ async function createPullRequest(branch, commitMessage) {
 }
 
 export default async function handler(request, response) {
-  enableCors(request, response, "stackblitz.io");
+  enableCors(request, response, ["stackblitz.io", "codesandbox.io"]);
 
   if (request.method === "OPTIONS") {
     response.status(200).end();
