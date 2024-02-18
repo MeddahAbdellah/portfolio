@@ -28,8 +28,8 @@ export function Deployments(): React.JSX.Element {
           </Button>
         </div>
       </header>
+      <Separator className="mt-8 mb-2" />
       <main className="w-full h-full flex flex-col overflow-auto">
-        <Separator className="mt-8 mb-2" />
         <DataTable />
       </main>
     </section>
