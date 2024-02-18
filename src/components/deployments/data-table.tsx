@@ -147,7 +147,7 @@ export function DataTable(): JSX.Element {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border max-h-[40dvh]">
+      <div className="rounded-md border max-h-[40dvh] overflow-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
