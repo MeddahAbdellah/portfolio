@@ -13,7 +13,7 @@ export function Explanation({
   const videoRef = React.useRef<HTMLVideoElement>(null);
   return (
     <motion.video
-      className="w-[200px] rounded h-1/2 bottom-8 left-8 absolute object-cover z-10"
+      className="w-[200px] rounded h-1/2 bottom-8 left-8 absolute object-cover z-10 scale-0"
       ref={videoRef}
       src={src}
       animate={{ scaleY: visible ? 1 : 0 }}
