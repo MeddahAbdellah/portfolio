@@ -9,6 +9,7 @@ import Intro from "@/components/intro/intro.astro";
 import References from "@/components/references/references.astro";
 import { SEO } from "astro-seo";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import Phone from "@/components/phone/phone.astro";
 
 const siteDescription = `Full-stack developer specializing in crafting high-quality user experiences and robust code, with a scalable and sustainable infrastructure.`;
 ---
@@ -100,8 +101,11 @@ const siteDescription = `Full-stack developer specializing in crafting high-qual
     }
   </style>
   <body>
+    <Phone />
     <Header />
-    <main class="main-container snap-y overflow-y-auto scroll-smooth">
+    <main
+      class="hidden md:block main-container snap-y overflow-y-auto scroll-smooth"
+    >
       <Intro />
       <Experience />
       <SkillTasteIntro />

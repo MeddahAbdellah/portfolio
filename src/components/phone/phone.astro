@@ -1,0 +1,65 @@
+---
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+---
+
+<main class="flex flex-col h-dvh justify-center items-center md:hidden">
+  <Alert className="w-4/5 mb-16">
+    <AlertTitle className="text-4xl mb-8">
+      <i class="fa-solid fa-desktop text-3xl mr-2"></i> Desktop only!
+    </AlertTitle>
+    <AlertDescription className="text-2xl">
+      The website is not available on mobile, please visit it on a desktop or a
+      tablet.
+    </AlertDescription>
+  </Alert>
+  <a
+    href="/cv_meddah_abdallah.pdf"
+    target="_blank"
+    class="w-1/2 mb-8"
+    aria-label="My cv in pdf format"
+  >
+    <Button variant="outline" className="w-full h-[64px]">
+      <img src="cv-icon.svg" alt="fullstack" />
+    </Button>
+    <a
+      href="https://github.com/MeddahAbdellah"
+      aria-label="My github profile"
+      class="w-1/2 mb-8"
+      target="_blank"
+    >
+      <Button variant="outline" className="w-full text-2xl h-[64px]">
+        <i class="fab fa-github mr-auto">
+          <span class="hidden">github</span>
+        </i>
+        <span class="mr-auto">Github</span>
+      </Button>
+    </a>
+    <a
+      href="https://www.linkedin.com/in/meddahabdallah/"
+      aria-label="My github profile"
+      class="w-1/2 mb-8"
+      target="_blank"
+    >
+      <Button variant="outline" className="w-full text-2xl h-[64px]">
+        <i class="fab fa-linkedin mr-auto">
+          <span class="hidden">linkedin</span>
+        </i>
+        <span class="mr-auto">Linkedin</span>
+      </Button>
+    </a>
+    <a
+      href="https://stackoverflow.com/users/8208547/meddah-abdallah"
+      aria-label="My github profile"
+      class="w-1/2 mb-8"
+      target="_blank"
+    >
+      <Button variant="outline" className="w-full text-2xl h-[64px]">
+        <i class="fab fa-stack-overflow mr-auto">
+          <span class="hidden">sackoverflow</span>
+        </i>
+        <span class="mr-auto">Stackoverflow</span>
+      </Button>
+    </a>
+  </a>
+</main>
