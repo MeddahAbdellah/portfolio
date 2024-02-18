@@ -93,7 +93,7 @@ export function DataTable(): JSX.Element {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="flex flex-col w-full h-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter references..."
@@ -147,7 +147,7 @@ export function DataTable(): JSX.Element {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border max-h-[40dvh] overflow-auto">
+      <div className="rounded-md border h-full overflow-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
