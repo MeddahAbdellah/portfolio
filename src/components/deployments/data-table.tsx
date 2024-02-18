@@ -89,7 +89,7 @@ export function DataTable(): JSX.Element {
 
   useEffect(() => {
     dispatch("[GET] deployments");
-    table.setPageSize(5);
+    table.setPageSize(10);
   }, []);
 
   return (
@@ -147,7 +147,7 @@ export function DataTable(): JSX.Element {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border max-h-[40dvh]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
