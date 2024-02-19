@@ -93,7 +93,7 @@ export function DataTable(): JSX.Element {
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-3/5 h-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter references..."

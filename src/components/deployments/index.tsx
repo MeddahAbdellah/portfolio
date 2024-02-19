@@ -1,8 +1,8 @@
 import { DataTable } from "./data-table";
-import { Separator } from "../ui/separator";
 import { useState } from "react";
 import { Explanation } from "../explanation/explanation";
 import { Button } from "../ui/button";
+import { ReviewForm } from "./review-form";
 
 export function Deployments(): React.JSX.Element {
   const [explainVisible, setExplainVisible] = useState<boolean>(false);
@@ -18,7 +18,7 @@ export function Deployments(): React.JSX.Element {
         <h2 className="text-3xl font-bold mb-4">Pending reviews</h2>
         <div className="flex justify-between">
           <h3 className="text-sm text-zinc-400 ml-2">
-            🚀 Continuously generated from the previous form
+            🚀 You can leave a review and you will a see it on the list
           </h3>
           <Button
             aria-label="Show explanation"
@@ -28,8 +28,8 @@ export function Deployments(): React.JSX.Element {
           </Button>
         </div>
       </header>
-      <Separator className="mt-8 mb-2" />
-      <main className="w-full h-full flex flex-col overflow-auto">
+      <main className="w-full h-full flex gap-8 overflow-y-hidden">
+        <ReviewForm />
         <DataTable />
       </main>
     </section>
