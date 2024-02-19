@@ -14,8 +14,8 @@ export function Deployments(): React.JSX.Element {
         visible={explainVisible}
         onEnded={() => setExplainVisible(false)}
       />
-      <header className="">
-        <h2 className="text-3xl font-bold mb-4">Deployments</h2>
+      <header>
+        <h2 className="text-3xl font-bold mb-4">Pending reviews</h2>
         <div className="flex justify-between">
           <h3 className="text-sm text-zinc-400 ml-2">
             🚀 Continuously generated from the previous form
