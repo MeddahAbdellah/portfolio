@@ -28,7 +28,7 @@ export function Deployments(): React.JSX.Element {
           </Button>
         </div>
       </header>
-      <main className="w-full h-full flex gap-8 overflow-y-hidden">
+      <main className="w-full h-full flex gap-4 overflow-y-hidden">
         <ReviewForm />
         <DataTable />
       </main>
