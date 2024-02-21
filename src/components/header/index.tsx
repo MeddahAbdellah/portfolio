@@ -39,7 +39,7 @@ export function Header(): React.JSX.Element {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <a href="#refs">Refrences</a>
+              <a href="#refs">References</a>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>

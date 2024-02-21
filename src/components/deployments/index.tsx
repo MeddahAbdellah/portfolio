@@ -8,7 +8,10 @@ export function Deployments(): React.JSX.Element {
   const [explainVisible, setExplainVisible] = useState<boolean>(false);
 
   return (
-    <section className="hidden md:flex flex-col h-full w-full py-8 px-16 snap-start snap-always relative overflow-hidden">
+    <section
+      id="deployments"
+      className="hidden md:flex flex-col h-full w-full py-8 px-16 snap-start snap-always relative overflow-hidden"
+    >
       <Explanation
         src="deployments-explained.mp4"
         visible={explainVisible}

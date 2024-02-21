@@ -1,5 +1,6 @@
 ---
 import references from "../../../public/references.json";
+import { Button } from "../ui/button";
 import { ReferenceColumn } from "./reference-column";
 
 const referenceColumns = [
@@ -22,9 +23,14 @@ const referenceColumns = [
 >
   <header>
     <h2 class="text-3xl font-bold mb-4">References</h2>
-    <h3 class="text-sm text-zinc-400 ml-2 mb-8">
-      🙏 Thank you all for the feedbacks
-    </h3>
+    <div class="flex justify-between">
+      <h3 class="text-sm text-zinc-400 ml-2 mb-8">
+        🙏 Thank you all for the feedbacks
+      </h3>
+      <Button aria-label="Show reviews" variant="secondary">
+        <a href="#deployments">Add a review</a>
+      </Button>
+    </div>
   </header>
 
   <main id="references-scroll-container" class="h-full overflow-y-auto gap-4">
