@@ -14,7 +14,7 @@ export function ReferenceColumn({
   referenceColumn: typeof references;
 }) {
   return (
-    <div className="flex flex-col gap-4 min-w-[300px] flex-1">
+    <div className="flex flex-col gap-4 min-w-[250px] flex-1">
       {referenceColumn.map((reference) => {
         return (
           <Card
@@ -23,7 +23,7 @@ export function ReferenceColumn({
           >
             <CardHeader>
               <img
-                className="w-full object-fit"
+                className="w-full object-fit rounded"
                 src={reference.profilePic}
                 decoding="async"
                 loading="lazy"
@@ -35,7 +35,7 @@ export function ReferenceColumn({
               <CardDescription className="text-sm">
                 {reference.jobTitle}
               </CardDescription>
-              <p className="text">{reference.review}</p>
+              <p className="text-sm mt-4">{reference.review}</p>
             </CardContent>
             <CardFooter></CardFooter>
           </Card>

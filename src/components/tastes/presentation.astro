@@ -63,7 +63,7 @@ import { Button } from "../ui/button";
     video.currentTime = 0;
   });
 
-  playButton.addEventListener("click", () => {
+  function onClick() {
     if (video.paused) {
       video.play();
       playButton.innerHTML = `<i class="fa-solid fa-pause"></i>`;
@@ -71,7 +71,11 @@ import { Button } from "../ui/button";
       video.pause();
       playButton.innerHTML = `<i class="fa-solid fa-play"></i>`;
     }
-  });
+  }
+
+  video.addEventListener("click", onClick);
+
+  playButton.addEventListener("click", onClick);
 
   const restartButton = document.getElementById(
     "skill-tastes-intro-presentation-restart",
