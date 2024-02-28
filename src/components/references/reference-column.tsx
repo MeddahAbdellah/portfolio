@@ -35,7 +35,9 @@ export function ReferenceColumn({
               <CardDescription className="text-sm">
                 {reference.jobTitle}
               </CardDescription>
-              <p className="text-sm mt-4">{reference.review}</p>
+              <p className="text-sm mt-4 whitespace-pre text-wrap">
+                {reference.review}
+              </p>
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
