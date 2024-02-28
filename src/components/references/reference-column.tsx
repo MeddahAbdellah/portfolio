@@ -19,7 +19,7 @@ export function ReferenceColumn({
         return (
           <Card
             key={reference.name}
-            className="referenceCard duration-300 w-full h-fit flex flex-col cursor-pointer rounded"
+            className="referenceCard duration-300 h-fit flex flex-col cursor-pointer rounded"
           >
             <CardHeader>
               <img

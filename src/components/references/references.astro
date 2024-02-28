@@ -10,13 +10,6 @@ const referenceColumns = [
 ];
 ---
 
-<style scoped>
-  #references-scroll-container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-</style>
-
 <section
   id="refs"
   class="hidden md:flex flex-col snap-start snap-always py-8 px-16 h-full"
@@ -33,7 +26,10 @@ const referenceColumns = [
     </div>
   </header>
 
-  <main id="references-scroll-container" class="h-full overflow-y-auto gap-4">
+  <main
+    id="references-scroll-container"
+    class="h-full overflow-y-auto gap-4 grid grid-cols-3"
+  >
     {
       referenceColumns.map((column) => {
         return <ReferenceColumn referenceColumn={column} />;
@@ -62,4 +58,22 @@ const referenceColumns = [
   };
 
   container.addEventListener("scroll", checkDistanceAndAdjustOpacity);
+
+  let scrollInterval;
+
+  const startScroll = () => {
+    scrollInterval = setInterval(() => {
+      container.scrollTop += 1;
+    }, 25);
+  };
+
+  container.addEventListener("mouseenter", () => {
+    clearInterval(scrollInterval);
+  });
+
+  container.addEventListener("mouseleave", () => {
+    startScroll();
+  });
+
+  startScroll();
 </script>
