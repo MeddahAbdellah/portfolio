@@ -42,6 +42,14 @@ export function Header(): React.JSX.Element {
               <a href="#refs">References</a>
             </NavigationMenuLink>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <a href="/blog">Blog</a>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
       <NavigationMenu>

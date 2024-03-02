@@ -1,0 +1,108 @@
+---
+import "@/styles/globals.css";
+import { Button } from "../../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
+
+const blogs = [
+  {
+    title: "Flux Architecture Demystified",
+    subTitle: "Redux and NGRX Aren't That Hard",
+    image: "redux.gif",
+    description:
+      "My goal in this article is to show how simple this architecture can be, and how in less than 40 lines of code we can make such an architecture work.",
+    link: "https://javascript.plainenglish.io/flux-architecture-demystified-redux-and-ngrx-arent-that-hard-2a79247bbb4d",
+  },
+  {
+    title: "Demystifying the Angular Router",
+    subTitle: "It's simpler than you think",
+    image: "angular-router.png",
+    description:
+      "Angular routing may seem like a mysterious black box, but actually, it's simple. It listens to URL changes to render the correct component and changes the URL when navigation occurs. That's about it.",
+    link: "https://javascript.plainenglish.io/demystifying-the-angular-router-fcee20ce8c5f",
+  },
+  {
+    title: "Object Mutation vs TypeScript",
+    subTitle: "Why You Should Avoid Object Mutation",
+    image: "ts.png",
+    description:
+      "We use TypeScript to make assumptions on what a variable contains and when a code is well-typed we trust it blindly, as we are supposed to. But there is a trap.",
+    link: "https://javascript.plainenglish.io/object-mutation-vs-typescript-why-you-should-avoid-object-mutation-92e956e45297",
+  },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="height=device-height, width=device-width, initial-scale=1, user-scalable=1"
+    />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Meddah Abdallah's Blog</title>
+  </head>
+  <body class="py-8 px-16">
+    <header>
+      <h1 class="text-3xl font-bold mb-4">Blog & Articles</h1>
+      <div class="flex justify-between flex-wrap mb-8 items-end">
+        <h2 class="text-sm text-zinc-400 ml-2 mb-2">
+          📚 I try to write articles that dymestify parts of code that people
+          use but do not understand
+        </h2>
+        <a href="../">
+          <Button aria-label="Show reviews" variant="secondary">
+            Return to website
+          </Button>
+        </a>
+      </div>
+    </header>
+  </body>
+  <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {
+      blogs.map((blog) => (
+        <Card className="flex flex-col">
+          <CardHeader>
+            <CardTitle>
+              {blog.title}
+              <p class="mt-2 text-sm font-normal">{blog.subTitle}</p>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <img
+              class="overflow-hidden rounded aspect-video object-cover"
+              src={blog.image}
+            />
+            <CardDescription className="mt-4">
+              {blog.description}
+            </CardDescription>
+          </CardContent>
+          <CardFooter className="flex justify-end mt-auto">
+            <a href={blog.link} target="_blank">
+              <Button variant="outline">Read More</Button>
+            </a>
+          </CardFooter>
+        </Card>
+      ))
+    }
+  </main>
+</html>
