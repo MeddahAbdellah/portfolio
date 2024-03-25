@@ -75,8 +75,12 @@ const referenceColumns = [
     startScroll();
   });
 
-  // The only way I found to scroll to the element is by using the offsetTop
-  const main = document.querySelector("#app-root-main");
-  const element = document.querySelector("#deployments");
-  main.scrollTop = element.offsetTop - main.offsetTop;
+  document
+    .getElementById("deployments-scroll-link")
+    .addEventListener("click", (event) => {
+      // The only way I found to scroll to the element is by using the offsetTop
+      const main = document.querySelector("#app-root-main");
+      const element = document.querySelector("#deployments");
+      main.scrollTop = element.offsetTop - main.offsetTop;
+    });
 </script>
