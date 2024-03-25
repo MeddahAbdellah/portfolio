@@ -21,7 +21,7 @@ const referenceColumns = [
         🙏 Thank you all for the feedbacks
       </h3>
       <Button aria-label="Show reviews" variant="secondary">
-        <a href="#deployments">Add a review</a>
+        <a href="#deployments" id="deployments-scroll-link">Add a review</a>
       </Button>
     </div>
   </header>
@@ -74,4 +74,9 @@ const referenceColumns = [
   container.addEventListener("mouseleave", () => {
     startScroll();
   });
+
+  // The only way I found to scroll to the element is by using the offsetTop
+  const main = document.querySelector("#app-root-main");
+  const element = document.querySelector("#deployments");
+  main.scrollTop = element.offsetTop - main.offsetTop;
 </script>
