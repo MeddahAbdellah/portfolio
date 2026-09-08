@@ -39,7 +39,7 @@ export default async function handler(request, response) {
   const requestId = request.headers["x-vercel-id"] || crypto.randomUUID();
   response.setHeader("X-Request-Id", requestId);
   response.setHeader("Cache-Control", "no-store");
-  console.info("[AskMeddah API] request started", { requestId, method: request.method });
+  console.info("[AskAbdallah API] request started", { requestId, method: request.method });
   if (request.method !== "POST") return fail(response, 405, "Method not allowed.", requestId, "request", "method_not_allowed");
   if (rateLimited(request.headers["x-forwarded-for"]?.split(",")[0] || "unknown")) return fail(response, 429, "Too many questions. Please wait a minute.", requestId, "request", "rate_limited");
   const messages = validateMessages(request.body?.messages);
@@ -49,9 +49,9 @@ export default async function handler(request, response) {
   let githubContext;
   try {
     githubContext = await getGitHubContext();
-    console.info("[AskMeddah API] GitHub context loaded", { requestId, repositoryCount: githubContext.repositories.length, fetchedAt: githubContext.fetchedAt });
+    console.info("[AskAbdallah API] GitHub context loaded", { requestId, repositoryCount: githubContext.repositories.length, fetchedAt: githubContext.fetchedAt });
   } catch (error) {
-    console.error("[AskMeddah API] GitHub context failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
+    console.error("[AskAbdallah API] GitHub context failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
     return fail(response, 502, "GitHub activity is temporarily unavailable. Please try again shortly.", requestId, "github", "context_unavailable");
   }
 
@@ -63,15 +63,15 @@ export default async function handler(request, response) {
     });
     const data = await apiResponse.json();
     if (!apiResponse.ok) {
-      console.error("[AskMeddah API] OpenAI response failed", { requestId, status: apiResponse.status, code: data.error?.code || data.error?.type || "unknown", message: data.error?.message });
+      console.error("[AskAbdallah API] OpenAI response failed", { requestId, status: apiResponse.status, code: data.error?.code || data.error?.type || "unknown", message: data.error?.message });
       return fail(response, 502, openAIError(apiResponse.status), requestId, "openai", `upstream_${apiResponse.status}`);
     }
     const message = data.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text;
     if (!message) throw new Error("The model returned no answer");
-    console.info("[AskMeddah API] request completed", { requestId, outputLength: message.length });
+    console.info("[AskAbdallah API] request completed", { requestId, outputLength: message.length });
     return response.status(200).json({ message, requestId });
   } catch (error) {
-    console.error("[AskMeddah API] OpenAI request failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
+    console.error("[AskAbdallah API] OpenAI request failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
     return fail(response, 502, "The interview assistant is temporarily unavailable.", requestId, "openai", error instanceof SyntaxError ? "invalid_json" : "request_failed");
   }
 }

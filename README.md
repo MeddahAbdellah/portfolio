@@ -1,6 +1,6 @@
-# Ask Meddah
+# Meddah Abdallah — AI portfolio
 
-An AI portfolio that lets a recruiter interview Meddah Abdallah's GitHub work. On each conversation, the server gathers current accessible repository metadata, READMEs, package manifests, language statistics, and recent commits, then asks OpenAI to answer strictly from that evidence.
+An AI portfolio that lets a recruiter interview Abdallah about his professional experience, engineering decisions, leadership, and technical work. Repository activity supplements the CV context with current implementation examples.
 
 ## Run locally
 
@@ -41,7 +41,7 @@ Private repository evidence is restricted to anonymized, high-level technical in
 
 ## Debugging
 
-Browser lifecycle, response status, diagnostic stage/code, request ID, and React errors are logged as expanded JSON text with the `[AskMeddah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskMeddah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage. Error responses use `Cache-Control: no-store` so Vercel does not preserve a stale failure.
+Browser lifecycle, response status, diagnostic stage/code, request ID, and React errors are logged as expanded JSON text with the `[AskAbdallah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskAbdallah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage. Error responses use `Cache-Control: no-store` so Vercel does not preserve a stale failure.
 
 The application does not impose its own character or conversation-history limits on chat messages. The complete conversation is sent on each turn, up to the request and context limits enforced by Vercel and the configured OpenAI model.
 

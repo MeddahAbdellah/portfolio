@@ -7,7 +7,7 @@ import styles from "./interview-chat.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
 
-const LOG_PREFIX = "[AskMeddah]";
+const LOG_PREFIX = "[AskAbdallah]";
 const printable = (details?: Record<string, unknown>) => details ? JSON.stringify(details) : "";
 const log = (event: string, details?: Record<string, unknown>) => console.info(`${LOG_PREFIX} ${event} ${printable(details)}`);
 const logError = (event: string, details: Record<string, unknown>) => console.error(`${LOG_PREFIX} ${event} ${printable(details)}`);
@@ -42,14 +42,14 @@ class ChatErrorBoundary extends Component<{ children: ReactNode }, { error: Erro
 const welcome: Message = {
   role: "assistant",
   content:
-    "Hi, I’m Meddah’s AI portfolio. Ask me what his repositories and latest commits demonstrate about his projects, technical choices, and engineering skills.",
+    "Hi, I’m Abdallah’s AI portfolio. Interview him about his experience, technical decisions, leadership, and the systems he has built.",
 };
 
 const prompts = [
-  "What do his latest commits focus on?",
-  "Which repositories should I explore first?",
-  "What technical skills do his repos demonstrate?",
-  "What would you ask him in a code interview?",
+  "Tell me about an AI system you took to production.",
+  "How do you approach frontend architecture at scale?",
+  "Describe a difficult technical decision you made.",
+  "How do you lead and mentor engineering teams?",
 ];
 
 const career = [
@@ -131,9 +131,9 @@ function InterviewChatContent() {
   return (
     <main className={styles.shell}>
       <header className={styles.header}>
-        <a className={styles.brand} href="/" aria-label="Ask Meddah home">
-          <span className={styles.mark}><span>M</span></span>
-          <span>Ask Meddah</span>
+        <a className={styles.brand} href="/" aria-label="Meddah Abdallah home">
+          <span className={styles.mark}><span>MA</span></span>
+          <span>Meddah Abdallah</span>
           <span className={styles.beta}>AI PORTFOLIO</span>
         </a>
         <nav className={styles.nav} aria-label="Profile links">
@@ -165,7 +165,7 @@ function InterviewChatContent() {
 
         <section className={styles.chat} aria-label="Interview chat">
           <div className={styles.chatTop}>
-            <div><Sparkles size={16} /><div><strong>Interview Meddah’s AI</strong><span>Live from GitHub activity</span></div></div>
+            <div><Sparkles size={16} /><div><strong>Interview Abdallah’s AI</strong><span>Professional experience and technical work</span></div></div>
             <button onClick={() => { setMessages([welcome]); setError(""); setFailedQuestion(""); }} aria-label="Start a new conversation"><RotateCcw size={15} /> <span>New chat</span></button>
           </div>
 
@@ -174,7 +174,7 @@ function InterviewChatContent() {
               <article key={index} className={`${styles.message} ${styles[message.role]}`}>
                 {message.role === "assistant" && <div className={styles.botAvatar}><Code2 size={16} /></div>}
                 <div>
-                  <span className={styles.speaker}>{message.role === "assistant" ? "MEDDAH AI" : "YOU"}</span>
+                  <span className={styles.speaker}>{message.role === "assistant" ? "ABDALLAH AI" : "YOU"}</span>
                   <div className={styles.messageText}><MessageText>{message.content}</MessageText></div>
                 </div>
               </article>
@@ -191,7 +191,7 @@ function InterviewChatContent() {
           </div>
 
           <form className={styles.composer} onSubmit={(e: FormEvent) => { e.preventDefault(); void send(); }}>
-            <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} placeholder="Ask what Meddah’s repositories reveal about his work…" rows={1} aria-label="Your interview question" />
+            <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} placeholder="Ask Abdallah an interview question…" rows={1} aria-label="Your interview question" />
             <button type="submit" disabled={!input.trim() || loading} aria-label="Send question"><ArrowUp size={19} /></button>
             <div><span><LockKeyhole size={11} /> Privacy-first: personal details are never shared</span><span>Enter to send · Shift + Enter for a new line</span></div>
           </form>
