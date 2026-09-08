@@ -28,6 +28,9 @@ function validateMessages(value) {
   return messages[messages.length - 1].role === "user" ? messages : null;
 }
 export default async function handler(request, response) {
+  const requestId = request.headers["x-vercel-id"] || crypto.randomUUID();
+  response.setHeader("X-Request-Id", requestId);
+  console.info("[AskMeddah API] request started", { requestId, method: request.method });
   if (request.method !== "POST") return response.status(405).json({ error: "Method not allowed." });
   if (rateLimited(request.headers["x-forwarded-for"]?.split(",")[0] || "unknown")) return response.status(429).json({ error: "Too many questions. Please wait a minute." });
   const messages = validateMessages(request.body?.messages);
@@ -37,8 +40,9 @@ export default async function handler(request, response) {
   let githubContext;
   try {
     githubContext = await getGitHubContext();
+    console.info("[AskMeddah API] GitHub context loaded", { requestId, repositoryCount: githubContext.repositories.length, fetchedAt: githubContext.fetchedAt });
   } catch (error) {
-    console.error("GitHub context error:", error instanceof Error ? error.message : error);
+    console.error("[AskMeddah API] GitHub context failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
     return response.status(502).json({ error: "GitHub activity is temporarily unavailable. Please try again shortly." });
   }
 
@@ -50,15 +54,16 @@ export default async function handler(request, response) {
     });
     const data = await apiResponse.json();
     if (!apiResponse.ok) {
-      console.error("OpenAI response error:", apiResponse.status, data.error?.code || data.error?.type || "unknown");
+      console.error("[AskMeddah API] OpenAI response failed", { requestId, status: apiResponse.status, code: data.error?.code || data.error?.type || "unknown", message: data.error?.message });
       return response.status(502).json({ error: openAIError(apiResponse.status) });
     }
     const message = data.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text;
     if (!message) throw new Error("The model returned no answer");
+    console.info("[AskMeddah API] request completed", { requestId, outputLength: message.length });
     response.setHeader("Cache-Control", "no-store");
     return response.status(200).json({ message });
   } catch (error) {
-    console.error("OpenAI request error:", error instanceof Error ? error.message : error);
+    console.error("[AskMeddah API] OpenAI request failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
     return response.status(502).json({ error: "The interview assistant is temporarily unavailable." });
   }
 }

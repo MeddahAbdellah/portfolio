@@ -36,6 +36,10 @@ For every selected repository the context includes:
 
 Repository text is treated as untrusted data by the system prompt. Answers must distinguish direct evidence from inference and must not claim that repository activity proves expertise, sole authorship, employment history, or business impact.
 
+## Debugging
+
+Browser lifecycle, response status, request ID, and React errors are logged to the browser console with the `[AskMeddah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskMeddah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage.
+
 ## Checks
 
 ```sh

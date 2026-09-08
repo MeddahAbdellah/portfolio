@@ -1,9 +1,39 @@
-import { useEffect, useRef, useState } from "react";
-import type { FormEvent, KeyboardEvent } from "react";
+import { Component, useEffect, useRef, useState } from "react";
+import type { ErrorInfo, FormEvent, KeyboardEvent, ReactNode } from "react";
 import { ArrowUp, Check, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles } from "lucide-react";
 import styles from "./interview-chat.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
+
+const LOG_PREFIX = "[AskMeddah]";
+const log = (event: string, details?: Record<string, unknown>) => console.info(LOG_PREFIX, event, details || "");
+
+class ChatErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  override state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: Error) { return { error }; }
+
+  override componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error(LOG_PREFIX, "React render failure", { name: error.name, message: error.message, stack: error.stack, componentStack: info.componentStack });
+  }
+
+  override render() {
+    if (this.state.error) {
+      return (
+        <main className={styles.shell}>
+          <section className={styles.fatal} role="alert">
+            <div className={styles.botAvatar}><Code2 size={18} /></div>
+            <p className={styles.eyebrow}>INTERVIEW CHAT ERROR</p>
+            <h1>The chat hit an unexpected browser error.</h1>
+            <p>The details were written to the developer console with the <code>{LOG_PREFIX}</code> prefix.</p>
+            <button onClick={() => window.location.reload()}>Reload the chat</button>
+          </section>
+        </main>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const welcome: Message = {
   role: "assistant",
@@ -23,7 +53,7 @@ function MessageText({ children }: { children: string }) {
   return <>{parts.map((part, i) => part.startsWith("`") ? <code key={i}>{part.slice(1, -1)}</code> : <span key={i}>{part}</span>)}</>;
 }
 
-export function InterviewChat() {
+function InterviewChatContent() {
   const [messages, setMessages] = useState<Message[]>([welcome]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,6 +73,7 @@ export function InterviewChat() {
     setInput("");
     setError("");
     setLoading(true);
+    log("Sending interview question", { messageCount: next.length, questionLength: content.length });
 
     try {
       const response = await fetch("/api/chat", {
@@ -50,11 +81,23 @@ export function InterviewChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next.slice(-10) }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "The interview assistant is unavailable.");
-      setMessages((current) => [...current, { role: "assistant", content: data.message }]);
+      const requestId = response.headers.get("x-request-id");
+      const rawBody = await response.text();
+      let data: { message?: unknown; error?: unknown } = {};
+      try {
+        data = rawBody ? JSON.parse(rawBody) : {};
+      } catch {
+        console.error(LOG_PREFIX, "Chat API returned non-JSON", { status: response.status, requestId, bodyLength: rawBody.length });
+        throw new Error("The interview assistant returned an invalid response.");
+      }
+      log("Chat API response", { status: response.status, ok: response.ok, requestId, hasMessage: typeof data.message === "string", hasError: Boolean(data.error) });
+      if (!response.ok) throw new Error(typeof data.error === "string" ? data.error : "The interview assistant is unavailable.");
+      if (typeof data.message !== "string" || !data.message.trim()) throw new Error("The interview assistant returned an empty response.");
+      setMessages((current) => [...current, { role: "assistant", content: data.message as string }]);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Something went wrong. Please try again.");
+      const message = cause instanceof Error ? cause.message : "Something went wrong. Please try again.";
+      console.error(LOG_PREFIX, "Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message });
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -137,4 +180,8 @@ export function InterviewChat() {
       <footer>AI responses can be imperfect. Confirm important details with Meddah during your interview.</footer>
     </main>
   );
+}
+
+export function InterviewChat() {
+  return <ChatErrorBoundary><InterviewChatContent /></ChatErrorBoundary>;
 }
