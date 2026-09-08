@@ -2,6 +2,8 @@ import { INTERVIEWER_SYSTEM_PROMPT } from "../src/lib/interviewer-system-prompt.
 import { getGitHubContext } from "./github-context.js";
 
 const requests = new Map();
+export const maxDuration = 300;
+const AGENT_RESPONSE_TIMEOUT_MS = 240_000;
 function configuredModel() {
   const model = process.env.OPENAI_MODEL?.trim();
   // Keep deployments configured from the earlier README working: `gpt-5.6`
@@ -43,6 +45,7 @@ export default async function handler(request, response) {
   if (request.method !== "POST") return fail(response, 405, "Method not allowed.", requestId, "request", "method_not_allowed");
   if (rateLimited(request.headers["x-forwarded-for"]?.split(",")[0] || "unknown")) return fail(response, 429, "Too many questions. Please wait a minute.", requestId, "request", "rate_limited");
   const messages = validateMessages(request.body?.messages);
+  const language = request.body?.language === "fr" ? "fr" : "en";
   if (!messages) return fail(response, 400, "Please send a valid interview question.", requestId, "request", "invalid_messages");
   if (!process.env.OPENAI_API_KEY) return fail(response, 503, "The interview assistant has not been configured yet.", requestId, "configuration", "missing_openai_key");
 
@@ -55,23 +58,66 @@ export default async function handler(request, response) {
     return fail(response, 502, "GitHub activity is temporarily unavailable. Please try again shortly.", requestId, "github", "context_unavailable");
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(new Error("OpenAI response timeout")), AGENT_RESPONSE_TIMEOUT_MS);
+  response.on("close", () => { if (!response.writableEnded) controller.abort(); });
   try {
     const apiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: configuredModel(), instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: configuredModel(),
+        instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nRESPONSE LANGUAGE\nAnswer exclusively in ${language === "fr" ? "French" : "English"}, matching the language selected by the visitor.\n\nLIVE GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`,
+        input: messages,
+        max_output_tokens: 700,
+        stream: true,
+      }),
     });
-    const data = await apiResponse.json();
     if (!apiResponse.ok) {
+      const data = await apiResponse.json().catch(() => ({}));
       console.error("[AskAbdallah API] OpenAI response failed", { requestId, status: apiResponse.status, code: data.error?.code || data.error?.type || "unknown", message: data.error?.message });
       return fail(response, 502, openAIError(apiResponse.status), requestId, "openai", `upstream_${apiResponse.status}`);
     }
-    const message = data.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text;
-    if (!message) throw new Error("The model returned no answer");
-    console.info("[AskAbdallah API] request completed", { requestId, outputLength: message.length });
-    return response.status(200).json({ message, requestId });
+    if (!apiResponse.body) throw new Error("The model returned no response stream");
+
+    response.status(200);
+    response.setHeader("Content-Type", "application/x-ndjson; charset=utf-8");
+    response.setHeader("X-Accel-Buffering", "no");
+    response.flushHeaders?.();
+
+    const reader = apiResponse.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let outputLength = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      buffer += decoder.decode(value, { stream: !done });
+      const lines = buffer.split(/\r?\n/);
+      buffer = done ? "" : lines.pop() || "";
+      for (const line of lines) {
+        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+        const event = JSON.parse(line.slice(6));
+        if (event.type === "response.output_text.delta" && typeof event.delta === "string") {
+          outputLength += event.delta.length;
+          response.write(`${JSON.stringify({ type: "delta", delta: event.delta })}\n`);
+        } else if (event.type === "error" || event.type === "response.failed") {
+          throw new Error(event.error?.message || event.response?.error?.message || "The model response failed");
+        }
+      }
+      if (done) break;
+    }
+    if (!outputLength) throw new Error("The model returned no answer");
+    response.write(`${JSON.stringify({ type: "done", requestId })}\n`);
+    response.end();
+    console.info("[AskAbdallah API] request completed", { requestId, outputLength, language });
   } catch (error) {
     console.error("[AskAbdallah API] OpenAI request failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
-    return fail(response, 502, "The interview assistant is temporarily unavailable.", requestId, "openai", error instanceof SyntaxError ? "invalid_json" : "request_failed");
+    const timedOut = controller.signal.aborted && error?.name !== "AbortError" || error?.name === "TimeoutError";
+    const message = timedOut ? "The interview assistant timed out. Please try again." : "The interview assistant is temporarily unavailable.";
+    if (!response.headersSent) return fail(response, timedOut ? 504 : 502, message, requestId, "openai", timedOut ? "response_timeout" : error instanceof SyntaxError ? "invalid_json" : "request_failed");
+    if (!response.writableEnded) response.end(`${JSON.stringify({ type: "error", error: message, requestId })}\n`);
+  } finally {
+    clearTimeout(timeout);
   }
 }
