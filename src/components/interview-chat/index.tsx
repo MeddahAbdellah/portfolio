@@ -52,6 +52,15 @@ const prompts = [
   "What would you ask him in a code interview?",
 ];
 
+const career = [
+  { period: "2025 — Present", role: "Senior Fullstack & AI Engineer", company: "Sanofi · Freelance" },
+  { period: "2024 — 2025", role: "Senior Fullstack Engineer", company: "Padoa · Freelance" },
+  { period: "2024", role: "Senior Fullstack & AI Engineer", company: "Engie Digital · Freelance" },
+  { period: "2023 — 2024", role: "Lead Software Engineer", company: "Citron" },
+  { period: "2020 — 2023", role: "Fullstack Engineer", company: "Padoa" },
+  { period: "2018 — 2020", role: "Embedded IoT Devices Engineer", company: "Ursum" },
+];
+
 function MessageText({ children }: { children: string }) {
   return <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>;
 }
@@ -136,18 +145,23 @@ function InterviewChatContent() {
 
       <section className={styles.workspace}>
         <aside className={styles.profile}>
-          <div className={styles.portraitWrap}>
-            <img src="/user-avatar.webp" alt="Meddah Abdallah" />
-            <span className={styles.online} />
-          </div>
           <p className={styles.eyebrow}>YOUR CANDIDATE</p>
           <h1>Meddah<br />Abdallah</h1>
-          <p className={styles.role}>Full-stack engineer building thoughtful products and reliable systems.</p>
+          <p className={styles.role}>Senior Fullstack &amp; AI Engineer building production-grade AI, cloud, web, and distributed systems.</p>
           <div className={styles.meta}>
-            <span>Paris, France</span><span>Full-stack</span><span>Open to work</span>
+            <span>Paris, France</span><span>8+ years</span><span>Open to work</span>
           </div>
           <div className={styles.rule} />
-          <p className={styles.about}>This AI reads Meddah’s accessible repositories, READMEs, technology manifests, and latest commits. Private work is used only for anonymized technical insights.</p>
+          <p className={styles.timelineLabel}>EXPERIENCE</p>
+          <ol className={styles.timeline}>
+            {career.map((entry) => (
+              <li key={`${entry.company}-${entry.period}`}>
+                <time>{entry.period}</time>
+                <strong>{entry.role}</strong>
+                <span>{entry.company}</span>
+              </li>
+            ))}
+          </ol>
           <a className={styles.cv} href="/cv_meddah_abdallah.pdf" target="_blank"><span>View résumé</span><ArrowUp size={16} /></a>
         </aside>
 
