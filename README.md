@@ -45,6 +45,8 @@ Browser lifecycle, response status, diagnostic stage/code, request ID, and React
 
 The application does not impose its own character or conversation-history limits on chat messages. The complete conversation is sent on each turn, up to the request and context limits enforced by Vercel and the configured OpenAI model.
 
+Chat answers are streamed from the OpenAI Responses API to the browser as newline-delimited JSON, so text appears as it is generated. The serverless function allows up to 300 seconds and aborts an upstream model response after 240 seconds. Individual GitHub requests allow 30 seconds, reducing failures caused by transient API latency.
+
 ## Checks
 
 ```sh
