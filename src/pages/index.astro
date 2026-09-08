@@ -1,123 +1,37 @@
 ---
 import "@/styles/globals.css";
-import { Header } from "@/components/header";
-import SkillTasteIntro from "@/components/tastes/skill-tastes-intro.astro";
-import { SkillSet } from "@/components/skill-set";
-import { Deployments } from "@/components/deployments";
-import Experience from "@/components/experience/experience.astro";
-import Intro from "@/components/intro/intro.astro";
-import References from "@/components/references/references.astro";
+import { InterviewChat } from "@/components/interview-chat";
 import { SEO } from "astro-seo";
 import SpeedInsights from "@vercel/speed-insights/astro";
-import Phone from "@/components/phone/phone.astro";
 
-const siteDescription = `Full-stack developer specializing in crafting high-quality user experiences and robust code, with a scalable and sustainable infrastructure.`;
+const description =
+  "Interview Meddah Abdallah's AI portfolio about his experience, engineering decisions, and public work.";
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="height=device-height, width=device-width, initial-scale=1, user-scalable=1"
-    />
-    <meta
-      http-equiv="Cache-Control"
-      content="no-cache, no-store, must-revalidate"
-    />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f4ef" />
     <SEO
-      title="Meddah Abdallah | Full Stack Developer | Software Engineer"
-      description={siteDescription}
-      canonical={"https://www.meddahabdallah.pro"}
+      title="Ask Meddah — AI portfolio interview"
+      description={description}
+      canonical="https://www.meddahabdallah.pro"
       openGraph={{
         basic: {
-          title: "Meddah Abdallah | Full Stack Developer | Software Engineer",
-          type: "video.movie",
+          title: "Ask Meddah — AI portfolio interview",
+          type: "website",
           image: "https://www.meddahabdallah.pro/logo.png",
-          url: "https://www.meddahabdallah.pro/presentation.mp4",
-        },
-        optional: {
-          video: "https://www.meddahabdallah.pro/presentation.mp4",
+          url: "https://www.meddahabdallah.pro",
         },
       }}
-      extend={{
-        link: [{ rel: "icon", href: "/favicon.png" }],
-        meta: [
-          {
-            name: "twitter:image",
-            content: "https://www.meddahabdallah.pro/logo.png",
-          },
-          { name: "twitter:title", content: "Meddah Abdallah" },
-          {
-            name: "twitter:description",
-            content: "Full Stack Developer | Software Engineer",
-          },
-        ],
-      }}
-    />
-    <script type="application/ld+json">
-      {
-        "@context": "http://schema.org",
-        "@type": "Person",
-        "name": "Meddah Abdallah",
-        "url": "http://www.meddahabdallah.pro",
-        "email": "meddah.abdellah.spcx@gmail.com",
-        "workLocation": "Paris, France",
-        "image": "https://www.meddahabdallah.pro/favicon.png",
-        "sameAs": [
-          "https://www.linkedin.com/in/meddahabdallah/",
-          "https://github.com/MeddahAbdellah",
-          "https://stackoverflow.com/users/8208547/meddah-abdallah"
-        ],
-        "worksFor": {
-          "@type": "Organization",
-          "name": "GADS (Citron)"
-        },
-        "jobTitle": "Fullstack Developer",
-        "alumniOf": "Paris Saclay"
-      }
-    </script>
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Meddah Abdallah</title>
+    <title>Ask Meddah</title>
   </head>
-  <style scoped>
-    *::-webkit-scrollbar {
-      display: none;
-    }
-
-    .main-container {
-      height: calc(100dvh - var(--header-height));
-    }
-
-    @media (max-width: 768px) {
-      .main-container {
-        height: 100dvh;
-      }
-    }
-  </style>
   <body>
-    <Phone />
-    <Header />
-    <main
-      class="hidden md:block main-container overflow-y-auto scroll-smooth"
-      id="app-root-main"
-    >
-      <Intro />
-      <Experience />
-      <SkillTasteIntro />
-      <SkillSet client:load />
-      <Deployments client:visible />
-      <References />
-      <SpeedInsights />
-    </main>
+    <InterviewChat client:load />
+    <SpeedInsights />
   </body>
 </html>
