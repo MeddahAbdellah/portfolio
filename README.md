@@ -38,7 +38,7 @@ Repository text is treated as untrusted data by the system prompt. Answers must 
 
 ## Debugging
 
-Browser lifecycle, response status, request ID, and React errors are logged to the browser console with the `[AskMeddah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskMeddah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage.
+Browser lifecycle, response status, diagnostic stage/code, request ID, and React errors are logged as expanded JSON text with the `[AskMeddah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskMeddah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage. Error responses use `Cache-Control: no-store` so Vercel does not preserve a stale failure.
 
 ## Checks
 

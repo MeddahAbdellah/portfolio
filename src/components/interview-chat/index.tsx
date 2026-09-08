@@ -6,7 +6,9 @@ import styles from "./interview-chat.module.css";
 type Message = { role: "user" | "assistant"; content: string };
 
 const LOG_PREFIX = "[AskMeddah]";
-const log = (event: string, details?: Record<string, unknown>) => console.info(LOG_PREFIX, event, details || "");
+const printable = (details?: Record<string, unknown>) => details ? JSON.stringify(details) : "";
+const log = (event: string, details?: Record<string, unknown>) => console.info(`${LOG_PREFIX} ${event} ${printable(details)}`);
+const logError = (event: string, details: Record<string, unknown>) => console.error(`${LOG_PREFIX} ${event} ${printable(details)}`);
 
 class ChatErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   override state: { error: Error | null } = { error: null };
@@ -14,7 +16,7 @@ class ChatErrorBoundary extends Component<{ children: ReactNode }, { error: Erro
   static getDerivedStateFromError(error: Error) { return { error }; }
 
   override componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error(LOG_PREFIX, "React render failure", { name: error.name, message: error.message, stack: error.stack, componentStack: info.componentStack });
+    logError("React render failure", { name: error.name, message: error.message, stack: error.stack, componentStack: info.componentStack });
   }
 
   override render() {
@@ -83,20 +85,20 @@ function InterviewChatContent() {
       });
       const requestId = response.headers.get("x-request-id");
       const rawBody = await response.text();
-      let data: { message?: unknown; error?: unknown } = {};
+      let data: { message?: unknown; error?: unknown; requestId?: unknown; diagnostic?: { stage?: unknown; code?: unknown } } = {};
       try {
         data = rawBody ? JSON.parse(rawBody) : {};
       } catch {
-        console.error(LOG_PREFIX, "Chat API returned non-JSON", { status: response.status, requestId, bodyLength: rawBody.length });
+        logError("Chat API returned non-JSON", { status: response.status, requestId, bodyLength: rawBody.length });
         throw new Error("The interview assistant returned an invalid response.");
       }
-      log("Chat API response", { status: response.status, ok: response.ok, requestId, hasMessage: typeof data.message === "string", hasError: Boolean(data.error) });
+      log("Chat API response", { status: response.status, ok: response.ok, requestId: data.requestId || requestId, stage: data.diagnostic?.stage, code: data.diagnostic?.code, hasMessage: typeof data.message === "string", hasError: Boolean(data.error) });
       if (!response.ok) throw new Error(typeof data.error === "string" ? data.error : "The interview assistant is unavailable.");
       if (typeof data.message !== "string" || !data.message.trim()) throw new Error("The interview assistant returned an empty response.");
       setMessages((current) => [...current, { role: "assistant", content: data.message as string }]);
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "Something went wrong. Please try again.";
-      console.error(LOG_PREFIX, "Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message });
+      logError("Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message });
       setError(message);
     } finally {
       setLoading(false);
