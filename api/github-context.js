@@ -4,21 +4,38 @@ const MAX_REPOS = 8;
 const MAX_FILE_CHARACTERS = 8_000;
 
 let cache;
+let pendingContext;
 
-function headers() {
+function githubToken() {
+  return process.env.GITHUB_TOKEN?.trim().replace(/^(?:Bearer|token)\s+/i, "");
+}
+
+function headers(authenticated = true) {
+  const token = githubToken();
   return {
     Accept: "application/vnd.github+json",
     "User-Agent": "meddah-interviewer-portfolio",
-    ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
+    ...(authenticated && token ? { Authorization: `Bearer ${token}` } : {}),
   };
 }
 
 async function github(path) {
-  const response = await fetch(`${GITHUB_API}${path}`, {
-    headers: headers(),
-    signal: AbortSignal.timeout(8_000),
+  const request = (authenticated) => fetch(`${GITHUB_API}${path}`, {
+    headers: headers(authenticated),
+    signal: AbortSignal.timeout(12_000),
   });
-  if (!response.ok) throw new Error(`GitHub ${path} returned ${response.status}`);
+
+  let response = await request(true);
+  // An expired token, a token copied with its auth scheme, or insufficient token
+  // permissions must not prevent access to data that is public anyway.
+  if ((response.status === 401 || response.status === 403) && githubToken()) {
+    response = await request(false);
+  }
+  if (!response.ok) {
+    const remaining = response.headers.get("x-ratelimit-remaining");
+    const reset = response.headers.get("x-ratelimit-reset");
+    throw new Error(`GitHub ${path} returned ${response.status} (remaining=${remaining ?? "unknown"}, reset=${reset ?? "unknown"})`);
+  }
   return response.json();
 }
 
@@ -65,11 +82,34 @@ async function repositoryContext(repo) {
 export async function getGitHubContext() {
   if (cache && cache.expiresAt > Date.now()) return cache.value;
 
+  if (pendingContext) return pendingContext;
+  pendingContext = refreshGitHubContext();
+  try {
+    return await pendingContext;
+  } catch (error) {
+    // A stale snapshot is preferable to making the whole interview unavailable
+    // during a temporary GitHub incident or rate-limit window.
+    if (cache?.value) return cache.value;
+    throw error;
+  } finally {
+    pendingContext = undefined;
+  }
+}
+
+async function refreshGitHubContext() {
   const owner = process.env.GITHUB_REPO_OWNER || "MeddahAbdellah";
-  const [profile, repositories] = await Promise.all([
+  const [profileResult, repositoriesResult] = await Promise.allSettled([
     github(`/users/${encodeURIComponent(owner)}`),
     github(`/users/${encodeURIComponent(owner)}/repos?per_page=100&sort=pushed&direction=desc&type=owner`),
   ]);
+
+  if (repositoriesResult.status === "rejected") throw repositoriesResult.reason;
+  if (profileResult.status === "rejected") {
+    console.error("GitHub profile request failed; continuing with repositories:", profileResult.reason);
+  }
+
+  const profile = profileResult.status === "fulfilled" ? profileResult.value : {};
+  const repositories = repositoriesResult.value;
 
   // The public users endpoint intentionally excludes private repositories, even
   // when GITHUB_TOKEN is configured. Forks are excluded to avoid attributing
@@ -96,4 +136,3 @@ export async function getGitHubContext() {
   cache = { value, expiresAt: Date.now() + CACHE_TTL };
   return value;
 }
-
