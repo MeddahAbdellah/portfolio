@@ -56,7 +56,7 @@ export default async function handler(request, response) {
     const apiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: configuredModel(), instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE PUBLIC GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
+      body: JSON.stringify({ model: configuredModel(), instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
     });
     const data = await apiResponse.json();
     if (!apiResponse.ok) {

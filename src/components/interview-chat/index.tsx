@@ -1,6 +1,8 @@
 import { Component, useEffect, useRef, useState } from "react";
 import type { ErrorInfo, FormEvent, KeyboardEvent, ReactNode } from "react";
 import { ArrowUp, Check, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import styles from "./interview-chat.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -40,7 +42,7 @@ class ChatErrorBoundary extends Component<{ children: ReactNode }, { error: Erro
 const welcome: Message = {
   role: "assistant",
   content:
-    "Hi, I’m Meddah’s AI portfolio. Ask me what his public repositories and latest commits demonstrate about his projects, technical choices, and engineering skills.",
+    "Hi, I’m Meddah’s AI portfolio. Ask me what his repositories and latest commits demonstrate about his projects, technical choices, and engineering skills.",
 };
 
 const prompts = [
@@ -51,8 +53,7 @@ const prompts = [
 ];
 
 function MessageText({ children }: { children: string }) {
-  const parts = children.split(/(`[^`]+`)/g);
-  return <>{parts.map((part, i) => part.startsWith("`") ? <code key={i}>{part.slice(1, -1)}</code> : <span key={i}>{part}</span>)}</>;
+  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>;
 }
 
 function InterviewChatContent() {
@@ -140,13 +141,13 @@ function InterviewChatContent() {
             <span>Paris, France</span><span>Full-stack</span><span>Open to work</span>
           </div>
           <div className={styles.rule} />
-          <p className={styles.about}>This AI reads Meddah’s public repositories, READMEs, technology manifests, and latest commits. It cites observable work without claiming access to private conversations.</p>
+          <p className={styles.about}>This AI reads Meddah’s accessible repositories, READMEs, technology manifests, and latest commits. Private work is used only for anonymized technical insights.</p>
           <a className={styles.cv} href="/cv_meddah_abdallah.pdf" target="_blank"><span>View résumé</span><ArrowUp size={16} /></a>
         </aside>
 
         <section className={styles.chat} aria-label="Interview chat">
           <div className={styles.chatTop}>
-            <div><Sparkles size={16} /><div><strong>Interview Meddah’s AI</strong><span>Live from public GitHub activity</span></div></div>
+            <div><Sparkles size={16} /><div><strong>Interview Meddah’s AI</strong><span>Live from GitHub activity</span></div></div>
             <button onClick={() => { setMessages([welcome]); setError(""); }} aria-label="Start a new conversation"><RotateCcw size={15} /> <span>New chat</span></button>
           </div>
 
@@ -156,8 +157,8 @@ function InterviewChatContent() {
                 {message.role === "assistant" && <div className={styles.botAvatar}><Code2 size={16} /></div>}
                 <div>
                   <span className={styles.speaker}>{message.role === "assistant" ? "MEDDAH AI" : "YOU"}</span>
-                  <p><MessageText>{message.content}</MessageText></p>
-                  {message.role === "assistant" && index > 0 && <span className={styles.verified}><Check size={11} /> Based on public GitHub evidence</span>}
+                  <div className={styles.messageText}><MessageText>{message.content}</MessageText></div>
+                  {message.role === "assistant" && index > 0 && <span className={styles.verified}><Check size={11} /> Based on GitHub evidence</span>}
                 </div>
               </article>
             ))}
