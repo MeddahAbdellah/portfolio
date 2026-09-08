@@ -145,8 +145,6 @@ function InterviewChatContent() {
 
       <section className={styles.workspace}>
         <aside className={styles.profile}>
-          <p className={styles.eyebrow}>YOUR CANDIDATE</p>
-          <h1>Meddah<br />Abdallah</h1>
           <p className={styles.role}>Senior Fullstack &amp; AI Engineer building production-grade AI, cloud, web, and distributed systems.</p>
           <div className={styles.meta}>
             <span>Paris, France</span><span>8+ years</span><span>Open to work</span>
