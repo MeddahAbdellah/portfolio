@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Engie</title>
+  <defs><linearGradient id="a" x1="10" y1="54" x2="54" y2="10" gradientUnits="userSpaceOnUse"><stop stop-color="#00a8e0"/><stop offset="1" stop-color="#0064ad"/></linearGradient></defs>
+  <rect width="64" height="64" rx="12" fill="#fff"/>
+  <path d="M11 29c7-14 35-18 44 0-12-9-32-7-44 0Z" fill="url(#a)"/>
+  <text x="32" y="45" fill="#0072b8" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">ENGIE</text>
+</svg>

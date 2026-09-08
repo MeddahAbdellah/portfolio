@@ -62,6 +62,7 @@ async function repositoryContext(repo) {
 
   return {
     name: repo.name,
+    visibility: repo.private ? "private" : "public",
     url: repo.html_url,
     description: repo.description,
     homepage: repo.homepage,
@@ -98,10 +99,25 @@ export async function getGitHubContext() {
 
 async function refreshGitHubContext() {
   const owner = process.env.GITHUB_REPO_OWNER || "MeddahAbdellah";
-  const [profileResult, repositoriesResult] = await Promise.allSettled([
+  const repositoryPath = githubToken()
+    ? "/user/repos?per_page=100&sort=pushed&direction=desc&affiliation=owner"
+    : `/users/${encodeURIComponent(owner)}/repos?per_page=100&sort=pushed&direction=desc&type=owner`;
+  const [profileResult, initialRepositoriesResult] = await Promise.allSettled([
     github(`/users/${encodeURIComponent(owner)}`),
-    github(`/users/${encodeURIComponent(owner)}/repos?per_page=100&sort=pushed&direction=desc&type=owner`),
+    github(repositoryPath),
   ]);
+  let repositoriesResult = initialRepositoriesResult;
+
+  // If a configured token is stale or cannot read the selected repositories,
+  // retain the public-only experience instead of taking the chat offline.
+  if (repositoriesResult.status === "rejected" && githubToken()) {
+    try {
+      const repositories = await github(`/users/${encodeURIComponent(owner)}/repos?per_page=100&sort=pushed&direction=desc&type=owner`);
+      repositoriesResult = { status: "fulfilled", value: repositories };
+    } catch {
+      // Preserve the original authenticated error for the diagnostic below.
+    }
+  }
 
   if (repositoriesResult.status === "rejected") throw repositoriesResult.reason;
   if (profileResult.status === "rejected") {
@@ -111,11 +127,11 @@ async function refreshGitHubContext() {
   const profile = profileResult.status === "fulfilled" ? profileResult.value : {};
   const repositories = repositoriesResult.value;
 
-  // The public users endpoint intentionally excludes private repositories, even
-  // when GITHUB_TOKEN is configured. Forks are excluded to avoid attributing
-  // somebody else's code to Meddah.
-  const ownedPublicRepos = repositories
-    .filter((repo) => !repo.private && !repo.fork && !repo.archived)
+  // The authenticated user endpoint includes private repositories granted to
+  // GITHUB_TOKEN. Explicitly constrain results to the configured owner because
+  // that endpoint can also return repositories owned by organizations.
+  const ownedRepos = repositories
+    .filter((repo) => repo.owner?.login?.toLowerCase() === owner.toLowerCase() && !repo.fork && !repo.archived)
     .slice(0, MAX_REPOS);
 
   const value = {
@@ -130,7 +146,7 @@ async function refreshGitHubContext() {
       url: profile.html_url,
       publicRepos: profile.public_repos,
     },
-    repositories: await Promise.all(ownedPublicRepos.map(repositoryContext)),
+    repositories: await Promise.all(ownedRepos.map(repositoryContext)),
   };
 
   cache = { value, expiresAt: Date.now() + CACHE_TTL };
