@@ -2,6 +2,20 @@ import { INTERVIEWER_SYSTEM_PROMPT } from "../src/lib/interviewer-system-prompt.
 import { getGitHubContext } from "./github-context.js";
 
 const requests = new Map();
+function configuredModel() {
+  const model = process.env.OPENAI_MODEL?.trim();
+  // Keep deployments configured from the earlier README working: `gpt-5.6`
+  // is the product name, while `gpt-5.6-sol` is its Responses API model ID.
+  return !model || model === "gpt-5.6" ? "gpt-5.6-sol" : model;
+}
+
+function openAIError(status) {
+  if (status === 401 || status === 403) return "The OpenAI API key is invalid or cannot use the configured model.";
+  if (status === 404) return "The configured OpenAI model is unavailable. Set OPENAI_MODEL to gpt-5.6-sol in Vercel and redeploy.";
+  if (status === 429) return "The interview assistant has reached its OpenAI usage limit. Please try again later.";
+  return "The interview assistant is temporarily unavailable.";
+}
+
 function rateLimited(ip) {
   const now = Date.now();
   const recent = (requests.get(ip) || []).filter((time) => time > now - 60_000);
@@ -19,21 +33,32 @@ export default async function handler(request, response) {
   const messages = validateMessages(request.body?.messages);
   if (!messages) return response.status(400).json({ error: "Please send a valid interview question." });
   if (!process.env.OPENAI_API_KEY) return response.status(503).json({ error: "The interview assistant has not been configured yet." });
+
+  let githubContext;
   try {
-    const githubContext = await getGitHubContext();
+    githubContext = await getGitHubContext();
+  } catch (error) {
+    console.error("GitHub context error:", error instanceof Error ? error.message : error);
+    return response.status(502).json({ error: "GitHub activity is temporarily unavailable. Please try again shortly." });
+  }
+
+  try {
     const apiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5.6-sol", instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE PUBLIC GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
+      body: JSON.stringify({ model: configuredModel(), instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE PUBLIC GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
     });
     const data = await apiResponse.json();
-    if (!apiResponse.ok) throw new Error(data.error?.message || "OpenAI request failed");
+    if (!apiResponse.ok) {
+      console.error("OpenAI response error:", apiResponse.status, data.error?.code || data.error?.type || "unknown");
+      return response.status(502).json({ error: openAIError(apiResponse.status) });
+    }
     const message = data.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text;
     if (!message) throw new Error("The model returned no answer");
     response.setHeader("Cache-Control", "no-store");
     return response.status(200).json({ message });
   } catch (error) {
-    console.error("Interview chat error:", error instanceof Error ? error.message : error);
+    console.error("OpenAI request error:", error instanceof Error ? error.message : error);
     return response.status(502).json({ error: "The interview assistant is temporarily unavailable." });
   }
 }

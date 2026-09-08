@@ -18,6 +18,8 @@ OPENAI_API_KEY=... npm run dev
 
 Never prefix secrets with `PUBLIC_`. Redeploy after changing Vercel environment variables.
 
+If an earlier deployment has `OPENAI_MODEL=gpt-5.6`, the API automatically maps that product name to the valid `gpt-5.6-sol` model ID. Updating the Vercel value is still recommended.
+
 ## How repository knowledge works
 
 `api/github-context.js` calls GitHub's public user and repository endpoints. It intentionally excludes private repositories, forks, and archived repositories, then inspects the eight most recently pushed owned repositories. Results are cached in each warm serverless instance for ten minutes to reduce GitHub API usage.

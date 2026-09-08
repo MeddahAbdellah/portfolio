@@ -30,7 +30,9 @@ export function InterviewChat() {
   const [error, setError] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), [messages, loading]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   async function send(question = input) {
     const content = question.trim();
