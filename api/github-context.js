@@ -22,7 +22,7 @@ function headers(authenticated = true) {
 async function github(path) {
   const request = (authenticated) => fetch(`${GITHUB_API}${path}`, {
     headers: headers(authenticated),
-    signal: AbortSignal.timeout(12_000),
+    signal: AbortSignal.timeout(30_000),
   });
 
   let response = await request(true);
