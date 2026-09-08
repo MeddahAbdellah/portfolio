@@ -26,10 +26,16 @@ function rateLimited(ip) {
   const recent = (requests.get(ip) || []).filter((time) => time > now - 60_000);
   recent.push(now); requests.set(ip, recent); return recent.length > 12;
 }
-function validateMessages(value) {
+export function validateMessages(value) {
   if (!Array.isArray(value) || !value.length || value.length > 10) return null;
-  const messages = value.map(({ role, content }) => ({ role, content: typeof content === "string" ? content.trim() : "" }));
-  if (messages.some(({ role, content }) => !["user", "assistant"].includes(role) || !content || content.length > 1200)) return null;
+  const messages = value.map((message) => ({
+    role: message?.role,
+    content: typeof message?.content === "string" ? message.content.trim() : "",
+  }));
+  if (messages.some(({ role, content }) => {
+    const maxLength = role === "assistant" ? 8_000 : 1_200;
+    return !["user", "assistant"].includes(role) || !content || content.length > maxLength;
+  })) return null;
   return messages[messages.length - 1].role === "user" ? messages : null;
 }
 export default async function handler(request, response) {

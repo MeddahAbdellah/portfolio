@@ -61,6 +61,7 @@ function InterviewChatContent() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [failedQuestion, setFailedQuestion] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ function InterviewChatContent() {
     setMessages(next);
     setInput("");
     setError("");
+    setFailedQuestion("");
     setLoading(true);
     log("Sending interview question", { messageCount: next.length, questionLength: content.length });
 
@@ -91,6 +93,8 @@ function InterviewChatContent() {
         data = rawBody ? JSON.parse(rawBody) : {};
       } catch {
         logError("Chat API returned non-JSON", { status: response.status, requestId, bodyLength: rawBody.length });
+        if (response.status === 504) throw new Error("The interview assistant timed out. Please try again.");
+        if (!response.ok) throw new Error("The interview assistant is temporarily unavailable.");
         throw new Error("The interview assistant returned an invalid response.");
       }
       log("Chat API response", { status: response.status, ok: response.ok, requestId: data.requestId || requestId, stage: data.diagnostic?.stage, code: data.diagnostic?.code, hasMessage: typeof data.message === "string", hasError: Boolean(data.error) });
@@ -100,6 +104,8 @@ function InterviewChatContent() {
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "Something went wrong. Please try again.";
       logError("Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message });
+      setMessages(messages);
+      setFailedQuestion(content);
       setError(message);
     } finally {
       setLoading(false);
@@ -148,7 +154,7 @@ function InterviewChatContent() {
         <section className={styles.chat} aria-label="Interview chat">
           <div className={styles.chatTop}>
             <div><Sparkles size={16} /><div><strong>Interview Meddah’s AI</strong><span>Live from GitHub activity</span></div></div>
-            <button onClick={() => { setMessages([welcome]); setError(""); }} aria-label="Start a new conversation"><RotateCcw size={15} /> <span>New chat</span></button>
+            <button onClick={() => { setMessages([welcome]); setError(""); setFailedQuestion(""); }} aria-label="Start a new conversation"><RotateCcw size={15} /> <span>New chat</span></button>
           </div>
 
           <div className={styles.messages} aria-live="polite">
@@ -168,7 +174,7 @@ function InterviewChatContent() {
               </div>
             )}
             {loading && <article className={`${styles.message} ${styles.assistant}`}><div className={styles.botAvatar}><Code2 size={16} /></div><div className={styles.typing}><i /><i /><i /></div></article>}
-            {error && <p className={styles.error}>{error} <button onClick={() => void send(messages[messages.length - 1]?.content)}>Try again</button></p>}
+            {error && <p className={styles.error}>{error} <button onClick={() => void send(failedQuestion)}>Try again</button></p>}
             <div ref={endRef} />
           </div>
 
