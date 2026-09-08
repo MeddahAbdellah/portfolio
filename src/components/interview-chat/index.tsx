@@ -50,6 +50,8 @@ const prompts = [
   "How do you approach frontend architecture at scale?",
   "Describe a difficult technical decision you made.",
   "How do you lead and mentor engineering teams?",
+  "Presentation de parcour",
+  "Why should we hire you?",
 ];
 
 const career = [
