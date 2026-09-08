@@ -121,7 +121,7 @@ export function InterviewChat() {
               </div>
             )}
             {loading && <article className={`${styles.message} ${styles.assistant}`}><div className={styles.botAvatar}><Code2 size={16} /></div><div className={styles.typing}><i /><i /><i /></div></article>}
-            {error && <p className={styles.error}>{error} <button onClick={() => void send(messages.at(-1)?.content)}>Try again</button></p>}
+            {error && <p className={styles.error}>{error} <button onClick={() => void send(messages[messages.length - 1]?.content)}>Try again</button></p>}
             <div ref={endRef} />
           </div>
 

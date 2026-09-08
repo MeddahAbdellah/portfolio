@@ -12,7 +12,7 @@ OPENAI_API_KEY=... npm run dev
 ## Vercel environment variables
 
 - `OPENAI_API_KEY` — required; used only by the server-side chat function.
-- `OPENAI_MODEL` — optional; defaults to `gpt-5.6` for stronger repository analysis and interview answers.
+- `OPENAI_MODEL` — optional; defaults to `gpt-5.6-sol` for stronger repository analysis and interview answers.
 - `GITHUB_REPO_OWNER` — optional; defaults to `MeddahAbdellah`.
 - `GITHUB_TOKEN` — optional but recommended to increase GitHub API limits. Use a fine-grained token with **read-only access to public repositories** and no account or write permissions.
 

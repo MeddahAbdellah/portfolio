@@ -11,7 +11,7 @@ function validateMessages(value) {
   if (!Array.isArray(value) || !value.length || value.length > 10) return null;
   const messages = value.map(({ role, content }) => ({ role, content: typeof content === "string" ? content.trim() : "" }));
   if (messages.some(({ role, content }) => !["user", "assistant"].includes(role) || !content || content.length > 1200)) return null;
-  return messages.at(-1).role === "user" ? messages : null;
+  return messages[messages.length - 1].role === "user" ? messages : null;
 }
 export default async function handler(request, response) {
   if (request.method !== "POST") return response.status(405).json({ error: "Method not allowed." });
@@ -24,7 +24,7 @@ export default async function handler(request, response) {
     const apiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5.6", instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE PUBLIC GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
+      body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5.6-sol", instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nLIVE PUBLIC GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`, input: messages, max_output_tokens: 700 }),
     });
     const data = await apiResponse.json();
     if (!apiResponse.ok) throw new Error(data.error?.message || "OpenAI request failed");
