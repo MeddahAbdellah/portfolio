@@ -1,6 +1,6 @@
 import { Component, useEffect, useRef, useState } from "react";
 import type { ErrorInfo, FormEvent, KeyboardEvent, ReactNode } from "react";
-import { ArrowUp, Check, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowUp, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "./interview-chat.module.css";
@@ -158,7 +158,6 @@ function InterviewChatContent() {
                 <div>
                   <span className={styles.speaker}>{message.role === "assistant" ? "MEDDAH AI" : "YOU"}</span>
                   <div className={styles.messageText}><MessageText>{message.content}</MessageText></div>
-                  {message.role === "assistant" && index > 0 && <span className={styles.verified}><Check size={11} /> Based on GitHub evidence</span>}
                 </div>
               </article>
             ))}
@@ -180,7 +179,7 @@ function InterviewChatContent() {
           </form>
         </section>
       </section>
-      <footer>AI responses can be imperfect. Confirm important details with Meddah during your interview.</footer>
+      <footer>AI-generated portfolio summaries may occasionally be incomplete.</footer>
     </main>
   );
 }
