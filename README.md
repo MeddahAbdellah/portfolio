@@ -22,6 +22,8 @@ If an earlier deployment has `OPENAI_MODEL=gpt-5.6`, the API automatically maps 
 
 `GITHUB_TOKEN` may be pasted as the raw token or with a `Bearer`/`token` prefix. If it is expired or lacks access, the server automatically retries public GitHub requests without it. Removing a stale token from Vercel is recommended.
 
+After updating the token in Vercel, redeploy the project so new serverless instances receive it; an existing GitHub context snapshot can remain cached for up to ten minutes.
+
 ## How repository knowledge works
 
 With `GITHUB_TOKEN`, `api/github-context.js` calls GitHub's authenticated-user repository endpoint so accessible private repositories are included. Without a token it falls back to the public user endpoint. It excludes forks, archived repositories, and repositories not owned by `GITHUB_REPO_OWNER`, then inspects the eight most recently pushed repositories. Results are cached in each warm serverless instance for ten minutes to reduce GitHub API usage.
