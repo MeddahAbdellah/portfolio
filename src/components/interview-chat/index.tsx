@@ -55,12 +55,12 @@ const prompts = [
 ];
 
 const career = [
-  { period: "2025 — Present", role: "Senior Fullstack & AI Engineer", company: "Sanofi · Freelance" },
-  { period: "2024 — 2025", role: "Senior Fullstack Engineer", company: "Padoa · Freelance" },
-  { period: "2024", role: "Senior Fullstack & AI Engineer", company: "Engie Digital · Freelance" },
-  { period: "2023 — 2024", role: "Lead Software Engineer", company: "Citron" },
-  { period: "2020 — 2023", role: "Fullstack Engineer", company: "Padoa" },
-  { period: "2018 — 2020", role: "Embedded IoT Devices Engineer", company: "Ursum" },
+  { period: "2025 — Present", role: "Senior Fullstack & AI Engineer", company: "Sanofi · Freelance", logo: "/company-logos/sanofi.svg", logoAlt: "Sanofi" },
+  { period: "2024 — 2025", role: "Senior Fullstack Engineer", company: "Padoa · Freelance", logo: "/company-logos/padoa.svg", logoAlt: "Padoa" },
+  { period: "2024", role: "Senior Fullstack & AI Engineer", company: "Engie Digital · Freelance", logo: "/company-logos/engie.svg", logoAlt: "Engie" },
+  { period: "2023 — 2024", role: "Lead Software Engineer", company: "Citron", logo: "/company-logos/citron.svg", logoAlt: "Citron" },
+  { period: "2020 — 2023", role: "Fullstack Engineer", company: "Padoa", logo: "/company-logos/padoa.svg", logoAlt: "Padoa" },
+  { period: "2018 — 2020", role: "Embedded IoT Devices Engineer", company: "Ursum", logo: "/company-logos/ursum.svg", logoAlt: "Ursum" },
 ];
 
 function MessageText({ children }: { children: string }) {
@@ -156,9 +156,12 @@ function InterviewChatContent() {
           <ol className={styles.timeline}>
             {career.map((entry) => (
               <li key={`${entry.company}-${entry.period}`}>
-                <time>{entry.period}</time>
-                <strong>{entry.role}</strong>
-                <span>{entry.company}</span>
+                <img src={entry.logo} alt={`${entry.logoAlt} logo`} loading="lazy" />
+                <div>
+                  <time>{entry.period}</time>
+                  <strong>{entry.role}</strong>
+                  <span>{entry.company}</span>
+                </div>
               </li>
             ))}
           </ol>
