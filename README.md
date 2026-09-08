@@ -43,6 +43,8 @@ Private repository evidence is restricted to anonymized, high-level technical in
 
 Browser lifecycle, response status, diagnostic stage/code, request ID, and React errors are logged as expanded JSON text with the `[AskMeddah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskMeddah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage. Error responses use `Cache-Control: no-store` so Vercel does not preserve a stale failure.
 
+The application does not impose its own character or conversation-history limits on chat messages. The complete conversation is sent on each turn, up to the request and context limits enforced by Vercel and the configured OpenAI model.
+
 ## Checks
 
 ```sh

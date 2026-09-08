@@ -84,7 +84,7 @@ function InterviewChatContent() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.slice(-10) }),
+        body: JSON.stringify({ messages: next }),
       });
       const requestId = response.headers.get("x-request-id");
       const rawBody = await response.text();
@@ -179,7 +179,7 @@ function InterviewChatContent() {
           </div>
 
           <form className={styles.composer} onSubmit={(e: FormEvent) => { e.preventDefault(); void send(); }}>
-            <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} placeholder="Ask what Meddah’s repositories reveal about his work…" rows={1} maxLength={1200} aria-label="Your interview question" />
+            <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} placeholder="Ask what Meddah’s repositories reveal about his work…" rows={1} aria-label="Your interview question" />
             <button type="submit" disabled={!input.trim() || loading} aria-label="Send question"><ArrowUp size={19} /></button>
             <div><span><LockKeyhole size={11} /> Privacy-first: personal details are never shared</span><span>Enter to send · Shift + Enter for a new line</span></div>
           </form>

@@ -27,15 +27,12 @@ function rateLimited(ip) {
   recent.push(now); requests.set(ip, recent); return recent.length > 12;
 }
 export function validateMessages(value) {
-  if (!Array.isArray(value) || !value.length || value.length > 10) return null;
+  if (!Array.isArray(value) || !value.length) return null;
   const messages = value.map((message) => ({
     role: message?.role,
     content: typeof message?.content === "string" ? message.content.trim() : "",
   }));
-  if (messages.some(({ role, content }) => {
-    const maxLength = role === "assistant" ? 8_000 : 1_200;
-    return !["user", "assistant"].includes(role) || !content || content.length > maxLength;
-  })) return null;
+  if (messages.some(({ role, content }) => !["user", "assistant"].includes(role) || !content)) return null;
   return messages[messages.length - 1].role === "user" ? messages : null;
 }
 export default async function handler(request, response) {
