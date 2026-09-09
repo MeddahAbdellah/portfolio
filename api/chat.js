@@ -2,9 +2,7 @@ import { INTERVIEWER_SYSTEM_PROMPT } from "../src/lib/interviewer-system-prompt.
 import { getGitHubContext } from "./github-context.js";
 
 const requests = new Map();
-// Stay below the 60-second function duration so the API can emit a structured
-// timeout event instead of having the hosting platform cut the stream off.
-export const AGENT_RESPONSE_TIMEOUT_MS = 55_000;
+export const maxDuration = 280;
 function configuredModel() {
   const model = process.env.OPENAI_MODEL?.trim();
   // Keep deployments configured from the earlier README working: `gpt-5.6`
@@ -44,7 +42,7 @@ export default async function handler(request, response) {
   const model = configuredModel();
   response.setHeader("X-Request-Id", requestId);
   response.setHeader("Cache-Control", "no-store");
-  console.info("[AskAbdallah API] request started", { requestId, method: request.method, model, responseTimeoutMs: AGENT_RESPONSE_TIMEOUT_MS });
+  console.info("[AskAbdallah API] request started", { requestId, method: request.method, model, maxDuration });
   if (request.method !== "POST") return fail(response, 405, "Method not allowed.", requestId, "request", "method_not_allowed");
   if (rateLimited(request.headers["x-forwarded-for"]?.split(",")[0] || "unknown")) return fail(response, 429, "Too many questions. Please wait a minute.", requestId, "request", "rate_limited");
   const messages = validateMessages(request.body?.messages);
@@ -62,7 +60,6 @@ export default async function handler(request, response) {
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(new Error("OpenAI response timeout")), AGENT_RESPONSE_TIMEOUT_MS);
   response.on("close", () => { if (!response.writableEnded) controller.abort(); });
   let outputLength = 0;
   try {
@@ -145,11 +142,8 @@ export default async function handler(request, response) {
     });
   } catch (error) {
     console.error("[AskAbdallah API] OpenAI request failed", { requestId, model, outputLength, durationMs: Date.now() - startedAt, code: error?.code, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
-    const timedOut = controller.signal.aborted && error?.name !== "AbortError" || error?.name === "TimeoutError";
-    const message = timedOut ? "The interview assistant timed out. Please try again." : "The interview assistant is temporarily unavailable.";
-    if (!response.headersSent) return fail(response, timedOut ? 504 : 502, message, requestId, "openai", timedOut ? "response_timeout" : error instanceof SyntaxError ? "invalid_json" : "request_failed");
+    const message = "The interview assistant is temporarily unavailable.";
+    if (!response.headersSent) return fail(response, 502, message, requestId, "openai", error instanceof SyntaxError ? "invalid_json" : "request_failed");
     if (!response.writableEnded) response.end(`${JSON.stringify({ type: "error", error: message, requestId })}\n`);
-  } finally {
-    clearTimeout(timeout);
   }
 }
