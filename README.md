@@ -45,7 +45,7 @@ Browser lifecycle, response status, diagnostic stage/code, request ID, stream ch
 
 The application does not set `max_output_tokens` and does not impose its own character, answer-length, or conversation-history limits. The complete conversation is sent on each turn, subject only to the platform and context limits enforced by Vercel and the configured OpenAI model. If OpenAI explicitly reports an incomplete response, the UI rejects the partial answer and offers a retry. Some valid streams close after delivering output without forwarding an optional completion marker; those answers are preserved and the missing marker is logged as a warning instead of being shown as an invalid response.
 
-Chat answers are streamed from the OpenAI Responses API to the browser as newline-delimited JSON, so text appears as it is generated. The serverless function allows up to 300 seconds and aborts an upstream model response after 240 seconds. Individual GitHub requests allow 30 seconds, reducing failures caused by transient API latency.
+Chat answers are streamed from the OpenAI Responses API to the browser as newline-delimited JSON, so text appears as it is generated. Because `api/chat.js` is a plain Vercel `/api` function, its 300-second duration is configured through the exported `config.maxDuration` object (rather than the named framework-route export, which left production on a 10-second default). The function aborts an upstream model response after 240 seconds. Individual GitHub requests allow 30 seconds, reducing failures caused by transient API latency.
 
 ## Checks
 
