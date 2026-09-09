@@ -34,6 +34,17 @@ test("prioritizes framework contributions, then project size, then recency", () 
   assert.match(INTERVIEWER_SYSTEM_PROMPT, /asks about a specific repository, answer about that repository directly/);
 });
 
+test("includes Abdallah's engineering principles with evidence calibration", () => {
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /# Abdallah's Engineering Principles/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /## 1\. Complexity must earn its existence/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /## 6\. Measure AI systems instead of trusting demos/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /## 10\. Optimize for users, not architectural elegance/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /They describe how he intends to reason, not proof that he always behaves accordingly/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /When evidence contradicts a stated principle, explicitly say so/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /stated principle\n- explored idea\n- implemented decision\n- observed production behavior/);
+  assert.match(INTERVIEWER_SYSTEM_PROMPT, /Prefer concrete decisions and their chronology/);
+});
+
 test("keeps sensitive private-repository material protected", () => {
   assert.match(INTERVIEWER_SYSTEM_PROMPT, /Do not share a private repository's URL/);
   assert.match(INTERVIEWER_SYSTEM_PROMPT, /Do not infer confidential business facts/);
