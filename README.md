@@ -37,7 +37,9 @@ For every selected repository the context includes:
 - Up to 8,000 characters from `package.json`, when present
 
 Repository text is treated as untrusted data by the system prompt. Answers must distinguish direct evidence from inference and must not claim that repository activity proves expertise, sole authorship, employment history, or business impact.
-Private repository evidence is restricted to anonymized, high-level technical insights; answers must not expose private names, links, content, commit messages, organizations, collaborators, or identifying project details.
+Private repositories are valid professional evidence: the interviewer may name them and discuss their technologies, architecture, engineering decisions, and activity, including when that work is stronger than the public examples. It still does not share private repository URLs, reproduce repository or commit content verbatim, expose secrets or personal data, identify collaborators, or infer confidential business facts absent from the supplied context.
+
+When choosing evidence for an answer, the interviewer prioritizes relevant contributions to major frameworks first, the biggest and most substantive repositories or projects second, and the most recently contributed-to repositories third. Recency is a tie-breaker rather than a substitute for stronger framework or large-project evidence; questions about a named repository are still answered directly.
 
 ## Debugging
 
