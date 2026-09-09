@@ -2,10 +2,6 @@ import { INTERVIEWER_SYSTEM_PROMPT } from "../src/lib/interviewer-system-prompt.
 import { getGitHubContext } from "./github-context.js";
 
 const requests = new Map();
-// Plain Vercel `/api` functions read duration from the exported config object.
-// A named `maxDuration` export is for framework routes and was ignored here,
-// leaving this function on the platform's 10-second default.
-export const config = { maxDuration: 300 };
 export const AGENT_RESPONSE_TIMEOUT_MS = 240_000;
 function configuredModel() {
   const model = process.env.OPENAI_MODEL?.trim();
