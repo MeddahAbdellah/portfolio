@@ -2,7 +2,9 @@ import { INTERVIEWER_SYSTEM_PROMPT } from "../src/lib/interviewer-system-prompt.
 import { getGitHubContext } from "./github-context.js";
 
 const requests = new Map();
-export const AGENT_RESPONSE_TIMEOUT_MS = 240_000;
+// Stay below the 60-second function duration so the API can emit a structured
+// timeout event instead of having the hosting platform cut the stream off.
+export const AGENT_RESPONSE_TIMEOUT_MS = 55_000;
 function configuredModel() {
   const model = process.env.OPENAI_MODEL?.trim();
   // Keep deployments configured from the earlier README working: `gpt-5.6`
