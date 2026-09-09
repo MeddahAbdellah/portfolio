@@ -121,11 +121,12 @@ function InterviewChatContent() {
     <header className={styles.header}>
       <a className={styles.brand} href="/" aria-label="Meddah Abdallah home"><span className={styles.mark}><span>MA</span></span><span>Meddah Abdallah</span><span className={styles.beta}>AI PORTFOLIO</span></a>
       <nav className={styles.nav} aria-label="Profile links">
+        <span className={styles.available}><i /> {t.available}</span>
         <div className={styles.language} role="group" aria-label={t.language}>
           <button className={language === "en" ? styles.activeLanguage : ""} onClick={() => changeLanguage("en")} aria-label="English" aria-pressed={language === "en"}>🇬🇧</button>
           <button className={language === "fr" ? styles.activeLanguage : ""} onClick={() => changeLanguage("fr")} aria-label="Français" aria-pressed={language === "fr"}>🇫🇷</button>
         </div>
-        <span className={styles.available}><i /> {t.available}</span><a href="https://github.com/MeddahAbdellah" target="_blank" rel="noreferrer"><Github size={17} /> <span>GitHub</span></a><a href="https://www.linkedin.com/in/meddahabdallah/" target="_blank" rel="noreferrer"><Linkedin size={17} /> <span>LinkedIn</span></a>
+        <a href="https://github.com/MeddahAbdellah" target="_blank" rel="noreferrer"><Github size={17} /> <span>GitHub</span></a><a href="https://www.linkedin.com/in/meddahabdallah/" target="_blank" rel="noreferrer"><Linkedin size={17} /> <span>LinkedIn</span></a>
       </nav>
     </header>
     <section className={styles.workspace}>
