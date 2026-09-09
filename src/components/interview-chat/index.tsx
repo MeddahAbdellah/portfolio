@@ -1,6 +1,6 @@
 import { Component, useEffect, useRef, useState } from "react";
 import type { ErrorInfo, FormEvent, KeyboardEvent, ReactNode } from "react";
-import { ArrowUp, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowUp, Briefcase, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "./interview-chat.module.css";
@@ -24,6 +24,7 @@ const copy = {
     you: "YOU", placeholder: "Ask Abdallah an interview question…", inputLabel: "Your interview question", send: "Send question",
     privacy: "Privacy-first: personal details are never shared", keyboard: "Enter to send · Shift + Enter for a new line",
     footer: "AI-generated portfolio summaries may occasionally be incomplete.", retry: "Try again", language: "Choose language",
+    careerCta: "View experience", closeCareer: "Close experience timeline",
     errors: { timeout: "The interview assistant timed out. Please try again.", unavailable: "The interview assistant is temporarily unavailable.", invalid: "The interview assistant returned an invalid response.", empty: "The interview assistant returned an empty response.", generic: "Something went wrong. Please try again." },
   },
   fr: {
@@ -35,6 +36,7 @@ const copy = {
     you: "VOUS", placeholder: "Posez une question d’entretien sur Abdallah…", inputLabel: "Votre question d’entretien", send: "Envoyer la question",
     privacy: "Confidentialité : les données personnelles ne sont jamais partagées", keyboard: "Entrée pour envoyer · Maj + Entrée pour une nouvelle ligne",
     footer: "Les résumés générés par l’IA peuvent parfois être incomplets.", retry: "Réessayer", language: "Choisir la langue",
+    careerCta: "Voir le parcours", closeCareer: "Fermer le parcours professionnel",
     errors: { timeout: "L’assistant a mis trop de temps à répondre. Veuillez réessayer.", unavailable: "L’assistant est temporairement indisponible.", invalid: "L’assistant a renvoyé une réponse invalide.", empty: "L’assistant a renvoyé une réponse vide.", generic: "Une erreur est survenue. Veuillez réessayer." },
   },
 } as const;
@@ -65,10 +67,17 @@ function InterviewChatContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [failedQuestion, setFailedQuestion] = useState("");
+  const [careerOpen, setCareerOpen] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { const saved = localStorage.getItem("portfolio-language"); if (saved === "fr") changeLanguage("fr"); }, []);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+  useEffect(() => {
+    if (!careerOpen) return;
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") setCareerOpen(false); };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [careerOpen]);
 
   function changeLanguage(next: Language) {
     setLanguageState(next); setMessages([{ role: "assistant", content: copy[next].welcome }]); setInput(""); setError(""); setFailedQuestion("");
@@ -130,9 +139,18 @@ function InterviewChatContent() {
       </nav>
     </header>
     <section className={styles.workspace}>
-      <aside className={styles.profile}><p className={styles.role}>{t.role}</p><div className={styles.meta}><span>Paris, France</span><span>{t.years}</span><span>{t.open}</span></div><div className={styles.rule} /><p className={styles.timelineLabel}>{t.experience}</p><ol className={styles.timeline}>{career.map((entry) => <li key={`${entry.company}-${entry.period}`}><img src={entry.logo} alt={`${entry.company} logo`} loading="lazy" /><div><time>{language === "fr" && entry.periodFr ? entry.periodFr : entry.period}</time><strong>{language === "fr" ? entry.roleFr : entry.role}</strong><span>{entry.company}</span></div></li>)}</ol><a className={styles.cv} href="/cv_meddah_abdallah.pdf" target="_blank"><span>{t.resume}</span><ArrowUp size={16} /></a></aside>
+      {careerOpen && <button className={styles.drawerBackdrop} onClick={() => setCareerOpen(false)} aria-label={t.closeCareer} />}
+      <aside className={`${styles.profile} ${careerOpen ? styles.profileOpen : ""}`} aria-hidden={!careerOpen ? undefined : false}>
+        <button className={styles.closeProfile} onClick={() => setCareerOpen(false)} aria-label={t.closeCareer}><X size={19} /></button>
+        <p className={styles.role}>{t.role}</p><div className={styles.meta}><span>Paris, France</span><span>{t.years}</span><span>{t.open}</span></div><div className={styles.rule} /><p className={styles.timelineLabel}>{t.experience}</p><ol className={styles.timeline}>{career.map((entry) => <li key={`${entry.company}-${entry.period}`}><img src={entry.logo} alt={`${entry.company} logo`} loading="lazy" /><div><time>{language === "fr" && entry.periodFr ? entry.periodFr : entry.period}</time><strong>{language === "fr" ? entry.roleFr : entry.role}</strong><span>{entry.company}</span></div></li>)}</ol><a className={styles.cv} href="/cv_meddah_abdallah.pdf" target="_blank"><span>{t.resume}</span><ArrowUp size={16} /></a></aside>
       <section className={styles.chat} aria-label={t.chatLabel}>
         <div className={styles.chatTop}><div><Sparkles size={16} /><div><strong>{t.interview}</strong><span>{t.subtitle}</span></div></div><button onClick={() => { setMessages([{ role: "assistant", content: t.welcome }]); setError(""); setFailedQuestion(""); }} aria-label={t.newChat}><RotateCcw size={15} /> <span>{t.newChat}</span></button></div>
+        <div className={styles.mobileCareer}>
+          <div className={styles.careerViewport} aria-label={t.experience}>
+            <div className={styles.careerRoll}>{[...career, ...career].map((entry, index) => <div className={styles.careerSlide} key={`${entry.company}-${index}`} aria-hidden={index >= career.length}><img src={entry.logo} alt="" /><div><time>{language === "fr" && entry.periodFr ? entry.periodFr : entry.period}</time><strong>{language === "fr" ? entry.roleFr : entry.role}</strong><span>{entry.company}</span></div></div>)}</div>
+          </div>
+          <button onClick={() => setCareerOpen(true)} aria-expanded={careerOpen}><Briefcase size={15} /><span>{t.careerCta}</span><ArrowUp size={14} /></button>
+        </div>
         <div className={styles.messages} aria-live="polite">
           {messages.map((message, index) => <article key={index} className={`${styles.message} ${styles[message.role]}`}>{message.role === "assistant" && <div className={styles.botAvatar}><Code2 size={16} /></div>}<div><span className={styles.speaker}>{message.role === "assistant" ? "ABDALLAH AI" : t.you}</span><div className={styles.messageText}><MessageText>{message.content}</MessageText></div></div></article>)}
           {messages.length === 1 && <div className={styles.suggestions}><span>{t.suggestions}</span><div>{t.prompts.map((prompt) => <button key={prompt} onClick={() => void send(prompt)}>{prompt}<ArrowUp size={14} /></button>)}</div></div>}
