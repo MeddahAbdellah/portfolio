@@ -76,6 +76,7 @@ function InterviewChatContent() {
 
   async function send(question = input) {
     const content = question.trim(); if (!content || loading) return;
+    const startedAt = performance.now();
     const next = [...messages, { role: "user" as const, content }];
     setMessages(next); setInput(""); setError(""); setFailedQuestion(""); setLoading(true);
     log("Sending interview question", { messageCount: next.length, questionLength: content.length, language });
@@ -88,23 +89,27 @@ function InterviewChatContent() {
         throw new Error(response.status === 504 ? t.errors.timeout : language === "fr" ? t.errors.unavailable : serverError || t.errors.unavailable);
       }
       if (!response.body) throw new Error(t.errors.invalid);
-      const reader = response.body.getReader(); const decoder = new TextDecoder(); let buffer = ""; let answer = "";
+      const reader = response.body.getReader(); const decoder = new TextDecoder(); let buffer = ""; let answer = ""; let chunkCount = 0; let receivedDone = false; let firstDeltaAt: number | undefined;
       while (true) {
-        const { done, value } = await reader.read(); buffer += decoder.decode(value, { stream: !done });
+        const { done, value } = await reader.read();
+        if (value) chunkCount += 1;
+        buffer += decoder.decode(value, { stream: !done });
         const lines = buffer.split("\n"); buffer = done ? "" : lines.pop() || "";
         for (const line of lines) {
           if (!line.trim()) continue;
           const event = JSON.parse(line) as { type: "delta" | "error" | "done"; delta?: string; error?: string };
           if (event.type === "error") throw new Error(language === "fr" ? (event.error?.includes("timed out") ? t.errors.timeout : t.errors.unavailable) : event.error || t.errors.unavailable);
-          if (event.type === "delta" && event.delta) { answer += event.delta; setMessages([...next, { role: "assistant", content: answer }]); }
+          if (event.type === "done") receivedDone = true;
+          if (event.type === "delta" && event.delta) { firstDeltaAt ??= performance.now(); answer += event.delta; setMessages([...next, { role: "assistant", content: answer }]); }
         }
         if (done) break;
       }
       if (!answer.trim()) throw new Error(t.errors.empty);
-      log("Chat stream completed", { requestId, outputLength: answer.length });
+      if (!receivedDone) throw new Error(t.errors.invalid);
+      log("Chat stream completed", { requestId, outputLength: answer.length, chunkCount, timeToFirstDeltaMs: firstDeltaAt ? Math.round(firstDeltaAt - startedAt) : undefined, durationMs: Math.round(performance.now() - startedAt) });
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : t.errors.generic;
-      logError("Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message });
+      logError("Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message, durationMs: Math.round(performance.now() - startedAt) });
       setMessages(next); setFailedQuestion(content); setError(message);
     } finally { setLoading(false); }
   }

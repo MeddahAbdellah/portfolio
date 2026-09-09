@@ -41,9 +41,9 @@ Private repository evidence is restricted to anonymized, high-level technical in
 
 ## Debugging
 
-Browser lifecycle, response status, diagnostic stage/code, request ID, and React errors are logged as expanded JSON text with the `[AskAbdallah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskAbdallah API]`, making it possible to correlate a browser failure with its server-side GitHub or OpenAI stage. Error responses use `Cache-Control: no-store` so Vercel does not preserve a stale failure.
+Browser lifecycle, response status, diagnostic stage/code, request ID, stream chunk count, output length, time to first text, total duration, and React errors are logged as expanded JSON text with the `[AskAbdallah]` prefix. Questions and answers are deliberately not logged. The same request ID appears in Vercel function logs under `[AskAbdallah API]`, where the model, token usage, completion status, output length, and timing are recorded. This makes it possible to correlate a browser failure with its server-side GitHub, OpenAI, or interrupted-stream stage. Error responses use `Cache-Control: no-store` so Vercel does not preserve a stale failure.
 
-The application does not impose its own character or conversation-history limits on chat messages. The complete conversation is sent on each turn, up to the request and context limits enforced by Vercel and the configured OpenAI model.
+The application does not set `max_output_tokens` and does not impose its own character, answer-length, or conversation-history limits. The complete conversation is sent on each turn, subject only to the platform and context limits enforced by Vercel and the configured OpenAI model. If OpenAI reports an incomplete response, or if its stream closes without a completion event, the UI rejects the partial answer and offers a retry rather than presenting it as complete.
 
 Chat answers are streamed from the OpenAI Responses API to the browser as newline-delimited JSON, so text appears as it is generated. The serverless function allows up to 300 seconds and aborts an upstream model response after 240 seconds. Individual GitHub requests allow 30 seconds, reducing failures caused by transient API latency.
 
