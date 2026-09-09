@@ -1,6 +1,6 @@
 import { Component, useEffect, useRef, useState } from "react";
 import type { ErrorInfo, FormEvent, KeyboardEvent, ReactNode } from "react";
-import { ArrowUp, Briefcase, Code2, Github, Linkedin, LockKeyhole, RotateCcw, Sparkles, X } from "lucide-react";
+import { ArrowUp, Briefcase, Code2, Github, Linkedin, LockKeyhole, Phone, RotateCcw, Sparkles, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import styles from "./interview-chat.module.css";
@@ -135,7 +135,7 @@ function InterviewChatContent() {
           <button className={language === "en" ? styles.activeLanguage : ""} onClick={() => changeLanguage("en")} aria-label="English" aria-pressed={language === "en"}>🇬🇧</button>
           <button className={language === "fr" ? styles.activeLanguage : ""} onClick={() => changeLanguage("fr")} aria-label="Français" aria-pressed={language === "fr"}>🇫🇷</button>
         </div>
-        <a href="https://github.com/MeddahAbdellah" target="_blank" rel="noreferrer"><Github size={17} /> <span>GitHub</span></a><a href="https://www.linkedin.com/in/meddahabdallah/" target="_blank" rel="noreferrer"><Linkedin size={17} /> <span>LinkedIn</span></a>
+        <a href="https://github.com/MeddahAbdellah" target="_blank" rel="noreferrer"><Github size={17} /> <span>GitHub</span></a><a href="https://www.linkedin.com/in/meddahabdallah/" target="_blank" rel="noreferrer"><Linkedin size={17} /> <span>LinkedIn</span></a><a className={styles.phoneLink} href="tel:+33769238622" aria-label="Call Abdallah at 0769238622"><Phone size={17} /> <span>0769238622</span></a>
       </nav>
     </header>
     <section className={styles.workspace}>
