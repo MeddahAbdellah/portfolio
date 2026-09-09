@@ -2,8 +2,7 @@ import { INTERVIEWER_SYSTEM_PROMPT } from "../src/lib/interviewer-system-prompt.
 import { getGitHubContext } from "./github-context.js";
 
 const requests = new Map();
-export const maxDuration = 300;
-const AGENT_RESPONSE_TIMEOUT_MS = 240_000;
+export const maxDuration = 280;
 function configuredModel() {
   const model = process.env.OPENAI_MODEL?.trim();
   // Keep deployments configured from the earlier README working: `gpt-5.6`
@@ -39,9 +38,11 @@ export function validateMessages(value) {
 }
 export default async function handler(request, response) {
   const requestId = request.headers["x-vercel-id"] || crypto.randomUUID();
+  const startedAt = Date.now();
+  const model = configuredModel();
   response.setHeader("X-Request-Id", requestId);
   response.setHeader("Cache-Control", "no-store");
-  console.info("[AskAbdallah API] request started", { requestId, method: request.method });
+  console.info("[AskAbdallah API] request started", { requestId, method: request.method, model, maxDuration });
   if (request.method !== "POST") return fail(response, 405, "Method not allowed.", requestId, "request", "method_not_allowed");
   if (rateLimited(request.headers["x-forwarded-for"]?.split(",")[0] || "unknown")) return fail(response, 429, "Too many questions. Please wait a minute.", requestId, "request", "rate_limited");
   const messages = validateMessages(request.body?.messages);
@@ -59,18 +60,17 @@ export default async function handler(request, response) {
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(new Error("OpenAI response timeout")), AGENT_RESPONSE_TIMEOUT_MS);
   response.on("close", () => { if (!response.writableEnded) controller.abort(); });
+  let outputLength = 0;
   try {
     const apiResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
       signal: controller.signal,
       body: JSON.stringify({
-        model: configuredModel(),
+        model,
         instructions: `${INTERVIEWER_SYSTEM_PROMPT}\n\nRESPONSE LANGUAGE\nAnswer exclusively in ${language === "fr" ? "French" : "English"}, matching the language selected by the visitor.\n\nLIVE GITHUB EVIDENCE:\n${JSON.stringify(githubContext)}`,
         input: messages,
-        max_output_tokens: 700,
         stream: true,
       }),
     });
@@ -89,7 +89,8 @@ export default async function handler(request, response) {
     const reader = apiResponse.body.getReader();
     const decoder = new TextDecoder();
     let buffer = "";
-    let outputLength = 0;
+    let firstDeltaAt;
+    let completion;
     while (true) {
       const { done, value } = await reader.read();
       buffer += decoder.decode(value, { stream: !done });
@@ -99,8 +100,11 @@ export default async function handler(request, response) {
         if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
         const event = JSON.parse(line.slice(6));
         if (event.type === "response.output_text.delta" && typeof event.delta === "string") {
+          firstDeltaAt ||= Date.now();
           outputLength += event.delta.length;
           response.write(`${JSON.stringify({ type: "delta", delta: event.delta })}\n`);
+        } else if (event.type === "response.completed" || event.type === "response.incomplete") {
+          completion = event.response;
         } else if (event.type === "error" || event.type === "response.failed") {
           throw new Error(event.error?.message || event.response?.error?.message || "The model response failed");
         }
@@ -108,16 +112,38 @@ export default async function handler(request, response) {
       if (done) break;
     }
     if (!outputLength) throw new Error("The model returned no answer");
+    if (!completion) {
+      console.warn("[AskAbdallah API] OpenAI stream ended without a completion event", {
+        requestId,
+        model,
+        outputLength,
+        durationMs: Date.now() - startedAt,
+      });
+    }
+    const incompleteReason = completion?.incomplete_details?.reason;
+    if (completion?.status === "incomplete" || incompleteReason) {
+      const error = new Error(`The model response was incomplete${incompleteReason ? `: ${incompleteReason}` : ""}`);
+      error.code = "incomplete_response";
+      throw error;
+    }
     response.write(`${JSON.stringify({ type: "done", requestId })}\n`);
     response.end();
-    console.info("[AskAbdallah API] request completed", { requestId, outputLength, language });
+    console.info("[AskAbdallah API] request completed", {
+      requestId,
+      outputLength,
+      language,
+      model,
+      status: completion?.status || "stream_closed_after_output",
+      completionEventReceived: Boolean(completion),
+      inputTokens: completion?.usage?.input_tokens,
+      outputTokens: completion?.usage?.output_tokens,
+      timeToFirstDeltaMs: firstDeltaAt ? firstDeltaAt - startedAt : undefined,
+      durationMs: Date.now() - startedAt,
+    });
   } catch (error) {
-    console.error("[AskAbdallah API] OpenAI request failed", { requestId, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
-    const timedOut = controller.signal.aborted && error?.name !== "AbortError" || error?.name === "TimeoutError";
-    const message = timedOut ? "The interview assistant timed out. Please try again." : "The interview assistant is temporarily unavailable.";
-    if (!response.headersSent) return fail(response, timedOut ? 504 : 502, message, requestId, "openai", timedOut ? "response_timeout" : error instanceof SyntaxError ? "invalid_json" : "request_failed");
+    console.error("[AskAbdallah API] OpenAI request failed", { requestId, model, outputLength, durationMs: Date.now() - startedAt, code: error?.code, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
+    const message = "The interview assistant is temporarily unavailable.";
+    if (!response.headersSent) return fail(response, 502, message, requestId, "openai", error instanceof SyntaxError ? "invalid_json" : "request_failed");
     if (!response.writableEnded) response.end(`${JSON.stringify({ type: "error", error: message, requestId })}\n`);
-  } finally {
-    clearTimeout(timeout);
   }
 }
