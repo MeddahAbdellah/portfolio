@@ -17,7 +17,7 @@ const logError = (event: string, details: Record<string, unknown>) => console.er
 const copy = {
   en: {
     welcome: "Hi, I’m Abdallah’s AI portfolio. Interview him about his experience, technical decisions, leadership, and the systems he has built.",
-    prompts: ["Tell me about an AI system you took to production.", "How do you approach frontend architecture at scale?", "Describe a difficult technical decision you made.", "How do you lead and mentor engineering teams?", "Present your career path.", "Why should we hire you?"],
+    prompts: ["Present your career path.", "Tell me about an AI system you took to production.", "How do you approach frontend architecture at scale?", "Describe a difficult technical decision you made.", "How do you lead and mentor engineering teams?", "Why should we hire you?"],
     available: "Available for opportunities", role: "Senior Fullstack & AI Engineer building production-grade AI, cloud, web, and distributed systems.",
     years: "8+ years", open: "Open to work", experience: "EXPERIENCE", resume: "View résumé", interview: "Interview Abdallah’s AI",
     subtitle: "Professional experience and technical work", newChat: "New chat", chatLabel: "Interview chat", suggestions: "TRY ASKING",
@@ -29,7 +29,7 @@ const copy = {
   },
   fr: {
     welcome: "Bonjour, je suis le portfolio IA d’Abdallah. Interrogez-moi sur son expérience, ses décisions techniques, son leadership et les systèmes qu’il a conçus.",
-    prompts: ["Parlez-moi d’un système d’IA mis en production.", "Comment abordez-vous l’architecture frontend à grande échelle ?", "Décrivez une décision technique difficile.", "Comment dirigez-vous et accompagnez-vous les équipes ?", "Présentez votre parcours professionnel.", "Pourquoi devrions-nous vous recruter ?"],
+    prompts: ["Présentez votre parcours professionnel.", "Parlez-moi d’un système d’IA mis en production.", "Comment abordez-vous l’architecture frontend à grande échelle ?", "Décrivez une décision technique difficile.", "Comment dirigez-vous et accompagnez-vous les équipes ?", "Pourquoi devrions-nous vous recruter ?"],
     available: "Disponible pour de nouvelles opportunités", role: "Ingénieur Fullstack & IA senior, spécialisé dans les systèmes IA, cloud, web et distribués en production.",
     years: "8+ ans", open: "Disponible", experience: "EXPÉRIENCE", resume: "Voir le CV", interview: "Interrogez l’IA d’Abdallah",
     subtitle: "Expérience professionnelle et réalisations techniques", newChat: "Nouvelle discussion", chatLabel: "Discussion d’entretien", suggestions: "SUGGESTIONS",
