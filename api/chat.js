@@ -115,9 +115,12 @@ export default async function handler(request, response) {
     }
     if (!outputLength) throw new Error("The model returned no answer");
     if (!completion) {
-      const error = new Error("The OpenAI stream ended without a completion event");
-      error.code = "incomplete_stream";
-      throw error;
+      console.warn("[AskAbdallah API] OpenAI stream ended without a completion event", {
+        requestId,
+        model,
+        outputLength,
+        durationMs: Date.now() - startedAt,
+      });
     }
     const incompleteReason = completion?.incomplete_details?.reason;
     if (completion?.status === "incomplete" || incompleteReason) {
@@ -132,7 +135,8 @@ export default async function handler(request, response) {
       outputLength,
       language,
       model,
-      status: completion?.status || "stream_closed_without_completion_event",
+      status: completion?.status || "stream_closed_after_output",
+      completionEventReceived: Boolean(completion),
       inputTokens: completion?.usage?.input_tokens,
       outputTokens: completion?.usage?.output_tokens,
       timeToFirstDeltaMs: firstDeltaAt ? firstDeltaAt - startedAt : undefined,

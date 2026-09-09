@@ -11,6 +11,7 @@ type Language = "en" | "fr";
 const LOG_PREFIX = "[AskAbdallah]";
 const printable = (details?: Record<string, unknown>) => details ? JSON.stringify(details) : "";
 const log = (event: string, details?: Record<string, unknown>) => console.info(`${LOG_PREFIX} ${event} ${printable(details)}`);
+const logWarning = (event: string, details?: Record<string, unknown>) => console.warn(`${LOG_PREFIX} ${event} ${printable(details)}`);
 const logError = (event: string, details: Record<string, unknown>) => console.error(`${LOG_PREFIX} ${event} ${printable(details)}`);
 
 const copy = {
@@ -105,8 +106,8 @@ function InterviewChatContent() {
         if (done) break;
       }
       if (!answer.trim()) throw new Error(t.errors.empty);
-      if (!receivedDone) throw new Error(t.errors.invalid);
-      log("Chat stream completed", { requestId, outputLength: answer.length, chunkCount, timeToFirstDeltaMs: firstDeltaAt ? Math.round(firstDeltaAt - startedAt) : undefined, durationMs: Math.round(performance.now() - startedAt) });
+      if (!receivedDone) logWarning("Chat stream closed after output without a done marker", { requestId, outputLength: answer.length, chunkCount });
+      log("Chat stream completed", { requestId, receivedDone, outputLength: answer.length, chunkCount, timeToFirstDeltaMs: firstDeltaAt ? Math.round(firstDeltaAt - startedAt) : undefined, durationMs: Math.round(performance.now() - startedAt) });
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : t.errors.generic;
       logError("Interview request failed", { name: cause instanceof Error ? cause.name : "UnknownError", message, durationMs: Math.round(performance.now() - startedAt) });
